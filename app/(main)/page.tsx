@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Search, Bell, Heart, MessageCircle, ChevronRight } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Search, Bell, Heart, MessageCircle, ChevronRight, Clock } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -68,6 +68,45 @@ const featuredCards = [
   },
 ]
 
+const auctionCards = [
+  {
+    id: "auction-1",
+    image: "/cards/pokemon-1.jpg",
+    name: "Walking Wake ex Hyper Rare",
+    currentBid: 225,
+    bidCount: 7,
+    endTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours
+    category: "pokemon",
+  },
+  {
+    id: "auction-2",
+    image: "/cards/yugioh-1.jpg",
+    name: "Dark Magician Ultimate",
+    currentBid: 450,
+    bidCount: 12,
+    endTime: new Date(Date.now() + 45 * 60 * 1000), // 45 minutes
+    category: "yugioh",
+  },
+  {
+    id: "auction-3",
+    image: "/cards/onepiece-1.jpg",
+    name: "Shanks Secret Rare",
+    currentBid: 320,
+    bidCount: 9,
+    endTime: new Date(Date.now() + 5 * 60 * 60 * 1000), // 5 hours
+    category: "onepiece",
+  },
+  {
+    id: "auction-4",
+    image: "/cards/mtg-1.jpg",
+    name: "Mox Pearl Alpha",
+    currentBid: 8500,
+    bidCount: 15,
+    endTime: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes
+    category: "mtg",
+  },
+]
+
 const posts = [
   {
     id: "1",
@@ -124,6 +163,33 @@ const posts = [
     category: "pokemon"
   },
 ]
+
+function formatTimeLeft(endTime: Date) {
+  const now = new Date().getTime()
+  const end = endTime.getTime()
+  const diff = Math.max(0, end - now)
+  
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+  
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`
+  }
+  return `${minutes}m`
+}
+
+function AuctionCountdown({ endTime }: { endTime: Date }) {
+  const [timeLeft, setTimeLeft] = useState(formatTimeLeft(endTime))
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(formatTimeLeft(endTime))
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [endTime])
+
+  return <span>{timeLeft}</span>
+}
 
 function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?: boolean }) {
   const [liked, setLiked] = useState(false)
@@ -183,6 +249,10 @@ export default function HomePage() {
 
   const filteredPosts = posts.filter(post => 
     selectedCategory === "all" || post.category === selectedCategory
+  )
+
+  const filteredAuctions = auctionCards.filter(card =>
+    selectedCategory === "all" || card.category === selectedCategory
   )
 
   const leftColumn = filteredPosts.filter((_, i) => i % 2 === 0)
@@ -252,7 +322,12 @@ export default function HomePage() {
                     />
                   ) : (
                     <div className={`w-full h-full ${category.bgColor} flex items-center justify-center`}>
-                      <span className="text-lg font-bold text-white">All</span>
+                      <svg className="size-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                      </svg>
                     </div>
                   )}
                 </div>
@@ -262,6 +337,47 @@ export default function HomePage() {
                   {category.label}
                 </span>
               </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Live Auctions */}
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="size-2 bg-red-500 rounded-full animate-pulse" />
+              <h2 className="font-bold text-foreground">Live Auctions</h2>
+            </div>
+            <Link href="/shop?type=auction" className="flex items-center gap-1 text-sm text-primary">
+              See All <ChevronRight className="size-4" />
+            </Link>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+            {filteredAuctions.map((card) => (
+              <Link key={card.id} href={`/auction/${card.id}`} className="shrink-0">
+                <div className="w-32 bg-card rounded-xl overflow-hidden border border-border">
+                  <div className="relative aspect-[3/4]">
+                    <Image
+                      src={card.image}
+                      alt={card.name}
+                      fill
+                      className="object-cover"
+                    />
+                    {/* Countdown Badge */}
+                    <div className="absolute top-2 left-2 bg-red-500/90 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                      <Clock className="size-2.5" />
+                      <AuctionCountdown endTime={card.endTime} />
+                    </div>
+                  </div>
+                  <div className="p-2">
+                    <p className="text-[11px] font-semibold text-foreground truncate">{card.name}</p>
+                    <div className="flex items-center justify-between mt-1">
+                      <p className="text-xs font-bold text-primary">${card.currentBid}</p>
+                      <span className="text-[10px] text-muted-foreground">{card.bidCount} bids</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>

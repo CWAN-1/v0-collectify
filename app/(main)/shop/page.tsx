@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Search, SlidersHorizontal, Heart, Star, ChevronDown, X, Check } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Search, SlidersHorizontal, Heart, Star, X, Check, Clock } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -17,6 +17,12 @@ const categories = [
   { id: "onepiece", label: "One Piece", avatar: "/brands/luffy.jpg", bgColor: "bg-red-600" },
   { id: "mtg", label: "MTG", avatar: "/brands/mtg.jpg", bgColor: "bg-amber-700" },
   { id: "sports", label: "Sports", avatar: "/brands/sports.jpg", bgColor: "bg-green-600" },
+]
+
+const saleTypes = [
+  { id: "all", label: "All" },
+  { id: "buy", label: "Buy Now" },
+  { id: "auction", label: "Auction" },
 ]
 
 const conditions = [
@@ -46,7 +52,8 @@ const products = [
     condition: "Mint",
     isHot: true,
     isVerified: true,
-    category: "pokemon"
+    category: "pokemon",
+    saleType: "buy"
   },
   {
     id: "2",
@@ -59,7 +66,8 @@ const products = [
     condition: "Excellent",
     isHot: true,
     isVerified: true,
-    category: "sports"
+    category: "sports",
+    saleType: "buy"
   },
   {
     id: "3",
@@ -73,7 +81,8 @@ const products = [
     condition: "Near Mint",
     isHot: false,
     isVerified: true,
-    category: "yugioh"
+    category: "yugioh",
+    saleType: "buy"
   },
   {
     id: "4",
@@ -86,7 +95,8 @@ const products = [
     condition: "Mint",
     isHot: true,
     isVerified: false,
-    category: "onepiece"
+    category: "onepiece",
+    saleType: "buy"
   },
   {
     id: "5",
@@ -99,7 +109,8 @@ const products = [
     condition: "Excellent",
     isHot: true,
     isVerified: true,
-    category: "pokemon"
+    category: "pokemon",
+    saleType: "buy"
   },
   {
     id: "6",
@@ -112,7 +123,67 @@ const products = [
     condition: "Mint",
     isHot: false,
     isVerified: true,
-    category: "mtg"
+    category: "mtg",
+    saleType: "buy"
+  },
+]
+
+const auctionProducts = [
+  {
+    id: "auction-1",
+    name: "Walking Wake ex Hyper Rare",
+    currentBid: 225,
+    image: "/cards/pokemon-1.jpg",
+    seller: "Aldra",
+    bidCount: 7,
+    condition: "Mint",
+    isHot: true,
+    isVerified: false,
+    category: "pokemon",
+    saleType: "auction",
+    endTime: new Date(Date.now() + 2 * 60 * 60 * 1000),
+  },
+  {
+    id: "auction-2",
+    name: "Dark Magician Ultimate Rare",
+    currentBid: 450,
+    image: "/cards/yugioh-1.jpg",
+    seller: "YugiMaster",
+    bidCount: 12,
+    condition: "Near Mint",
+    isHot: true,
+    isVerified: true,
+    category: "yugioh",
+    saleType: "auction",
+    endTime: new Date(Date.now() + 45 * 60 * 1000),
+  },
+  {
+    id: "auction-3",
+    name: "Shanks Manga Art Secret",
+    currentBid: 320,
+    image: "/cards/onepiece-1.jpg",
+    seller: "PirateKing",
+    bidCount: 9,
+    condition: "Mint",
+    isHot: false,
+    isVerified: true,
+    category: "onepiece",
+    saleType: "auction",
+    endTime: new Date(Date.now() + 5 * 60 * 60 * 1000),
+  },
+  {
+    id: "auction-4",
+    name: "Mox Pearl Alpha Edition",
+    currentBid: 8500,
+    image: "/cards/mtg-1.jpg",
+    seller: "MTGLegend",
+    bidCount: 15,
+    condition: "Excellent",
+    isHot: true,
+    isVerified: true,
+    category: "mtg",
+    saleType: "auction",
+    endTime: new Date(Date.now() + 30 * 60 * 1000),
   },
 ]
 
@@ -122,6 +193,33 @@ function formatPrice(price: number) {
     currency: "USD",
     minimumFractionDigits: 0,
   }).format(price)
+}
+
+function formatTimeLeft(endTime: Date) {
+  const now = new Date().getTime()
+  const end = endTime.getTime()
+  const diff = Math.max(0, end - now)
+  
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+  
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`
+  }
+  return `${minutes}m`
+}
+
+function AuctionCountdown({ endTime }: { endTime: Date }) {
+  const [timeLeft, setTimeLeft] = useState(formatTimeLeft(endTime))
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(formatTimeLeft(endTime))
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [endTime])
+
+  return <span>{timeLeft}</span>
 }
 
 function ProductCard({ product }: { product: typeof products[0] }) {
@@ -196,14 +294,87 @@ function ProductCard({ product }: { product: typeof products[0] }) {
   )
 }
 
+function AuctionCard({ product }: { product: typeof auctionProducts[0] }) {
+  const [liked, setLiked] = useState(false)
+
+  return (
+    <Link href={`/auction/${product.id}`} className="block">
+      <div className="bg-card rounded-2xl overflow-hidden border border-border">
+        {/* Image */}
+        <div className="relative aspect-square bg-gradient-to-b from-primary/10 to-transparent">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover"
+          />
+          {/* Countdown Badge */}
+          <div className="absolute top-2 left-2 bg-red-500/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+            <Clock className="size-2.5" />
+            <AuctionCountdown endTime={product.endTime} />
+          </div>
+          {/* Wishlist */}
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              setLiked(!liked)
+            }}
+            className="absolute top-2 right-2 size-8 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-border"
+          >
+            <Heart className={`size-4 ${liked ? "fill-red-500 text-red-500" : ""}`} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-3">
+          <h3 className="font-medium text-sm text-foreground line-clamp-2 mb-1">
+            {product.name}
+          </h3>
+          
+          {/* Condition */}
+          <span className="text-xs text-green-400">{product.condition}</span>
+
+          {/* Current Bid */}
+          <div className="mt-2 flex items-center justify-between">
+            <div>
+              <span className="text-[10px] text-muted-foreground block">Current Bid</span>
+              <span className="font-bold text-primary">{formatPrice(product.currentBid)}</span>
+            </div>
+            <div className="text-right">
+              <span className="text-[10px] text-muted-foreground block">Bids</span>
+              <span className="font-semibold text-sm">{product.bidCount}</span>
+            </div>
+          </div>
+
+          {/* Seller */}
+          <div className="flex items-center gap-1 mt-2 pt-2 border-t border-border">
+            <span className="text-xs text-muted-foreground">{product.seller}</span>
+            {product.isVerified && (
+              <div className="size-3.5 bg-primary rounded-full flex items-center justify-center">
+                <Check className="size-2 text-white" />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 export default function ShopPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedSaleType, setSelectedSaleType] = useState("all")
   const [selectedConditions, setSelectedConditions] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("popular")
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const filteredProducts = products.filter(product => 
+    (selectedCategory === "all" || product.category === selectedCategory) &&
+    (selectedConditions.length === 0 || selectedConditions.some(c => product.condition.toLowerCase().includes(c)))
+  )
+
+  const filteredAuctions = auctionProducts.filter(product =>
     (selectedCategory === "all" || product.category === selectedCategory) &&
     (selectedConditions.length === 0 || selectedConditions.some(c => product.condition.toLowerCase().includes(c)))
   )
@@ -217,7 +388,7 @@ export default function ShopPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
         <div className="px-4 pt-12 pb-3">
@@ -318,7 +489,7 @@ export default function ShopPage() {
         </div>
 
         {/* Brand Categories */}
-        <div className="px-4 pb-3">
+        <div className="px-4 pb-2">
           <div className="flex gap-2 overflow-x-auto scrollbar-hide py-1">
             {categories.map((category) => (
               <button
@@ -352,10 +523,29 @@ export default function ShopPage() {
             ))}
           </div>
         </div>
+
+        {/* Sale Type Filter */}
+        <div className="px-4 pb-3">
+          <div className="flex gap-2">
+            {saleTypes.map((type) => (
+              <button
+                key={type.id}
+                onClick={() => setSelectedSaleType(type.id)}
+                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all border ${
+                  selectedSaleType === type.id
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-foreground border-border"
+                }`}
+              >
+                {type.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       {/* Product Grid */}
-      <main className="px-4 pt-4">
+      <main className="px-4 pt-2">
         {/* Active Filters */}
         {selectedConditions.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
@@ -376,14 +566,26 @@ export default function ShopPage() {
 
         {/* Results Count */}
         <p className="text-sm text-muted-foreground mb-4">
-          {filteredProducts.length} products found
+          {selectedSaleType === "auction" 
+            ? `${filteredAuctions.length} auctions found`
+            : selectedSaleType === "buy"
+            ? `${filteredProducts.length} products found`
+            : `${filteredProducts.length + filteredAuctions.length} items found`
+          }
         </p>
 
         {/* Grid */}
         <div className="grid grid-cols-2 gap-4">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {(selectedSaleType === "all" || selectedSaleType === "auction") && 
+            filteredAuctions.map((product) => (
+              <AuctionCard key={product.id} product={product} />
+            ))
+          }
+          {(selectedSaleType === "all" || selectedSaleType === "buy") &&
+            filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          }
         </div>
       </main>
     </div>
