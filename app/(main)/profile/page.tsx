@@ -54,9 +54,9 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header with gradient background */}
-      <header className="bg-gradient-to-br from-primary via-primary to-accent px-4 pt-10 pb-4 relative">
-        {/* Settings button */}
-        <div className="flex items-center justify-end mb-3">
+      <header className="bg-gradient-to-br from-primary via-primary to-accent px-4 pt-12 pb-4 relative">
+        {/* Settings button — absolute top right */}
+        <div className="absolute top-3 right-3">
           <Link href="/profile/settings">
             <Button variant="ghost" size="icon" className="text-white/80 hover:bg-white/10 size-9">
               <Settings className="size-5" />
@@ -142,21 +142,21 @@ export default function ProfilePage() {
             <h3 className="font-semibold text-sm">My Orders</h3>
             <ChevronRight className="size-4 text-muted-foreground" />
           </Link>
-          <div className="grid grid-cols-6 gap-1">
+          <div className="grid grid-cols-4 gap-y-3 gap-x-2">
             {orderStatuses.map((status) => {
               const Icon = status.icon
               return (
                 <Link key={status.id} href={`/profile/orders?status=${status.id}`}>
-                  <div className="flex flex-col items-center gap-1 relative">
-                    <div className="size-9 rounded-xl bg-secondary flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-1.5 relative">
+                    <div className="size-10 rounded-xl bg-secondary flex items-center justify-center">
                       <Icon className="size-4 text-muted-foreground" />
                     </div>
                     {status.count > 0 && (
-                      <span className="absolute -top-1 -right-0.5 size-4 bg-red-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
+                      <span className="absolute -top-1 right-3 size-4 bg-red-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
                         {status.count}
                       </span>
                     )}
-                    <span className="text-[9px] text-muted-foreground text-center">{status.label}</span>
+                    <span className="text-[10px] text-muted-foreground text-center leading-tight">{status.label}</span>
                   </div>
                 </Link>
               )
