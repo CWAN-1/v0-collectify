@@ -265,12 +265,16 @@ export default function HomePage() {
         <div className="px-4 pt-12 pb-3">
           {/* Logo + Search + Messages */}
           <div className="flex items-center gap-3">
-            {/* Logo */}
-            <div className="size-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0">
-              <svg className="size-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-            </div>
+          {/* Logo */}
+            <Link href="/" className="shrink-0">
+              <Image
+                src="/logo.png"
+                alt="Collectify"
+                width={100}
+                height={32}
+                className="h-8 w-auto"
+              />
+            </Link>
             
             {/* Search */}
             <div className="relative flex-1">
