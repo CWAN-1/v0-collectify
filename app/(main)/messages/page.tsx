@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Bell, Package, Heart, UserPlus, MessageCircle, Check, CheckCheck } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { Package, Heart, UserPlus, MessageCircle, Check } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
@@ -97,7 +96,6 @@ const notifications = [
 
 export default function MessagesPage() {
   const [activeTab, setActiveTab] = useState("chats")
-  const [searchQuery, setSearchQuery] = useState("")
 
   return (
     <div className="min-h-screen bg-background">
@@ -105,18 +103,6 @@ export default function MessagesPage() {
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
         <div className="px-4 pt-12 pb-4">
           <h1 className="text-2xl font-bold text-foreground mb-4">Messages</h1>
-          
-          {/* Search */}
-          <div className="relative mb-4">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search messages..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-12 pl-12 rounded-xl bg-card border-border text-base"
-            />
-          </div>
 
           {/* Tabs */}
           <div className="flex gap-2">

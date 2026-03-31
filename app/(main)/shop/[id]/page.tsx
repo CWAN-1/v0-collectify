@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Heart, Share2, Star, Check, Minus, Plus, MessageCircle, ShoppingBag, ChevronRight, Flame, Shield } from "lucide-react"
+import { ArrowLeft, Heart, Share2, Star, Check, Minus, Plus, MessageCircle, ShoppingBag, ChevronRight, Flame } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image"
@@ -15,9 +15,9 @@ const product = {
   price: 250,
   originalPrice: 300,
   images: [
-    "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=600&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1608889825205-eebdb9fc5806?w=600&h=600&fit=crop",
+    "/cards/pokemon-1.jpg",
+    "/cards/pokemon-2.jpg",
+    "/cards/yugioh-1.jpg",
   ],
   seller: {
     name: "CardMaster",
@@ -37,11 +37,6 @@ const product = {
   reviews: 156,
   sold: 234,
   stock: 1,
-  hp: "330",
-  type: "Pokemon-GX",
-  abilities: [
-    { name: "G-Max Volt Crash", damage: "300", description: "This attack does 30 damage to each of your opponent's Benched Pokemon." }
-  ]
 }
 
 function formatPrice(price: number) {
@@ -119,15 +114,12 @@ export default function ProductDetailPage() {
         <div className="bg-card rounded-t-3xl pt-6 border-t border-x border-border">
           {/* Title & Price */}
           <div className="px-4 mb-4">
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-4">
               <div className="flex-1">
                 <h1 className="text-xl font-bold text-foreground mb-1 text-balance">
                   {product.name}
                 </h1>
                 <p className="text-sm text-muted-foreground">{product.subtitle}</p>
-              </div>
-              <div className="bg-primary/20 px-3 py-1 rounded-full">
-                <span className="text-sm font-semibold text-primary">HP {product.hp}</span>
               </div>
             </div>
             <div className="flex items-center gap-3 mt-3">
@@ -158,51 +150,23 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Card Ability */}
-          <div className="mx-4 bg-secondary rounded-2xl p-4 mb-4 border border-border">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="size-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                <span className="text-xs font-bold text-black">⚡</span>
-              </div>
-              <span className="font-semibold">{product.abilities[0].name}</span>
-              <span className="ml-auto font-bold text-primary">{product.abilities[0].damage}</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {product.abilities[0].description}
-            </p>
-          </div>
-
           {/* Specifications */}
           <div className="mx-4 bg-secondary rounded-2xl p-4 mb-4 border border-border">
-            <h3 className="font-semibold mb-3 flex items-center gap-2">
-              <Shield className="size-4 text-primary" />
-              Specifications
-            </h3>
-            <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Condition</span>
-                <span className="font-medium text-green-400">{product.condition}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Set</span>
-                <span className="font-medium">{product.set}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Number</span>
-                <span className="font-medium">{product.number}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Rarity</span>
-                <span className="font-medium text-purple-400">{product.rarity}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Language</span>
-                <span className="font-medium">{product.language}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Stock</span>
-                <span className="font-medium">{product.stock} left</span>
-              </div>
+            <h3 className="font-semibold mb-3 text-sm">Specifications</h3>
+            <div className="space-y-2.5">
+              {[
+                { label: "Condition", value: product.condition, className: "text-green-400" },
+                { label: "Set", value: product.set, className: "" },
+                { label: "Card Number", value: product.number, className: "" },
+                { label: "Rarity", value: product.rarity, className: "text-purple-400" },
+                { label: "Language", value: product.language, className: "" },
+                { label: "Stock", value: `${product.stock} left`, className: "text-orange-400" },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground shrink-0">{row.label}</span>
+                  <span className={`font-medium text-right ml-4 ${row.className}`}>{row.value}</span>
+                </div>
+              ))}
             </div>
           </div>
 

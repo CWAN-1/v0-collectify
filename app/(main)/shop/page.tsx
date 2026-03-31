@@ -9,13 +9,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import Link from "next/link"
 import Image from "next/image"
 
+
 const categories = [
-  { id: "all", label: "All", bgColor: "bg-gradient-to-br from-primary to-accent", textColor: "text-white" },
-  { id: "pokemon", label: "Pokemon", bgColor: "bg-yellow-500", textColor: "text-black" },
-  { id: "yugioh", label: "Yu-Gi-Oh!", bgColor: "bg-orange-600", textColor: "text-white" },
-  { id: "onepiece", label: "One Piece", bgColor: "bg-red-600", textColor: "text-white" },
-  { id: "mtg", label: "MTG", bgColor: "bg-amber-700", textColor: "text-white" },
-  { id: "sports", label: "Sports", bgColor: "bg-green-600", textColor: "text-white" },
+  { id: "all", label: "All", avatar: null, bgColor: "bg-gradient-to-br from-primary to-accent" },
+  { id: "pokemon", label: "Pokemon", avatar: "/brands/pikachu.jpg", bgColor: "bg-yellow-500" },
+  { id: "yugioh", label: "Yu-Gi-Oh!", avatar: "/brands/yugioh.jpg", bgColor: "bg-orange-600" },
+  { id: "onepiece", label: "One Piece", avatar: "/brands/luffy.jpg", bgColor: "bg-red-600" },
+  { id: "mtg", label: "MTG", avatar: "/brands/mtg.jpg", bgColor: "bg-amber-700" },
+  { id: "sports", label: "Sports", avatar: "/brands/sports.jpg", bgColor: "bg-green-600" },
 ]
 
 const conditions = [
@@ -38,7 +39,7 @@ const products = [
     name: "Pikachu VMAX Rainbow Rare",
     price: 250,
     originalPrice: 300,
-    image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=400&fit=crop",
+    image: "/cards/pokemon-1.jpg",
     seller: "CardMaster",
     rating: 4.9,
     sold: 156,
@@ -51,7 +52,7 @@ const products = [
     id: "2",
     name: "LeBron James Rookie Card",
     price: 1500,
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=400&fit=crop",
+    image: "/cards/sports-1.jpg",
     seller: "SportsHub",
     rating: 5.0,
     sold: 23,
@@ -65,7 +66,7 @@ const products = [
     name: "Blue-Eyes White Dragon 1st Ed",
     price: 850,
     originalPrice: 1000,
-    image: "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=400&h=400&fit=crop",
+    image: "/cards/yugioh-1.jpg",
     seller: "YugiCollector",
     rating: 4.8,
     sold: 45,
@@ -78,7 +79,7 @@ const products = [
     id: "4",
     name: "Luffy Gear 5 Secret Rare",
     price: 180,
-    image: "https://images.unsplash.com/photo-1608889825205-eebdb9fc5806?w=400&h=400&fit=crop",
+    image: "/cards/onepiece-1.jpg",
     seller: "OnePieceID",
     rating: 4.7,
     sold: 89,
@@ -91,7 +92,7 @@ const products = [
     id: "5",
     name: "Charizard Base Set Holo",
     price: 2500,
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
+    image: "/cards/pokemon-2.jpg",
     seller: "VintageCards",
     rating: 4.9,
     sold: 12,
@@ -102,16 +103,16 @@ const products = [
   },
   {
     id: "6",
-    name: "Michael Jordan Fleer Rookie",
+    name: "Black Lotus",
     price: 4500,
-    image: "https://images.unsplash.com/photo-1642056446815-3b9b6e1e3d5e?w=400&h=400&fit=crop",
+    image: "/cards/mtg-1.jpg",
     seller: "LegendaryCards",
     rating: 5.0,
     sold: 5,
     condition: "Mint",
     isHot: false,
     isVerified: true,
-    category: "sports"
+    category: "mtg"
   },
 ]
 
@@ -323,18 +324,30 @@ export default function ShopPage() {
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all border ${
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-xl transition-all border ${
                   selectedCategory === category.id
-                    ? `${category.bgColor} ${category.textColor} border-transparent shadow-md`
-                    : "bg-card text-foreground border-border"
+                    ? "border-primary bg-primary/10"
+                    : "bg-card border-border"
                 }`}
               >
-                <div className={`size-5 rounded-md ${selectedCategory === category.id ? "bg-white/20" : category.bgColor} flex items-center justify-center`}>
-                  <span className={`text-[8px] font-bold ${selectedCategory === category.id ? "text-current" : category.textColor}`}>
-                    {category.label.slice(0, 2).toUpperCase()}
-                  </span>
+                <div className="size-6 rounded-lg overflow-hidden shrink-0">
+                  {category.avatar ? (
+                    <Image
+                      src={category.avatar}
+                      alt={category.label}
+                      width={24}
+                      height={24}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className={`w-full h-full ${category.bgColor} flex items-center justify-center`}>
+                      <span className="text-[8px] font-bold text-white">ALL</span>
+                    </div>
+                  )}
                 </div>
-                <span className="text-xs font-medium whitespace-nowrap">{category.label}</span>
+                <span className={`text-xs font-medium whitespace-nowrap ${
+                  selectedCategory === category.id ? "text-primary" : "text-foreground"
+                }`}>{category.label}</span>
               </button>
             ))}
           </div>
