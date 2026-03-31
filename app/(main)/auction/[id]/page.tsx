@@ -32,7 +32,7 @@ const auctionProduct = {
   shippingMethod: "Express",
   rarity: "Hyper Rare",
   cardType: "Holo",
-  description: "Nama Set: Scarlet & Violet—Temporal Forces\nNomor Kartu: 215/162\nKelangkaan: Hyper Rare (Sangat Langka)\nTipe: Basic Pokemon, tipe Air...",
+  description: "Set: Scarlet & Violet—Temporal Forces\nCard Number: 215/162\nRarity: Hyper Rare\nType: Basic Pokemon, Water type\nFreshly pulled, sleeved and put in toploader immediately.",
   endTime: new Date(Date.now() + 11 * 1000), // 11 seconds from now for demo
   bidCount: 7,
 }
@@ -168,7 +168,7 @@ export default function AuctionDetailPage() {
         <CountdownTimer endTime={auctionProduct.endTime} />
       </div>
 
-      {/* Seller Info */}
+      {/* Seller Info - Moved below product info */}
       <div className="bg-card px-4 py-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

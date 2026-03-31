@@ -1,6 +1,6 @@
 "use client"
 
-import { Settings, ChevronRight, Clock, Heart, Users, Gavel, CreditCard, MapPin, Globe, FileText, HelpCircle, Info, LogOut, Wallet, Coins, Package, CheckCircle, Truck, XCircle } from "lucide-react"
+import { Settings, ChevronRight, Clock, Heart, Users, Gavel, Wallet, Coins, Package, CreditCard, Truck, CheckCircle, RotateCcw, XCircle, Store, MapPin, Globe, FileText, HelpCircle, Info, LogOut, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
@@ -16,19 +16,19 @@ const actionButtons = [
 
 // Order statuses
 const orderStatuses = [
-  { id: "pending", label: "Pending", icon: Clock },
-  { id: "paid", label: "Paid", icon: CreditCard },
-  { id: "shipping", label: "To Ship", icon: Truck },
-  { id: "delivered", label: "Received", icon: CheckCircle },
-  { id: "completed", label: "Done", icon: CheckCircle },
-  { id: "refunded", label: "Refunded", icon: XCircle },
-  { id: "cancelled", label: "Cancelled", icon: XCircle },
+  { id: "pending", label: "Pending", icon: Clock, count: 2 },
+  { id: "paid", label: "Paid", icon: CreditCard, count: 1 },
+  { id: "shipping", label: "To Ship", icon: Truck, count: 0 },
+  { id: "received", label: "Received", icon: CheckCircle, count: 3 },
+  { id: "refunded", label: "Refunded", icon: RotateCcw, count: 0 },
+  { id: "cancelled", label: "Cancelled", icon: XCircle, count: 0 },
 ]
 
 // Sales menu
 const salesMenu = [
-  { href: "/profile/wallet", icon: Wallet, label: "CardHub Balance" },
-  { href: "/profile/coins", icon: Coins, label: "CardHub Mall & Coins" },
+  { href: "/profile/shop", icon: Store, label: "My Shop" },
+  { href: "/profile/wallet", icon: Wallet, label: "Balance & Withdraw" },
+  { href: "/profile/coins", icon: Coins, label: "CardHub Coins" },
 ]
 
 // Account menu
@@ -45,7 +45,6 @@ const user = {
   name: "Alex Chen",
   username: "@alexchen",
   avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop",
-  coins: 520,
   rating: 4.9,
   totalSold: 156,
   followers: 1250,
@@ -55,52 +54,50 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header with gradient background */}
-      <header className="bg-gradient-to-br from-amber-400 via-amber-500 to-orange-400 text-black px-4 pt-12 pb-6 relative overflow-hidden">
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-4 left-4 text-6xl font-bold">$</div>
-          <div className="absolute top-8 right-8 text-4xl font-bold">$</div>
-          <div className="absolute bottom-4 left-1/4 text-5xl font-bold">$</div>
-        </div>
-        
+      <header className="bg-gradient-to-br from-primary via-primary to-accent px-4 pt-10 pb-4 relative">
         {/* Settings button */}
-        <div className="flex items-center justify-end mb-4 relative z-10">
+        <div className="flex items-center justify-end mb-3">
           <Link href="/profile/settings">
-            <Button variant="ghost" size="icon" className="text-black/70 hover:bg-black/10 size-9">
+            <Button variant="ghost" size="icon" className="text-white/80 hover:bg-white/10 size-9">
               <Settings className="size-5" />
             </Button>
           </Link>
         </div>
 
         {/* Profile Info */}
-        <div className="flex items-center gap-3 relative z-10">
-          <Avatar className="size-16 border-2 border-white/50 shrink-0">
+        <div className="flex items-center gap-3">
+          <Avatar className="size-14 border-2 border-white/30 shrink-0">
             <AvatarImage src={user.avatar} />
-            <AvatarFallback className="text-amber-600 bg-white text-xl">
+            <AvatarFallback className="text-primary bg-white text-lg">
               {user.name[0]}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg font-bold truncate">{user.name}</h2>
-            <div className="flex items-center gap-1.5">
-              <div className="size-4 rounded-full bg-blue-500 flex items-center justify-center">
-                <Coins className="size-2.5 text-white" />
+            <h2 className="text-base font-bold text-white truncate">{user.name}</h2>
+            {/* Stats Row */}
+            <div className="flex items-center gap-3 mt-1">
+              <div className="flex items-center gap-1">
+                <Star className="size-3.5 text-yellow-400 fill-yellow-400" />
+                <span className="text-xs text-white/90 font-medium">{user.rating}</span>
               </div>
-              <span className="text-sm font-medium">{user.coins} coins</span>
+              <div className="w-px h-3 bg-white/30" />
+              <span className="text-xs text-white/80">{user.totalSold} sold</span>
+              <div className="w-px h-3 bg-white/30" />
+              <span className="text-xs text-white/80">{user.followers} followers</span>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Action Buttons */}
-      <div className="px-4 -mt-3 relative z-10">
-        <div className="bg-card rounded-2xl border border-border p-4 mb-4">
-          <div className="grid grid-cols-4 gap-3">
+      <main className="px-4 pt-4">
+        {/* Action Buttons */}
+        <div className="bg-card rounded-2xl border border-border p-3 mb-4">
+          <div className="grid grid-cols-4 gap-2">
             {actionButtons.map((btn) => {
               const Icon = btn.icon
               return (
                 <Link key={btn.id} href={btn.href}>
-                  <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-col items-center gap-1.5">
                     <div className="size-10 rounded-xl bg-secondary flex items-center justify-center">
                       <Icon className="size-5 text-foreground" />
                     </div>
@@ -113,82 +110,76 @@ export default function ProfilePage() {
         </div>
 
         {/* Seller Invitation Banner */}
-        <div className="bg-gradient-to-r from-amber-400 to-amber-500 rounded-2xl p-4 mb-4 relative overflow-hidden">
-          <div className="flex items-center gap-4">
+        <div className="bg-gradient-to-r from-primary/90 to-accent/90 rounded-2xl p-3 mb-4 relative overflow-hidden">
+          <div className="flex items-center gap-3">
             <div className="flex-1">
-              <h3 className="text-black font-bold text-base mb-1">Start Selling Now!</h3>
-              <p className="text-black/70 text-xs mb-3 leading-relaxed">
+              <h3 className="text-white font-bold text-sm mb-0.5">Start Selling Now!</h3>
+              <p className="text-white/80 text-[10px] leading-relaxed">
                 Lowest commission — Join the most active card trading platform!
               </p>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <div className="w-16 h-12 relative shrink-0">
+                <Image
+                  src="/images/seller-banner.jpg"
+                  alt="Seller"
+                  fill
+                  className="object-contain"
+                />
+              </div>
               <Link href="/profile/shop">
-                <Button size="sm" className="h-8 px-4 bg-black text-white hover:bg-black/80 rounded-lg text-xs font-semibold">
+                <Button size="sm" className="h-6 px-3 bg-white text-primary hover:bg-white/90 rounded-md text-[10px] font-semibold">
                   Join
                 </Button>
               </Link>
-            </div>
-            <div className="w-24 h-20 relative shrink-0">
-              <Image
-                src="/images/seller-banner.jpg"
-                alt="Seller"
-                fill
-                className="object-contain"
-              />
             </div>
           </div>
         </div>
 
         {/* My Orders */}
-        <div className="bg-card rounded-2xl border border-border p-4 mb-4">
-          <Link href="/profile/orders" className="flex items-center justify-between mb-4">
+        <div className="bg-card rounded-2xl border border-border p-3 mb-4">
+          <Link href="/profile/orders" className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-sm">My Orders</h3>
             <ChevronRight className="size-4 text-muted-foreground" />
           </Link>
-          <div className="grid grid-cols-4 gap-3 mb-3">
-            {orderStatuses.slice(0, 4).map((status) => {
+          <div className="grid grid-cols-6 gap-1">
+            {orderStatuses.map((status) => {
               const Icon = status.icon
               return (
                 <Link key={status.id} href={`/profile/orders?status=${status.id}`}>
-                  <div className="flex flex-col items-center gap-1.5">
-                    <div className="size-10 rounded-xl bg-secondary flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-1 relative">
+                    <div className="size-9 rounded-xl bg-secondary flex items-center justify-center">
                       <Icon className="size-4 text-muted-foreground" />
                     </div>
-                    <span className="text-[10px] text-muted-foreground text-center">{status.label}</span>
+                    {status.count > 0 && (
+                      <span className="absolute -top-1 -right-0.5 size-4 bg-red-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
+                        {status.count}
+                      </span>
+                    )}
+                    <span className="text-[9px] text-muted-foreground text-center">{status.label}</span>
                   </div>
                 </Link>
               )
             })}
-          </div>
-          <div className="grid grid-cols-4 gap-3">
-            {orderStatuses.slice(4).map((status) => {
-              const Icon = status.icon
-              return (
-                <Link key={status.id} href={`/profile/orders?status=${status.id}`}>
-                  <div className="flex flex-col items-center gap-1.5">
-                    <div className="size-10 rounded-xl bg-secondary flex items-center justify-center">
-                      <Icon className="size-4 text-muted-foreground" />
-                    </div>
-                    <span className="text-[10px] text-muted-foreground text-center">{status.label}</span>
-                  </div>
-                </Link>
-              )
-            })}
-            <div /> {/* Empty spacer */}
           </div>
         </div>
 
         {/* Sales Section */}
         <div className="bg-card rounded-2xl border border-border overflow-hidden mb-4">
+          <div className="px-3 py-2 border-b border-border">
+            <h3 className="font-semibold text-sm">Sales</h3>
+          </div>
           {salesMenu.map((item, index) => {
             const Icon = item.icon
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 p-3.5 hover:bg-secondary transition-colors ${
+                className={`flex items-center gap-3 px-3 py-3 hover:bg-secondary transition-colors ${
                   index > 0 ? "border-t border-border" : ""
                 }`}
               >
-                <div className="size-9 rounded-xl bg-secondary flex items-center justify-center">
+                <div className="size-8 rounded-lg bg-secondary flex items-center justify-center">
                   <Icon className="size-4 text-primary" />
                 </div>
                 <span className="flex-1 font-medium text-sm">{item.label}</span>
@@ -200,17 +191,20 @@ export default function ProfilePage() {
 
         {/* Account Section */}
         <div className="bg-card rounded-2xl border border-border overflow-hidden mb-4">
+          <div className="px-3 py-2 border-b border-border">
+            <h3 className="font-semibold text-sm">Account</h3>
+          </div>
           {accountMenu.map((item, index) => {
             const Icon = item.icon
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 p-3.5 hover:bg-secondary transition-colors ${
+                className={`flex items-center gap-3 px-3 py-3 hover:bg-secondary transition-colors ${
                   index > 0 ? "border-t border-border" : ""
                 }`}
               >
-                <div className="size-9 rounded-xl bg-secondary flex items-center justify-center">
+                <div className="size-8 rounded-lg bg-secondary flex items-center justify-center">
                   <Icon className="size-4 text-muted-foreground" />
                 </div>
                 <span className="flex-1 font-medium text-sm">{item.label}</span>
@@ -223,12 +217,12 @@ export default function ProfilePage() {
         {/* Logout */}
         <Button
           variant="outline"
-          className="w-full h-12 rounded-2xl border-destructive text-destructive hover:bg-destructive/10 gap-2"
+          className="w-full h-11 rounded-2xl border-destructive text-destructive hover:bg-destructive/10 gap-2 mb-4"
         >
           <LogOut className="size-4" />
           Log Out
         </Button>
-      </div>
+      </main>
     </div>
   )
 }
