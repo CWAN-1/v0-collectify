@@ -8,71 +8,71 @@ import Image from "next/image"
 import Link from "next/link"
 
 const tabs = [
-  { id: "all", label: "Semua" },
-  { id: "pending", label: "Belum Bayar" },
-  { id: "processing", label: "Diproses" },
-  { id: "shipping", label: "Dikirim" },
-  { id: "completed", label: "Selesai" },
+  { id: "all", label: "All" },
+  { id: "pending", label: "Unpaid" },
+  { id: "processing", label: "Processing" },
+  { id: "shipping", label: "Shipping" },
+  { id: "completed", label: "Completed" },
 ]
 
 const orders = [
   {
     id: "ORD123456",
     status: "shipping",
-    statusLabel: "Sedang Dikirim",
+    statusLabel: "Shipping",
     items: [
       {
         name: "Pikachu VMAX Rainbow Rare",
-        image: "/products/product-1.jpg",
-        price: 2500000,
+        image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=200&h=200&fit=crop",
+        price: 250,
         quantity: 1
       }
     ],
-    seller: "CardMaster Jakarta",
-    total: 2525000,
+    seller: "CardMaster",
+    total: 255,
     date: "28 Mar 2024",
-    trackingNumber: "JKT123456789"
+    trackingNumber: "TRK123456789"
   },
   {
     id: "ORD123455",
     status: "completed",
-    statusLabel: "Selesai",
+    statusLabel: "Completed",
     items: [
       {
         name: "Charizard Base Set Holo",
-        image: "/products/product-5.jpg",
-        price: 25000000,
+        image: "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=200&h=200&fit=crop",
+        price: 2500,
         quantity: 1
       }
     ],
     seller: "VintageCards",
-    total: 25030000,
+    total: 2505,
     date: "25 Mar 2024",
     rated: false
   },
   {
     id: "ORD123454",
     status: "pending",
-    statusLabel: "Menunggu Pembayaran",
+    statusLabel: "Awaiting Payment",
     items: [
       {
         name: "LeBron James Rookie Card",
-        image: "/products/product-2.jpg",
-        price: 15000000,
+        image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=200&h=200&fit=crop",
+        price: 1500,
         quantity: 1
       }
     ],
     seller: "SportsHub",
-    total: 15030000,
+    total: 1505,
     date: "27 Mar 2024",
     expiry: "28 Mar 2024, 23:59"
   },
 ]
 
 function formatPrice(price: number) {
-  return new Intl.NumberFormat("id-ID", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "IDR",
+    currency: "USD",
     minimumFractionDigits: 0,
   }).format(price)
 }
@@ -108,7 +108,7 @@ export default function OrdersPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <h1 className="text-xl font-bold">Pesanan Saya</h1>
+          <h1 className="text-xl font-bold">My Orders</h1>
         </div>
 
         {/* Tabs */}
@@ -172,7 +172,7 @@ export default function OrdersPage() {
 
                   {/* Total */}
                   <div className="flex items-center justify-between py-3 border-t border-border">
-                    <span className="text-sm text-muted-foreground">Total Pesanan</span>
+                    <span className="text-sm text-muted-foreground">Order Total</span>
                     <span className="font-bold">{formatPrice(order.total)}</span>
                   </div>
 
@@ -181,10 +181,10 @@ export default function OrdersPage() {
                     {order.status === "pending" && (
                       <>
                         <Button variant="outline" className="flex-1 rounded-xl">
-                          Batal
+                          Cancel
                         </Button>
                         <Button className="flex-1 rounded-xl">
-                          Bayar Sekarang
+                          Pay Now
                         </Button>
                       </>
                     )}
@@ -195,24 +195,24 @@ export default function OrdersPage() {
                           Chat
                         </Button>
                         <Button className="flex-1 rounded-xl">
-                          Lacak Paket
+                          Track Package
                         </Button>
                       </>
                     )}
                     {order.status === "completed" && !order.rated && (
                       <>
                         <Button variant="outline" className="flex-1 rounded-xl">
-                          Beli Lagi
+                          Buy Again
                         </Button>
                         <Button className="flex-1 rounded-xl gap-1">
                           <Star className="size-4" />
-                          Beri Nilai
+                          Rate
                         </Button>
                       </>
                     )}
                     {order.status === "completed" && order.rated && (
                       <Button variant="outline" className="flex-1 rounded-xl">
-                        Beli Lagi
+                        Buy Again
                       </Button>
                     )}
                   </div>
@@ -225,12 +225,12 @@ export default function OrdersPage() {
             <div className="size-24 bg-muted rounded-full flex items-center justify-center mb-4">
               <Package className="size-12 text-muted-foreground" />
             </div>
-            <h3 className="font-semibold text-lg mb-2">Belum Ada Pesanan</h3>
+            <h3 className="font-semibold text-lg mb-2">No Orders Yet</h3>
             <p className="text-muted-foreground text-center mb-6">
-              Pesanan Anda akan muncul di sini.
+              Your orders will appear here.
             </p>
             <Link href="/shop">
-              <Button className="rounded-full">Mulai Belanja</Button>
+              <Button className="rounded-full">Start Shopping</Button>
             </Link>
           </div>
         )}

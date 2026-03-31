@@ -20,8 +20,8 @@ const categories = [
 const posts = [
   {
     id: "1",
-    user: { name: "Alex Chen", avatar: "/avatars/user-1.jpg", verified: true },
-    image: "/posts/post-1.jpg",
+    user: { name: "Alex Chen", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", verified: true },
+    image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=600&fit=crop",
     title: "Unboxing Pikachu VMAX Rainbow Rare",
     likes: 2431,
     comments: 89,
@@ -30,8 +30,8 @@ const posts = [
   },
   {
     id: "2",
-    user: { name: "Sarah Lee", avatar: "/avatars/user-2.jpg", verified: false },
-    image: "/posts/post-2.jpg",
+    user: { name: "Sarah Lee", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", verified: false },
+    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=400&fit=crop",
     title: "NBA Rookie Cards Collection 2024",
     likes: 1892,
     comments: 45,
@@ -40,8 +40,8 @@ const posts = [
   },
   {
     id: "3",
-    user: { name: "Mike Zhang", avatar: "/avatars/user-3.jpg", verified: true },
-    image: "/posts/post-3.jpg",
+    user: { name: "Mike Zhang", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", verified: true },
+    image: "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=400&h=400&fit=crop",
     title: "Review: Blue-Eyes White Dragon 1st Edition",
     likes: 3210,
     comments: 156,
@@ -50,8 +50,8 @@ const posts = [
   },
   {
     id: "4",
-    user: { name: "Emma Wilson", avatar: "/avatars/user-4.jpg", verified: false },
-    image: "/posts/post-4.jpg",
+    user: { name: "Emma Wilson", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", verified: false },
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop",
     title: "Tips for Storing Your Card Collection",
     likes: 987,
     comments: 34,
@@ -60,8 +60,8 @@ const posts = [
   },
   {
     id: "5",
-    user: { name: "James Park", avatar: "/avatars/user-5.jpg", verified: true },
-    image: "/posts/post-5.jpg",
+    user: { name: "James Park", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", verified: true },
+    image: "https://images.unsplash.com/photo-1608889825205-eebdb9fc5806?w=400&h=400&fit=crop",
     title: "Luffy Gear 5 Secret Rare Pull!",
     likes: 4521,
     comments: 234,
@@ -70,8 +70,8 @@ const posts = [
   },
   {
     id: "6",
-    user: { name: "Lisa Wang", avatar: "/avatars/user-6.jpg", verified: false },
-    image: "/posts/post-6.jpg",
+    user: { name: "Lisa Wang", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", verified: false },
+    image: "https://images.unsplash.com/photo-1642056446815-3b9b6e1e3d5e?w=400&h=600&fit=crop",
     title: "Pokemon Cards Haul from Japan",
     likes: 1567,
     comments: 67,
@@ -85,8 +85,8 @@ function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?
   const [saved, setSaved] = useState(false)
 
   return (
-    <Link href={`/post/${post.id}`} className="block mb-4 break-inside-avoid">
-      <div className="bg-card rounded-2xl overflow-hidden border border-border">
+    <Link href={`/post/${post.id}`} className="block mb-3">
+      <div className="bg-card rounded-xl overflow-hidden border border-border">
         {/* Image */}
         <div className={`relative w-full ${post.aspectRatio === "tall" ? "aspect-[3/4]" : "aspect-square"}`}>
           <Image
@@ -214,13 +214,13 @@ export default function HomePage() {
 
       {/* Masonry Feed */}
       <main className="px-4 pt-4">
-        <div className="flex gap-4">
-          <div className="flex-1">
+        <div className="flex gap-3 w-full">
+          <div className="flex-1 min-w-0">
             {leftColumn.map((post, index) => (
               <PostCard key={post.id} post={post} priority={index === 0} />
             ))}
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             {rightColumn.map((post, index) => (
               <PostCard key={post.id} post={post} priority={index === 0} />
             ))}

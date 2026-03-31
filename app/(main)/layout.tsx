@@ -6,8 +6,8 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
-      <div className="pb-20">
+    <div className="min-h-screen bg-background overflow-x-hidden w-full max-w-full">
+      <div className="pb-16">
         {children}
       </div>
       <BottomNav />

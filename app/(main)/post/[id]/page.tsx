@@ -11,45 +11,45 @@ import Image from "next/image"
 const post = {
   id: "1",
   user: {
-    name: "Budi Santoso",
-    username: "@budisantoso",
-    avatar: "/avatars/user-1.jpg",
+    name: "Alex Chen",
+    username: "@alexchen",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
     verified: true,
     followers: 12500
   },
   images: [
-    "/posts/post-1.jpg",
-    "/posts/post-1-2.jpg",
+    "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=600&fit=crop",
+    "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=600&h=600&fit=crop",
   ],
-  title: "Unboxing Pikachu VMAX Rainbow Rare - Hasil Pull Terbaik!",
-  content: "Setelah buka 5 booster box Vivid Voltage, akhirnya dapet juga kartu impian! Pikachu VMAX Rainbow Rare dalam kondisi perfect centering. Langsung masuk ke sleeve dan toploader.\n\nKalian pernah pull kartu chase kalian belum? Share di komen ya!",
+  title: "Unboxing Pikachu VMAX Rainbow Rare - Best Pull Ever!",
+  content: "After opening 5 booster boxes of Vivid Voltage, I finally got my dream card! Pikachu VMAX Rainbow Rare in perfect centering condition. Immediately sleeved and put in a toploader.\n\nHave you ever pulled your chase card? Share in the comments!",
   likes: 2431,
   comments: 89,
-  createdAt: "2 jam lalu",
+  createdAt: "2 hours ago",
   tags: ["Pokemon", "PullRates", "VividVoltage", "Pikachu"]
 }
 
 const comments = [
   {
     id: "1",
-    user: { name: "Dewi K", avatar: "/avatars/user-2.jpg" },
-    content: "Gila keren banget! Selamat ya bro!",
+    user: { name: "Sarah L", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" },
+    content: "Wow, that's amazing! Congrats!",
     likes: 45,
-    createdAt: "1 jam lalu"
+    createdAt: "1 hour ago"
   },
   {
     id: "2",
-    user: { name: "Ahmad R", avatar: "/avatars/user-3.jpg" },
-    content: "Centeringnya perfect banget, PSA 10 potential nih",
+    user: { name: "Mike Z", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" },
+    content: "The centering is perfect, PSA 10 potential for sure",
     likes: 32,
-    createdAt: "1 jam lalu"
+    createdAt: "1 hour ago"
   },
   {
     id: "3",
-    user: { name: "Maya P", avatar: "/avatars/user-6.jpg" },
-    content: "Berapa box buka total sampe dapet ini?",
+    user: { name: "Emma W", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" },
+    content: "How many boxes did you open to get this?",
     likes: 18,
-    createdAt: "45 menit lalu"
+    createdAt: "45 min ago"
   },
 ]
 
@@ -99,7 +99,7 @@ export default function PostDetailPage() {
             </div>
           </div>
           <Button variant="outline" size="sm" className="rounded-full">
-            Ikuti
+            Follow
           </Button>
         </div>
 
@@ -168,7 +168,7 @@ export default function PostDetailPage() {
 
         {/* Comments */}
         <div className="border-t border-border pt-4">
-          <h3 className="font-semibold mb-4">Komentar ({post.comments})</h3>
+          <h3 className="font-semibold mb-4">Comments ({post.comments})</h3>
           <div className="space-y-4">
             {comments.map((comment) => (
               <div key={comment.id} className="flex gap-3">
@@ -194,15 +194,15 @@ export default function PostDetailPage() {
       </main>
 
       {/* Comment Input */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 pb-8">
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 pb-[calc(env(safe-area-inset-bottom)+8px)]">
         <div className="flex gap-3 items-center">
           <Avatar className="size-10">
-            <AvatarImage src="/avatars/user-1.jpg" />
+            <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
           <div className="flex-1 relative">
             <Input
-              placeholder="Tulis komentar..."
+              placeholder="Write a comment..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="h-12 pr-12 rounded-full bg-muted border-0"

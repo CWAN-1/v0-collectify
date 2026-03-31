@@ -45,13 +45,13 @@ export default function CreatePostPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold">Posting Baru</span>
+          <span className="font-semibold">New Post</span>
           <Button
             onClick={handlePublish}
             disabled={!title || images.length === 0}
             className="rounded-full px-5"
           >
-            Posting
+            Post
           </Button>
         </div>
       </header>
@@ -59,12 +59,12 @@ export default function CreatePostPage() {
       <main className="px-4 py-6">
         {/* Image Upload */}
         <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">Foto (Maks. 9)</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">Photos (Max. 9)</h3>
           <div className="flex gap-3 overflow-x-auto pb-2">
             {/* Add Photo Button */}
             <label className="size-24 shrink-0 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-foreground/50 transition-colors">
               <Plus className="size-6 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Tambah</span>
+              <span className="text-xs text-muted-foreground">Add</span>
               <input type="file" accept="image/*" multiple className="hidden" />
             </label>
             
@@ -72,7 +72,7 @@ export default function CreatePostPage() {
             {[1, 2, 3].map((i) => (
               <div key={i} className="size-24 shrink-0 relative rounded-xl overflow-hidden bg-muted">
                 <Image
-                  src={`/posts/post-${i}.jpg`}
+                  src={`https://images.unsplash.com/photo-161377140478${i}-3a5686aa2be3?w=200&h=200&fit=crop`}
                   alt={`Photo ${i}`}
                   fill
                   className="object-cover"
@@ -88,7 +88,7 @@ export default function CreatePostPage() {
         {/* Title */}
         <div className="mb-6">
           <Input
-            placeholder="Judul posting..."
+            placeholder="Post title..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="h-14 rounded-2xl bg-muted border-0 text-base font-semibold"
@@ -100,7 +100,7 @@ export default function CreatePostPage() {
         {/* Content */}
         <div className="mb-6">
           <Textarea
-            placeholder="Ceritakan tentang kartu koleksi Anda..."
+            placeholder="Tell us about your card collection..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="min-h-32 rounded-2xl bg-muted border-0 text-base resize-none"
@@ -111,7 +111,7 @@ export default function CreatePostPage() {
 
         {/* Tags */}
         <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">Tags (Maks. 5)</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">Tags (Max. 5)</h3>
           
           {/* Selected Tags */}
           {tags.length > 0 && (
@@ -134,7 +134,7 @@ export default function CreatePostPage() {
           <div className="relative">
             <Hash className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
-              placeholder="Tambah tag..."
+              placeholder="Add tag..."
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value.replace(/\s/g, ""))}
               onKeyDown={(e) => {
@@ -168,11 +168,11 @@ export default function CreatePostPage() {
 
         {/* Location */}
         <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">Lokasi</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">Location</h3>
           <div className="relative">
             <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
-              placeholder="Tambah lokasi..."
+              placeholder="Add location..."
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               className="h-12 pl-12 rounded-full bg-muted border-0"
@@ -186,7 +186,7 @@ export default function CreatePostPage() {
           <div className="relative">
             <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
-              placeholder="Mention pengguna..."
+              placeholder="Mention users..."
               className="h-12 pl-12 rounded-full bg-muted border-0"
             />
           </div>

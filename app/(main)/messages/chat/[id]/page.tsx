@@ -9,8 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image"
 
 const chatUser = {
-  name: "CardMaster Jakarta",
-  avatar: "/avatars/seller-1.jpg",
+  name: "CardMaster",
+  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
   verified: true,
   isOnline: true,
   lastSeen: "Online"
@@ -21,7 +21,7 @@ const messages = [
     id: "1",
     sender: "them",
     type: "text",
-    content: "Halo kak, ada yang bisa dibantu?",
+    content: "Hi! How can I help you?",
     time: "10:00",
     status: "read"
   },
@@ -29,7 +29,7 @@ const messages = [
     id: "2",
     sender: "me",
     type: "text",
-    content: "Halo, saya mau tanya tentang kartu Pikachu VMAX nya",
+    content: "Hi, I want to ask about the Pikachu VMAX card",
     time: "10:02",
     status: "read"
   },
@@ -37,7 +37,7 @@ const messages = [
     id: "3",
     sender: "me",
     type: "text",
-    content: "Apakah kondisinya benar-benar mint?",
+    content: "Is the condition really mint?",
     time: "10:02",
     status: "read"
   },
@@ -45,7 +45,7 @@ const messages = [
     id: "4",
     sender: "them",
     type: "text",
-    content: "Betul kak, kartunya fresh dari pack langsung masuk sleeve dan toploader. Tidak ada whitening sama sekali",
+    content: "Yes! The card is fresh from pack, went straight into sleeve and toploader. No whitening at all",
     time: "10:05",
     status: "read"
   },
@@ -54,9 +54,9 @@ const messages = [
     sender: "them",
     type: "product",
     product: {
-      image: "/products/product-1.jpg",
+      image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=300&h=300&fit=crop",
       name: "Pikachu VMAX Rainbow Rare",
-      price: 2500000
+      price: 250
     },
     time: "10:05",
     status: "read"
@@ -65,7 +65,7 @@ const messages = [
     id: "6",
     sender: "me",
     type: "text",
-    content: "Oke, saya checkout ya. Bisa dikirim hari ini?",
+    content: "Ok, I will checkout. Can you ship today?",
     time: "10:15",
     status: "read"
   },
@@ -73,7 +73,7 @@ const messages = [
     id: "7",
     sender: "them",
     type: "text",
-    content: "Bisa kak, kalau checkout sebelum jam 12 bisa dikirim hari ini",
+    content: "Sure! If you checkout before 12pm, I can ship today",
     time: "10:20",
     status: "read"
   },
@@ -81,16 +81,16 @@ const messages = [
     id: "8",
     sender: "them",
     type: "text",
-    content: "Baik kak, kartu sudah dikirim ya. Ini resinya: JKT123456789",
+    content: "Your card has been shipped! Tracking: TRK123456789",
     time: "10:30",
     status: "delivered"
   },
 ]
 
 function formatPrice(price: number) {
-  return new Intl.NumberFormat("id-ID", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "IDR",
+    currency: "USD",
     minimumFractionDigits: 0,
   }).format(price)
 }
@@ -193,14 +193,14 @@ export default function ChatPage() {
       </main>
 
       {/* Input */}
-      <div className="sticky bottom-0 bg-background border-t border-border p-4 pb-8">
+      <div className="sticky bottom-0 bg-background border-t border-border p-4 pb-[calc(env(safe-area-inset-bottom)+8px)]">
         <div className="flex gap-3 items-center">
           <Button variant="ghost" size="icon" className="shrink-0">
             <ImageIcon className="size-5" />
           </Button>
           <div className="flex-1 relative">
             <Input
-              placeholder="Ketik pesan..."
+              placeholder="Type a message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}

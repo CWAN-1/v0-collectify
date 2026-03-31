@@ -9,16 +9,16 @@ const publishOptions = [
     id: "post",
     href: "/publish/post",
     icon: ImageIcon,
-    title: "Posting",
-    description: "Bagikan koleksi dan cerita kartu Anda",
+    title: "Create Post",
+    description: "Share your collection and card stories",
     color: "bg-muted"
   },
   {
     id: "product",
     href: "/publish/product",
     icon: ShoppingBag,
-    title: "Jual Kartu",
-    description: "Jual kartu koleksi Anda di toko",
+    title: "Sell Card",
+    description: "List your collectible cards for sale",
     color: "bg-muted"
   },
 ]
@@ -34,7 +34,7 @@ export default function PublishPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold text-lg">Buat</span>
+          <span className="font-semibold text-lg">Create</span>
           <div className="size-10" />
         </div>
       </header>
@@ -69,9 +69,9 @@ export default function PublishPage() {
               <Sparkles className="size-5 text-background" />
             </div>
             <div>
-              <h4 className="font-semibold mb-1">Tips untuk penjual</h4>
+              <h4 className="font-semibold mb-1">Tips for sellers</h4>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Foto yang jelas dengan pencahayaan baik dapat meningkatkan peluang penjualan hingga 3x lipat. Sertakan foto depan, belakang, dan detail kondisi kartu.
+                Clear photos with good lighting can increase your sales by 3x. Include front, back, and detail shots of the card condition.
               </p>
             </div>
           </div>
