@@ -270,19 +270,20 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Bottom Actions */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 pb-[calc(env(safe-area-inset-bottom)+16px)]">
-        <div className="flex gap-3">
-          <Button variant="outline" size="icon" className="size-12 rounded-xl border-border bg-secondary">
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border safe-area-bottom">
+        <div className="flex gap-2 p-3 max-w-md mx-auto">
+          <Button variant="outline" size="icon" className="size-11 rounded-xl border-border bg-secondary shrink-0">
             <MessageCircle className="size-5" />
           </Button>
-          <Button variant="outline" className="flex-1 h-12 rounded-xl border-border bg-secondary gap-2">
-            <ShoppingBag className="size-5" />
-            Add to Cart
+          <Button variant="outline" className="h-11 px-3 rounded-xl border-border bg-secondary gap-1.5 shrink-0">
+            <ShoppingBag className="size-4" />
+            <span className="text-sm">Cart</span>
           </Button>
-          <Button className="flex-1 h-12 rounded-xl bg-gradient-to-r from-primary to-accent">
+          <Button className="flex-1 h-11 rounded-xl bg-gradient-to-r from-primary to-accent text-sm font-semibold">
             Buy Now
           </Button>
         </div>
+        <div className="h-[env(safe-area-inset-bottom)]" />
       </div>
     </div>
   )

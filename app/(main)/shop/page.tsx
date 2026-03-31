@@ -10,12 +10,12 @@ import Link from "next/link"
 import Image from "next/image"
 
 const categories = [
-  { id: "all", label: "All", count: 1234 },
-  { id: "pokemon", label: "Pokemon", count: 456 },
-  { id: "sports", label: "Sports Cards", count: 321 },
-  { id: "yugioh", label: "Yu-Gi-Oh", count: 234 },
-  { id: "onepiece", label: "One Piece", count: 123 },
-  { id: "mtg", label: "MTG", count: 100 },
+  { id: "all", label: "All", bgColor: "bg-gradient-to-br from-primary to-accent", textColor: "text-white" },
+  { id: "pokemon", label: "Pokemon", bgColor: "bg-yellow-500", textColor: "text-black" },
+  { id: "yugioh", label: "Yu-Gi-Oh!", bgColor: "bg-orange-600", textColor: "text-white" },
+  { id: "onepiece", label: "One Piece", bgColor: "bg-red-600", textColor: "text-white" },
+  { id: "mtg", label: "MTG", bgColor: "bg-amber-700", textColor: "text-white" },
+  { id: "sports", label: "Sports", bgColor: "bg-green-600", textColor: "text-white" },
 ]
 
 const conditions = [
@@ -219,40 +219,28 @@ export default function ShopPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
-        <div className="px-4 pt-12 pb-4">
-          {/* Title */}
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-foreground">Shop</h1>
-            <Link href="/cart" className="relative">
-              <Button variant="ghost" size="icon" className="bg-card border border-border rounded-xl">
-                <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                  <line x1="3" y1="6" x2="21" y2="6"/>
-                  <path d="M16 10a4 4 0 0 1-8 0"/>
-                </svg>
-                <span className="absolute -top-1 -right-1 size-4 bg-gradient-to-r from-primary to-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                  2
-                </span>
-              </Button>
-            </Link>
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search cards..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-12 pl-12 pr-12 rounded-xl bg-card border-border text-base"
-            />
-            <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-              <SheetTrigger asChild>
-                <button className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <SlidersHorizontal className="size-5 text-muted-foreground" />
-                </button>
-              </SheetTrigger>
+        <div className="px-4 pt-12 pb-3">
+          {/* Search Row */}
+          <div className="flex items-center gap-3">
+            {/* Shop Title */}
+            <span className="text-base font-bold text-foreground shrink-0">Shop</span>
+            
+            {/* Search */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search cards..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-10 pl-9 pr-10 rounded-xl bg-card border-border text-sm"
+              />
+              <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                <SheetTrigger asChild>
+                  <button className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <SlidersHorizontal className="size-4 text-muted-foreground" />
+                  </button>
+                </SheetTrigger>
               <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl">
                 <SheetHeader className="pb-4">
                   <SheetTitle className="text-xl">Filter & Sort</SheetTitle>
@@ -309,24 +297,44 @@ export default function ShopPage() {
                   </div>
                 </div>
               </SheetContent>
-            </Sheet>
+              </Sheet>
+            </div>
+
+            {/* Cart */}
+            <Link href="/cart" className="relative shrink-0">
+              <Button variant="ghost" size="icon" className="size-10 bg-card border border-border rounded-xl">
+                <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                <span className="absolute -top-1 -right-1 size-4 bg-gradient-to-r from-primary to-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  2
+                </span>
+              </Button>
+            </Link>
           </div>
         </div>
 
-        {/* Categories */}
+        {/* Brand Categories */}
         <div className="px-4 pb-3">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide py-1">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all border ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all border ${
                   selectedCategory === category.id
-                    ? "bg-primary text-primary-foreground border-primary"
+                    ? `${category.bgColor} ${category.textColor} border-transparent shadow-md`
                     : "bg-card text-foreground border-border"
                 }`}
               >
-                {category.label}
+                <div className={`size-5 rounded-md ${selectedCategory === category.id ? "bg-white/20" : category.bgColor} flex items-center justify-center`}>
+                  <span className={`text-[8px] font-bold ${selectedCategory === category.id ? "text-current" : category.textColor}`}>
+                    {category.label.slice(0, 2).toUpperCase()}
+                  </span>
+                </div>
+                <span className="text-xs font-medium whitespace-nowrap">{category.label}</span>
               </button>
             ))}
           </div>

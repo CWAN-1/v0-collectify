@@ -1,20 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Bell, Heart, MessageCircle, Sparkles, Flame, ChevronRight } from "lucide-react"
+import { Search, Bell, Heart, MessageCircle, ChevronRight } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
 import Image from "next/image"
 
+// Brand logos with actual card game brand colors
 const categories = [
-  { id: "all", label: "All", icon: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=60&h=60&fit=crop", count: 1234 },
-  { id: "pokemon", label: "Pokemon", icon: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=60&h=60&fit=crop", count: 456 },
-  { id: "sports", label: "Sports", icon: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=60&h=60&fit=crop", count: 321 },
-  { id: "yugioh", label: "Yu-Gi-Oh", icon: "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=60&h=60&fit=crop", count: 234 },
-  { id: "onepiece", label: "One Piece", icon: "https://images.unsplash.com/photo-1608889825205-eebdb9fc5806?w=60&h=60&fit=crop", count: 189 },
-  { id: "mtg", label: "MTG", icon: "https://images.unsplash.com/photo-1642056446815-3b9b6e1e3d5e?w=60&h=60&fit=crop", count: 145 },
+  { id: "all", label: "All", bgColor: "bg-gradient-to-br from-primary to-accent", textColor: "text-white" },
+  { id: "pokemon", label: "Pokemon", logo: "/brands/pokemon.png", bgColor: "bg-yellow-500", textColor: "text-black" },
+  { id: "yugioh", label: "Yu-Gi-Oh!", logo: "/brands/yugioh.png", bgColor: "bg-orange-600", textColor: "text-white" },
+  { id: "onepiece", label: "One Piece", logo: "/brands/onepiece.png", bgColor: "bg-red-600", textColor: "text-white" },
+  { id: "mtg", label: "MTG", logo: "/brands/mtg.png", bgColor: "bg-amber-700", textColor: "text-white" },
+  { id: "sports", label: "Sports", logo: "/brands/sports.png", bgColor: "bg-green-600", textColor: "text-white" },
 ]
 
 const featuredCards = [
@@ -24,13 +25,15 @@ const featuredCards = [
     name: "Pikachu VMAX",
     set: "Vivid Voltage",
     price: 250,
+    category: "pokemon",
   },
   {
     id: "2", 
     image: "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=300&h=420&fit=crop",
-    name: "Charizard GX",
-    set: "Hidden Fates",
-    price: 450,
+    name: "Blue-Eyes Dragon",
+    set: "Legend of Blue Eyes",
+    price: 850,
+    category: "yugioh",
   },
   {
     id: "3",
@@ -38,6 +41,31 @@ const featuredCards = [
     name: "Luffy Gear 5",
     set: "Romance Dawn",
     price: 180,
+    category: "onepiece",
+  },
+  {
+    id: "4",
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=420&fit=crop",
+    name: "Charizard GX",
+    set: "Hidden Fates",
+    price: 450,
+    category: "pokemon",
+  },
+  {
+    id: "5",
+    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=300&h=420&fit=crop",
+    name: "LeBron Rookie",
+    set: "2003 Topps",
+    price: 1500,
+    category: "sports",
+  },
+  {
+    id: "6",
+    image: "https://images.unsplash.com/photo-1642056446815-3b9b6e1e3d5e?w=300&h=420&fit=crop",
+    name: "Black Lotus",
+    set: "Alpha",
+    price: 25000,
+    category: "mtg",
   },
 ]
 
@@ -165,63 +193,74 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
-        <div className="px-4 pt-12 pb-4">
-          {/* Logo & Actions */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="size-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Sparkles className="size-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-foreground">CardHub</span>
+        <div className="px-4 pt-12 pb-3">
+          {/* Logo + Search + Messages */}
+          <div className="flex items-center gap-3">
+            {/* Logo */}
+            <div className="size-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0">
+              <svg className="size-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
             </div>
-            <Button variant="ghost" size="icon" className="relative bg-card border border-border rounded-xl">
-              <Bell className="size-5" />
-              <span className="absolute -top-1 -right-1 size-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">3</span>
-            </Button>
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search cards, users, or topics..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-12 pl-12 rounded-xl bg-card border-border text-base"
-            />
+            
+            {/* Search */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search cards..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-10 pl-9 pr-4 rounded-xl bg-card border-border text-sm"
+              />
+            </div>
+            
+            {/* Messages */}
+            <Link href="/messages">
+              <Button variant="ghost" size="icon" className="relative size-10 bg-card border border-border rounded-xl shrink-0">
+                <Bell className="size-5" />
+                <span className="absolute -top-1 -right-1 size-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">3</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
 
       <main className="px-4">
-        {/* Featured Banner */}
-        <div className="mb-6">
-          <div className="relative h-40 rounded-2xl overflow-hidden bg-gradient-to-r from-primary/80 to-accent/80 border border-border">
-            <div className="absolute inset-0 p-5 flex flex-col justify-between">
-              <div className="inline-flex items-center gap-1 px-2 py-1 bg-red-500 rounded-full w-fit">
-                <Flame className="size-3 text-white" />
-                <span className="text-xs font-semibold text-white">Latest News!</span>
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white mb-1">Battle Alongside your Clan</h2>
-                <p className="text-sm text-white/80 mb-2">Secret Lair is here to celebrate everything we love</p>
-                <Button size="sm" className="h-8 rounded-full bg-white text-primary hover:bg-white/90">
-                  PREORDER NOW
-                </Button>
-              </div>
-            </div>
-            <Image
-              src="https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=400&h=200&fit=crop"
-              alt="Featured"
-              fill
-              className="object-cover opacity-30"
-            />
+        {/* Brand Categories */}
+        <div className="mb-5">
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide py-2">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`flex flex-col items-center gap-1.5 shrink-0 transition-transform ${
+                  selectedCategory === category.id ? "scale-105" : ""
+                }`}
+              >
+                <div className={`size-14 rounded-2xl ${category.bgColor} flex items-center justify-center border-2 ${
+                  selectedCategory === category.id ? "border-white shadow-lg shadow-primary/30" : "border-transparent"
+                }`}>
+                  {category.id === "all" ? (
+                    <span className="text-xl font-bold text-white">All</span>
+                  ) : (
+                    <span className={`text-xs font-bold ${category.textColor} text-center px-1`}>
+                      {category.label.split(' ')[0]}
+                    </span>
+                  )}
+                </div>
+                <span className={`text-[10px] font-medium ${
+                  selectedCategory === category.id ? "text-primary" : "text-muted-foreground"
+                }`}>
+                  {category.label}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Featured Collection */}
-        <div className="mb-6">
+        <div className="mb-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-foreground">Featured Collection</h2>
             <Link href="/shop" className="flex items-center gap-1 text-sm text-primary">
@@ -229,9 +268,11 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {featuredCards.map((card) => (
+            {featuredCards.filter(card => 
+              selectedCategory === "all" || card.category === selectedCategory
+            ).map((card) => (
               <Link key={card.id} href={`/shop/${card.id}`} className="shrink-0">
-                <div className="w-32 bg-card rounded-xl overflow-hidden border border-border">
+                <div className="w-28 bg-card rounded-xl overflow-hidden border border-border">
                   <div className="relative aspect-[3/4]">
                     <Image
                       src={card.image}
@@ -241,9 +282,9 @@ export default function HomePage() {
                     />
                   </div>
                   <div className="p-2">
-                    <p className="text-xs font-semibold text-foreground truncate">{card.name}</p>
-                    <p className="text-xs text-muted-foreground">{card.set}</p>
-                    <p className="text-sm font-bold text-primary mt-1">${card.price}</p>
+                    <p className="text-[11px] font-semibold text-foreground truncate">{card.name}</p>
+                    <p className="text-[10px] text-muted-foreground">{card.set}</p>
+                    <p className="text-xs font-bold text-primary mt-1">${card.price}</p>
                   </div>
                 </div>
               </Link>
@@ -251,34 +292,14 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Categories */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-foreground">Categories</h2>
-            <Link href="/shop" className="flex items-center gap-1 text-sm text-primary">
-              See All <ChevronRight className="size-4" />
-            </Link>
-          </div>
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all border ${
-                  selectedCategory === category.id
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-foreground border-border"
-                }`}
-              >
-                {category.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Community Feed */}
         <div className="mb-6">
-          <h2 className="font-bold text-foreground mb-3">Community</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-bold text-foreground">Community</h2>
+            <span className="text-xs text-muted-foreground">
+              {selectedCategory === "all" ? "All Categories" : categories.find(c => c.id === selectedCategory)?.label}
+            </span>
+          </div>
           <div className="flex gap-3 w-full">
             <div className="flex-1 min-w-0">
               {leftColumn.map((post, index) => (
