@@ -168,46 +168,6 @@ export default function AuctionDetailPage() {
         <CountdownTimer endTime={auctionProduct.endTime} />
       </div>
 
-      {/* Seller Info - Moved below product info */}
-      <div className="bg-card px-4 py-4 border-b border-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Avatar className="size-11 border-2 border-border">
-              <AvatarImage src={auctionProduct.seller.avatar} />
-              <AvatarFallback>{auctionProduct.seller.name[0]}</AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-foreground">{auctionProduct.seller.name}</span>
-                {auctionProduct.seller.verified && (
-                  <div className="size-4 bg-primary rounded-full flex items-center justify-center">
-                    <Check className="size-2.5 text-primary-foreground" />
-                  </div>
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {auctionProduct.seller.location} | {auctionProduct.seller.followers} followers
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="h-8 rounded-full text-xs border-primary text-primary">
-              Follow
-            </Button>
-            <Button variant="outline" size="icon" className="size-8 rounded-full border-border">
-              <MessageCircle className="size-4" />
-            </Button>
-          </div>
-        </div>
-        {/* Seller Stats */}
-        <div className="flex items-center gap-1 mt-3 text-sm">
-          <span className="text-muted-foreground">{auctionProduct.seller.totalSold} sold</span>
-          <span className="text-muted-foreground mx-1">|</span>
-          <span className="text-yellow-500">&#9733;</span>
-          <span className="text-green-400 font-medium">{auctionProduct.seller.positiveRate}% positive</span>
-        </div>
-      </div>
-
       {/* Condition / Rating */}
       <div className="bg-card px-4 py-3.5 border-b border-border">
         <div className="flex items-center justify-between">
@@ -250,6 +210,46 @@ export default function AuctionDetailPage() {
         <button className="flex items-center gap-1 mt-2 text-sm text-primary">
           Show more <ChevronRight className="size-4" />
         </button>
+      </div>
+
+      {/* Seller Info - Moved below description */}
+      <div className="bg-card px-4 py-4 border-b border-border">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Avatar className="size-11 border-2 border-border">
+              <AvatarImage src={auctionProduct.seller.avatar} />
+              <AvatarFallback>{auctionProduct.seller.name[0]}</AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-semibold text-foreground">{auctionProduct.seller.name}</span>
+                {auctionProduct.seller.verified && (
+                  <div className="size-4 bg-primary rounded-full flex items-center justify-center">
+                    <Check className="size-2.5 text-primary-foreground" />
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {auctionProduct.seller.location} | {auctionProduct.seller.followers} followers
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="h-8 rounded-full text-xs border-primary text-primary">
+              Follow
+            </Button>
+            <Button variant="outline" size="icon" className="size-8 rounded-full border-border">
+              <MessageCircle className="size-4" />
+            </Button>
+          </div>
+        </div>
+        {/* Seller Stats */}
+        <div className="flex items-center gap-1 mt-3 text-sm">
+          <span className="text-muted-foreground">{auctionProduct.seller.totalSold} sold</span>
+          <span className="text-muted-foreground mx-1">|</span>
+          <span className="text-yellow-500">&#9733;</span>
+          <span className="text-green-400 font-medium">{auctionProduct.seller.positiveRate}% positive</span>
+        </div>
       </div>
 
       {/* List Similar */}
