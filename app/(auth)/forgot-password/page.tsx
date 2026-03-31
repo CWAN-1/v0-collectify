@@ -41,10 +41,10 @@ export default function ForgotPasswordPage() {
           <>
             <div className="mb-10">
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                Lupa Kata Sandi?
+                Forgot Password?
               </h1>
               <p className="text-muted-foreground">
-                Masukkan email Anda untuk menerima kode verifikasi.
+                Enter your email to receive a verification code.
               </p>
             </div>
 
@@ -64,7 +64,7 @@ export default function ForgotPasswordPage() {
               disabled={!email}
               className="w-full h-14 rounded-full text-base font-semibold"
             >
-              Kirim Kode
+              Send Code
             </Button>
           </>
         )}
@@ -73,10 +73,10 @@ export default function ForgotPasswordPage() {
           <>
             <div className="mb-10">
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                Verifikasi Kode
+                Verify Code
               </h1>
               <p className="text-muted-foreground">
-                Masukkan kode 4 digit yang dikirim ke{" "}
+                Enter the 4-digit code sent to{" "}
                 <span className="text-foreground font-medium">{email}</span>
               </p>
             </div>
@@ -97,13 +97,13 @@ export default function ForgotPasswordPage() {
               disabled={otp.length < 4}
               className="w-full h-14 rounded-full text-base font-semibold mb-6"
             >
-              Verifikasi
+              Verify
             </Button>
 
             <p className="text-center text-muted-foreground">
-              Tidak menerima kode?{" "}
+              {"Didn't receive the code?"}{" "}
               <button className="font-semibold text-foreground">
-                Kirim Ulang
+                Resend
               </button>
             </p>
           </>
@@ -115,16 +115,16 @@ export default function ForgotPasswordPage() {
               <Shield className="size-12 text-foreground" />
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Kata Sandi Diperbarui
+              Password Updated
             </h1>
             <p className="text-muted-foreground mb-8">
-              Kata sandi Anda telah berhasil diubah. Silakan masuk dengan kata sandi baru.
+              Your password has been successfully changed. Please sign in with your new password.
             </p>
             <Button
               onClick={handleBackToLogin}
               className="w-full h-14 rounded-full text-base font-semibold"
             >
-              Masuk
+              Sign In
             </Button>
           </div>
         )}

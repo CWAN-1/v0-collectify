@@ -8,27 +8,27 @@ import Image from "next/image"
 
 const slides = [
   {
-    title: "Selamat Datang di CardHub",
-    subtitle: "Platform trading card terbaik di Indonesia",
-    description: "Temukan, jual, dan kumpulkan kartu koleksi favoritmu",
+    title: "Welcome to CardHub",
+    subtitle: "The best trading card platform",
+    description: "Discover, sell, and collect your favorite cards",
     image: "/onboarding-1.jpg"
   },
   {
-    title: "Koleksi Lengkap",
-    subtitle: "Pokemon, Sports Cards, Yu-Gi-Oh & lebih banyak lagi",
-    description: "Akses ribuan kartu koleksi dari berbagai kategori",
+    title: "Complete Collection",
+    subtitle: "Pokemon, Sports Cards, Yu-Gi-Oh & more",
+    description: "Access thousands of collectible cards across categories",
     image: "/onboarding-2.jpg"
   },
   {
-    title: "Komunitas Aktif",
-    subtitle: "Bergabung dengan kolektor lainnya",
-    description: "Bagikan koleksi, tips, dan temukan teman baru",
+    title: "Active Community",
+    subtitle: "Join fellow collectors",
+    description: "Share your collection, tips, and find new friends",
     image: "/onboarding-3.jpg"
   },
   {
-    title: "Transaksi Aman",
-    subtitle: "Perlindungan pembeli & penjual",
-    description: "Jual beli dengan aman dan terpercaya",
+    title: "Secure Transactions",
+    subtitle: "Buyer & seller protection",
+    description: "Buy and sell safely with trusted transactions",
     image: "/onboarding-4.jpg"
   }
 ]
@@ -59,7 +59,7 @@ export default function OnboardingPage() {
           </div>
         </div>
         <Button variant="ghost" onClick={handleSkip} className="text-muted-foreground">
-          Lewati
+          Skip
         </Button>
       </div>
 
@@ -110,7 +110,7 @@ export default function OnboardingPage() {
             onClick={handleNext}
             className="w-full h-14 rounded-full text-base font-semibold"
           >
-            {currentSlide === slides.length - 1 ? "Mulai Sekarang" : "Lanjut"}
+            {currentSlide === slides.length - 1 ? "Get Started" : "Next"}
             <ChevronRight className="size-5 ml-2" />
           </Button>
         </div>

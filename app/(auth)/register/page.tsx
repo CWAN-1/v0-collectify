@@ -21,9 +21,9 @@ export default function RegisterPage() {
   const router = useRouter()
 
   const passwordChecks = [
-    { label: "Minimal 8 karakter", valid: formData.password.length >= 8 },
-    { label: "Satu huruf besar", valid: /[A-Z]/.test(formData.password) },
-    { label: "Satu angka", valid: /[0-9]/.test(formData.password) },
+    { label: "At least 8 characters", valid: formData.password.length >= 8 },
+    { label: "One uppercase letter", valid: /[A-Z]/.test(formData.password) },
+    { label: "One number", valid: /[0-9]/.test(formData.password) },
   ]
 
   const handleRegister = () => {
@@ -43,10 +43,10 @@ export default function RegisterPage() {
         {/* Title */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Buat Akun
+            Create Account
           </h1>
           <p className="text-muted-foreground">
-            Bergabung dengan komunitas kolektor trading card.
+            Join the trading card collector community.
           </p>
         </div>
 
@@ -57,7 +57,7 @@ export default function RegisterPage() {
             <User className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Nama Lengkap"
+              placeholder="Full Name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="h-14 pl-12 rounded-2xl bg-muted border-0 text-base"
@@ -81,7 +81,7 @@ export default function RegisterPage() {
             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
               type="tel"
-              placeholder="Nomor Telepon"
+              placeholder="Phone Number"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               className="h-14 pl-12 rounded-2xl bg-muted border-0 text-base"
@@ -93,7 +93,7 @@ export default function RegisterPage() {
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
               type={showPassword ? "text" : "password"}
-              placeholder="Kata Sandi"
+              placeholder="Password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               className="h-14 pl-12 pr-12 rounded-2xl bg-muted border-0 text-base"
@@ -132,13 +132,13 @@ export default function RegisterPage() {
               className="mt-0.5"
             />
             <label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed">
-              Saya setuju dengan{" "}
+              I agree to the{" "}
               <Link href="/terms" className="font-medium text-foreground underline">
-                Syarat & Ketentuan
+                Terms & Conditions
               </Link>{" "}
-              dan{" "}
+              and{" "}
               <Link href="/privacy" className="font-medium text-foreground underline">
-                Kebijakan Privasi
+                Privacy Policy
               </Link>
             </label>
           </div>
@@ -150,13 +150,13 @@ export default function RegisterPage() {
           disabled={!agreeTerms}
           className="w-full h-14 rounded-full text-base font-semibold mt-8"
         >
-          Daftar
+          Sign Up
         </Button>
 
         {/* Divider */}
         <div className="flex items-center gap-4 my-8">
           <Separator className="flex-1" />
-          <span className="text-muted-foreground text-sm">atau daftar dengan</span>
+          <span className="text-muted-foreground text-sm">or sign up with</span>
           <Separator className="flex-1" />
         </div>
 
@@ -186,9 +186,9 @@ export default function RegisterPage() {
       {/* Footer */}
       <div className="px-6 pb-12 pt-8">
         <p className="text-center text-muted-foreground">
-          Sudah punya akun?{" "}
+          Already have an account?{" "}
           <Link href="/login" className="font-semibold text-foreground">
-            Masuk
+            Sign In
           </Link>
         </p>
       </div>

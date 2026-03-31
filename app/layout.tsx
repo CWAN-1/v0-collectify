@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'CardHub - 收藏卡交易社区',
-  description: '发现、交易、分享你的收藏卡。宝可梦、球星卡、游戏王等卡牌爱好者的交流平台。',
+  title: 'CardHub - Trading Card Marketplace',
+  description: 'Discover, trade, and share your collectible cards. A community platform for Pokemon, Sports, Yu-Gi-Oh and more.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -29,6 +29,14 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased overflow-x-hidden">
         {children}
         <Analytics />
       </body>

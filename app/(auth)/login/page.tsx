@@ -33,10 +33,10 @@ export default function LoginPage() {
         {/* Title */}
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Masuk ke Akun
+            Login to Account
           </h1>
           <p className="text-muted-foreground">
-            Selamat datang kembali! Silakan masukkan data Anda.
+            Welcome back! Please enter your details.
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export default function LoginPage() {
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
               type={showPassword ? "text" : "password"}
-              placeholder="Kata Sandi"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="h-14 pl-12 pr-12 rounded-2xl bg-muted border-0 text-base"
@@ -82,11 +82,11 @@ export default function LoginPage() {
                 onCheckedChange={(checked) => setRememberMe(checked as boolean)}
               />
               <label htmlFor="remember" className="text-sm text-foreground">
-                Ingat saya
+                Remember me
               </label>
             </div>
             <Link href="/forgot-password" className="text-sm font-medium text-foreground">
-              Lupa kata sandi?
+              Forgot password?
             </Link>
           </div>
         </div>
@@ -96,13 +96,13 @@ export default function LoginPage() {
           onClick={handleLogin}
           className="w-full h-14 rounded-full text-base font-semibold mt-8"
         >
-          Masuk
+          Sign In
         </Button>
 
         {/* Divider */}
         <div className="flex items-center gap-4 my-8">
           <Separator className="flex-1" />
-          <span className="text-muted-foreground text-sm">atau lanjutkan dengan</span>
+          <span className="text-muted-foreground text-sm">or continue with</span>
           <Separator className="flex-1" />
         </div>
 
@@ -132,9 +132,9 @@ export default function LoginPage() {
       {/* Footer */}
       <div className="px-6 pb-12 pt-8">
         <p className="text-center text-muted-foreground">
-          Belum punya akun?{" "}
+          {"Don't have an account?"}{" "}
           <Link href="/register" className="font-semibold text-foreground">
-            Daftar
+            Sign Up
           </Link>
         </p>
       </div>

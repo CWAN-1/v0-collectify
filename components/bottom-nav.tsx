@@ -6,11 +6,11 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { href: "/", icon: Home, label: "Beranda" },
-  { href: "/shop", icon: ShoppingBag, label: "Toko" },
+  { href: "/", icon: Home, label: "Home" },
+  { href: "/shop", icon: ShoppingBag, label: "Shop" },
   { href: "/publish", icon: PlusSquare, label: "", isCenter: true },
-  { href: "/messages", icon: MessageCircle, label: "Pesan" },
-  { href: "/profile", icon: User, label: "Profil" },
+  { href: "/messages", icon: MessageCircle, label: "Messages" },
+  { href: "/profile", icon: User, label: "Profile" },
 ]
 
 export function BottomNav() {
@@ -22,8 +22,8 @@ export function BottomNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background">
-      <div className="mx-auto flex h-20 max-w-lg items-center justify-around px-2 pb-4">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
           const Icon = item.icon
@@ -33,10 +33,10 @@ export function BottomNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center justify-center -mt-4"
+                className="flex items-center justify-center"
               >
-                <div className="flex size-14 items-center justify-center rounded-full bg-foreground transition-transform hover:scale-105 active:scale-95">
-                  <Icon className="size-6 text-background" />
+                <div className="flex size-12 items-center justify-center rounded-full bg-foreground transition-transform hover:scale-105 active:scale-95">
+                  <Icon className="size-5 text-background" />
                 </div>
               </Link>
             )

@@ -9,7 +9,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 const categories = [
-  { id: "all", label: "Semua" },
+  { id: "all", label: "All" },
   { id: "pokemon", label: "Pokemon" },
   { id: "sports", label: "Sports" },
   { id: "yugioh", label: "Yu-Gi-Oh" },
@@ -20,7 +20,7 @@ const categories = [
 const posts = [
   {
     id: "1",
-    user: { name: "Budi Santoso", avatar: "/avatars/user-1.jpg", verified: true },
+    user: { name: "Alex Chen", avatar: "/avatars/user-1.jpg", verified: true },
     image: "/posts/post-1.jpg",
     title: "Unboxing Pikachu VMAX Rainbow Rare",
     likes: 2431,
@@ -30,9 +30,9 @@ const posts = [
   },
   {
     id: "2",
-    user: { name: "Dewi Kartika", avatar: "/avatars/user-2.jpg", verified: false },
+    user: { name: "Sarah Lee", avatar: "/avatars/user-2.jpg", verified: false },
     image: "/posts/post-2.jpg",
-    title: "Koleksi NBA Rookie Cards 2024",
+    title: "NBA Rookie Cards Collection 2024",
     likes: 1892,
     comments: 45,
     aspectRatio: "square",
@@ -40,7 +40,7 @@ const posts = [
   },
   {
     id: "3",
-    user: { name: "Ahmad Rizky", avatar: "/avatars/user-3.jpg", verified: true },
+    user: { name: "Mike Zhang", avatar: "/avatars/user-3.jpg", verified: true },
     image: "/posts/post-3.jpg",
     title: "Review: Blue-Eyes White Dragon 1st Edition",
     likes: 3210,
@@ -50,9 +50,9 @@ const posts = [
   },
   {
     id: "4",
-    user: { name: "Siti Nurhaliza", avatar: "/avatars/user-4.jpg", verified: false },
+    user: { name: "Emma Wilson", avatar: "/avatars/user-4.jpg", verified: false },
     image: "/posts/post-4.jpg",
-    title: "Tips Menyimpan Kartu Koleksi",
+    title: "Tips for Storing Your Card Collection",
     likes: 987,
     comments: 34,
     aspectRatio: "tall",
@@ -60,7 +60,7 @@ const posts = [
   },
   {
     id: "5",
-    user: { name: "Rendi Pratama", avatar: "/avatars/user-5.jpg", verified: true },
+    user: { name: "James Park", avatar: "/avatars/user-5.jpg", verified: true },
     image: "/posts/post-5.jpg",
     title: "Luffy Gear 5 Secret Rare Pull!",
     likes: 4521,
@@ -70,9 +70,9 @@ const posts = [
   },
   {
     id: "6",
-    user: { name: "Maya Putri", avatar: "/avatars/user-6.jpg", verified: false },
+    user: { name: "Lisa Wang", avatar: "/avatars/user-6.jpg", verified: false },
     image: "/posts/post-6.jpg",
-    title: "Haul Kartu Pokemon dari Jepang",
+    title: "Pokemon Cards Haul from Japan",
     likes: 1567,
     comments: 67,
     aspectRatio: "tall",
@@ -80,7 +80,7 @@ const posts = [
   },
 ]
 
-function PostCard({ post }: { post: typeof posts[0] }) {
+function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?: boolean }) {
   const [liked, setLiked] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -94,6 +94,7 @@ function PostCard({ post }: { post: typeof posts[0] }) {
             alt={post.title}
             fill
             className="object-cover"
+            priority={priority}
           />
           {/* Save Button */}
           <button
@@ -158,7 +159,7 @@ export default function HomePage() {
   const rightColumn = filteredPosts.filter((_, i) => i % 2 === 1)
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
         <div className="px-4 pt-12 pb-4">
@@ -183,7 +184,7 @@ export default function HomePage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Cari kartu, pengguna, atau topik..."
+              placeholder="Search cards, users, or topics..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-12 pl-12 rounded-full bg-muted border-0 text-base"
@@ -215,13 +216,13 @@ export default function HomePage() {
       <main className="px-4 pt-4">
         <div className="flex gap-4">
           <div className="flex-1">
-            {leftColumn.map((post) => (
-              <PostCard key={post.id} post={post} />
+            {leftColumn.map((post, index) => (
+              <PostCard key={post.id} post={post} priority={index === 0} />
             ))}
           </div>
           <div className="flex-1">
-            {rightColumn.map((post) => (
-              <PostCard key={post.id} post={post} />
+            {rightColumn.map((post, index) => (
+              <PostCard key={post.id} post={post} priority={index === 0} />
             ))}
           </div>
         </div>

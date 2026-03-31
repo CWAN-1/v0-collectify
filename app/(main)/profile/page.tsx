@@ -8,40 +8,40 @@ import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 
 const orderStatuses = [
-  { id: "pending", label: "Belum Bayar", icon: Clock, count: 1 },
-  { id: "processing", label: "Diproses", icon: Package, count: 2 },
-  { id: "shipping", label: "Dikirim", icon: Package, count: 1 },
-  { id: "review", label: "Beri Nilai", icon: Star, count: 3 },
+  { id: "pending", label: "Unpaid", icon: Clock, count: 1 },
+  { id: "processing", label: "Processing", icon: Package, count: 2 },
+  { id: "shipping", label: "Shipping", icon: Package, count: 1 },
+  { id: "review", label: "Review", icon: Star, count: 3 },
 ]
 
 const menuItems = [
   { 
-    section: "Pembelian",
+    section: "Purchases",
     items: [
-      { href: "/profile/orders", icon: Package, label: "Pesanan Saya" },
+      { href: "/profile/orders", icon: Package, label: "My Orders" },
       { href: "/profile/wishlist", icon: Heart, label: "Wishlist" },
-      { href: "/profile/saved", icon: Bookmark, label: "Disimpan" },
+      { href: "/profile/saved", icon: Bookmark, label: "Saved" },
     ]
   },
   { 
-    section: "Penjualan",
+    section: "Sales",
     items: [
-      { href: "/profile/shop", icon: Store, label: "Toko Saya" },
-      { href: "/profile/wallet", icon: Wallet, label: "Saldo & Penarikan" },
+      { href: "/profile/shop", icon: Store, label: "My Shop" },
+      { href: "/profile/wallet", icon: Wallet, label: "Balance & Withdraw" },
     ]
   },
   { 
-    section: "Lainnya",
+    section: "Others",
     items: [
-      { href: "/profile/settings", icon: Settings, label: "Pengaturan" },
-      { href: "/help", icon: HelpCircle, label: "Bantuan" },
+      { href: "/profile/settings", icon: Settings, label: "Settings" },
+      { href: "/help", icon: HelpCircle, label: "Help" },
     ]
   },
 ]
 
 const user = {
-  name: "Budi Santoso",
-  username: "@budisantoso",
+  name: "Alex Chen",
+  username: "@alexchen",
   avatar: "/avatars/user-1.jpg",
   verified: true,
   followers: 1250,
@@ -61,11 +61,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-foreground text-background px-4 pt-12 pb-8 rounded-b-[2rem]">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl font-bold">Profil</h1>
+          <h1 className="text-xl font-bold">Profile</h1>
           <Link href="/profile/settings">
             <Button variant="ghost" size="icon" className="text-background hover:bg-background/10">
               <Settings className="size-5" />
@@ -98,7 +98,7 @@ export default function ProfilePage() {
                   <span>{user.rating}</span>
                 </div>
                 <span className="text-background/50">|</span>
-                <span className="text-sm">{user.totalSold} terjual</span>
+                <span className="text-sm">{user.totalSold} sold</span>
               </div>
             )}
           </div>
@@ -108,15 +108,15 @@ export default function ProfilePage() {
         <div className="flex justify-around mt-6 pt-6 border-t border-background/20">
           <div className="text-center">
             <p className="text-2xl font-bold">{user.posts}</p>
-            <p className="text-sm text-background/70">Posting</p>
+            <p className="text-sm text-background/70">Posts</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold">{user.followers.toLocaleString()}</p>
-            <p className="text-sm text-background/70">Pengikut</p>
+            <p className="text-sm text-background/70">Followers</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold">{user.following}</p>
-            <p className="text-sm text-background/70">Mengikuti</p>
+            <p className="text-sm text-background/70">Following</p>
           </div>
         </div>
       </header>
@@ -125,9 +125,9 @@ export default function ProfilePage() {
         {/* Order Status */}
         <div className="bg-card rounded-2xl border border-border p-4 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold">Pesanan Saya</h3>
+            <h3 className="font-semibold">My Orders</h3>
             <Link href="/profile/orders" className="text-sm text-muted-foreground flex items-center gap-1">
-              Lihat Semua <ChevronRight className="size-4" />
+              View All <ChevronRight className="size-4" />
             </Link>
           </div>
           <div className="grid grid-cols-4 gap-2">
@@ -159,7 +159,7 @@ export default function ProfilePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {darkMode ? <Moon className="size-5" /> : <Sun className="size-5" />}
-              <span className="font-medium">Mode Gelap</span>
+              <span className="font-medium">Dark Mode</span>
             </div>
             <Switch checked={darkMode} onCheckedChange={toggleDarkMode} />
           </div>
@@ -200,7 +200,7 @@ export default function ProfilePage() {
           className="w-full h-14 rounded-2xl border-destructive text-destructive hover:bg-destructive/10 gap-2 mt-4"
         >
           <LogOut className="size-5" />
-          Keluar
+          Logout
         </Button>
       </main>
     </div>

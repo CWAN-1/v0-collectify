@@ -8,15 +8,15 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 
 const tabs = [
-  { id: "chats", label: "Pesan" },
-  { id: "notifications", label: "Notifikasi" },
+  { id: "chats", label: "Chats" },
+  { id: "notifications", label: "Notifications" },
 ]
 
 const chats = [
   {
     id: "1",
-    user: { name: "CardMaster Jakarta", avatar: "/avatars/seller-1.jpg", verified: true },
-    lastMessage: "Baik kak, kartu sudah dikirim ya",
+    user: { name: "CardMaster", avatar: "/avatars/seller-1.jpg", verified: true },
+    lastMessage: "Your card has been shipped!",
     time: "10:30",
     unread: 2,
     isOnline: true
@@ -24,24 +24,24 @@ const chats = [
   {
     id: "2",
     user: { name: "SportsHub", avatar: "/avatars/seller-2.jpg", verified: true },
-    lastMessage: "Stok masih ada kak, langsung checkout aja",
+    lastMessage: "Still in stock, checkout now!",
     time: "09:15",
     unread: 0,
     isOnline: false
   },
   {
     id: "3",
-    user: { name: "Dewi Kartika", avatar: "/avatars/user-2.jpg", verified: false },
-    lastMessage: "Wah keren banget koleksinya!",
-    time: "Kemarin",
+    user: { name: "Sarah Lee", avatar: "/avatars/user-2.jpg", verified: false },
+    lastMessage: "Wow, amazing collection!",
+    time: "Yesterday",
     unread: 0,
     isOnline: true
   },
   {
     id: "4",
-    user: { name: "Ahmad Rizky", avatar: "/avatars/user-3.jpg", verified: false },
-    lastMessage: "Foto tambahan sudah saya kirim ya",
-    time: "Kemarin",
+    user: { name: "Mike Zhang", avatar: "/avatars/user-3.jpg", verified: false },
+    lastMessage: "I sent the additional photos",
+    time: "Yesterday",
     unread: 1,
     isOnline: false
   },
@@ -52,45 +52,45 @@ const notifications = [
     id: "1",
     type: "order",
     icon: Package,
-    title: "Pesanan Dikirim",
-    message: "Pesanan #ORD123456 sedang dalam pengiriman",
-    time: "2 jam lalu",
+    title: "Order Shipped",
+    message: "Order #ORD123456 is on its way",
+    time: "2 hours ago",
     read: false
   },
   {
     id: "2",
     type: "like",
     icon: Heart,
-    title: "Posting disukai",
-    message: "Budi dan 23 lainnya menyukai posting Anda",
-    time: "3 jam lalu",
+    title: "Post liked",
+    message: "Alex and 23 others liked your post",
+    time: "3 hours ago",
     read: false
   },
   {
     id: "3",
     type: "follow",
     icon: UserPlus,
-    title: "Pengikut baru",
-    message: "CardMaster Jakarta mulai mengikuti Anda",
-    time: "5 jam lalu",
+    title: "New follower",
+    message: "CardMaster started following you",
+    time: "5 hours ago",
     read: true
   },
   {
     id: "4",
     type: "comment",
     icon: MessageCircle,
-    title: "Komentar baru",
-    message: "Maya berkomentar di posting Anda",
-    time: "Kemarin",
+    title: "New comment",
+    message: "Maya commented on your post",
+    time: "Yesterday",
     read: true
   },
   {
     id: "5",
     type: "order",
     icon: Package,
-    title: "Pesanan Selesai",
-    message: "Pesanan #ORD123455 telah selesai. Beri ulasan?",
-    time: "2 hari lalu",
+    title: "Order Completed",
+    message: "Order #ORD123455 completed. Leave a review?",
+    time: "2 days ago",
     read: true
   },
 ]
@@ -100,18 +100,18 @@ export default function MessagesPage() {
   const [searchQuery, setSearchQuery] = useState("")
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
         <div className="px-4 pt-12 pb-4">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Pesan</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-4">Messages</h1>
           
           {/* Search */}
           <div className="relative mb-4">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Cari pesan..."
+              placeholder="Search messages..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-12 pl-12 rounded-full bg-muted border-0 text-base"

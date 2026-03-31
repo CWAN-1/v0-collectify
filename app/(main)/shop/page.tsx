@@ -10,7 +10,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 const categories = [
-  { id: "all", label: "Semua", count: 1234 },
+  { id: "all", label: "All", count: 1234 },
   { id: "pokemon", label: "Pokemon", count: 456 },
   { id: "sports", label: "Sports Cards", count: 321 },
   { id: "yugioh", label: "Yu-Gi-Oh", count: 234 },
@@ -26,10 +26,10 @@ const conditions = [
 ]
 
 const sortOptions = [
-  { id: "popular", label: "Terpopuler" },
-  { id: "newest", label: "Terbaru" },
-  { id: "price-low", label: "Harga: Rendah ke Tinggi" },
-  { id: "price-high", label: "Harga: Tinggi ke Rendah" },
+  { id: "popular", label: "Most Popular" },
+  { id: "newest", label: "Newest" },
+  { id: "price-low", label: "Price: Low to High" },
+  { id: "price-high", label: "Price: High to Low" },
 ]
 
 const products = [
@@ -216,13 +216,13 @@ export default function ShopPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
         <div className="px-4 pt-12 pb-4">
           {/* Title */}
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold text-foreground">Toko</h1>
+            <h1 className="text-2xl font-bold text-foreground">Shop</h1>
             <Link href="/cart" className="relative">
               <Button variant="ghost" size="icon">
                 <svg className="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -242,7 +242,7 @@ export default function ShopPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Cari kartu..."
+              placeholder="Search cards..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-12 pl-12 pr-12 rounded-full bg-muted border-0 text-base"
@@ -255,13 +255,13 @@ export default function ShopPage() {
               </SheetTrigger>
               <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl">
                 <SheetHeader className="pb-4">
-                  <SheetTitle className="text-xl">Filter & Urutkan</SheetTitle>
+                  <SheetTitle className="text-xl">Filter & Sort</SheetTitle>
                 </SheetHeader>
                 
                 <div className="space-y-6 overflow-auto h-full pb-20">
                   {/* Sort */}
                   <div>
-                    <h3 className="font-semibold mb-3">Urutkan</h3>
+                    <h3 className="font-semibold mb-3">Sort By</h3>
                     <div className="space-y-2">
                       {sortOptions.map((option) => (
                         <button
@@ -280,7 +280,7 @@ export default function ShopPage() {
 
                   {/* Condition */}
                   <div>
-                    <h3 className="font-semibold mb-3">Kondisi</h3>
+                    <h3 className="font-semibold mb-3">Condition</h3>
                     <div className="flex flex-wrap gap-2">
                       {conditions.map((condition) => (
                         <button
@@ -304,7 +304,7 @@ export default function ShopPage() {
                       onClick={() => setIsFilterOpen(false)}
                       className="w-full h-14 rounded-full"
                     >
-                      Terapkan Filter
+                      Apply Filters
                     </Button>
                   </div>
                 </div>
@@ -355,7 +355,7 @@ export default function ShopPage() {
 
         {/* Results Count */}
         <p className="text-sm text-muted-foreground mb-4">
-          {filteredProducts.length} produk ditemukan
+          {filteredProducts.length} products found
         </p>
 
         {/* Grid */}
