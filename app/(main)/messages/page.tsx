@@ -15,7 +15,7 @@ const tabs = [
 const chats = [
   {
     id: "1",
-    user: { name: "CardMaster", avatar: "/avatars/seller-1.jpg", verified: true },
+    user: { name: "CardMaster", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", verified: true },
     lastMessage: "Your card has been shipped!",
     time: "10:30",
     unread: 2,
@@ -23,7 +23,7 @@ const chats = [
   },
   {
     id: "2",
-    user: { name: "SportsHub", avatar: "/avatars/seller-2.jpg", verified: true },
+    user: { name: "SportsHub", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", verified: true },
     lastMessage: "Still in stock, checkout now!",
     time: "09:15",
     unread: 0,
@@ -31,7 +31,7 @@ const chats = [
   },
   {
     id: "3",
-    user: { name: "Sarah Lee", avatar: "/avatars/user-2.jpg", verified: false },
+    user: { name: "Sarah Lee", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", verified: false },
     lastMessage: "Wow, amazing collection!",
     time: "Yesterday",
     unread: 0,
@@ -39,7 +39,7 @@ const chats = [
   },
   {
     id: "4",
-    user: { name: "Mike Zhang", avatar: "/avatars/user-3.jpg", verified: false },
+    user: { name: "Mike Zhang", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", verified: false },
     lastMessage: "I sent the additional photos",
     time: "Yesterday",
     unread: 1,
@@ -102,7 +102,7 @@ export default function MessagesPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-background border-b border-border">
+      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
         <div className="px-4 pt-12 pb-4">
           <h1 className="text-2xl font-bold text-foreground mb-4">Messages</h1>
           
@@ -114,7 +114,7 @@ export default function MessagesPage() {
               placeholder="Search messages..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-12 pl-12 rounded-full bg-muted border-0 text-base"
+              className="h-12 pl-12 rounded-xl bg-card border-border text-base"
             />
           </div>
 
@@ -124,10 +124,10 @@ export default function MessagesPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all ${
+                className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all border ${
                   activeTab === tab.id
-                    ? "bg-foreground text-background"
-                    : "bg-muted text-foreground"
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-foreground border-border"
                 }`}
               >
                 {tab.label}
@@ -144,15 +144,15 @@ export default function MessagesPage() {
               <Link
                 key={chat.id}
                 href={`/messages/chat/${chat.id}`}
-                className="flex items-center gap-3 p-3 rounded-2xl hover:bg-muted transition-colors"
+                className="flex items-center gap-3 p-3 rounded-2xl hover:bg-secondary bg-card border border-border transition-colors"
               >
                 <div className="relative">
-                  <Avatar className="size-14">
+                  <Avatar className="size-14 border-2 border-primary/30">
                     <AvatarImage src={chat.user.avatar} />
                     <AvatarFallback>{chat.user.name[0]}</AvatarFallback>
                   </Avatar>
                   {chat.isOnline && (
-                    <span className="absolute bottom-0 right-0 size-4 bg-green-500 border-2 border-background rounded-full" />
+                    <span className="absolute bottom-0 right-0 size-4 bg-green-500 border-2 border-card rounded-full" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -160,8 +160,8 @@ export default function MessagesPage() {
                     <div className="flex items-center gap-1.5">
                       <span className="font-semibold truncate">{chat.user.name}</span>
                       {chat.user.verified && (
-                        <div className="size-4 bg-foreground rounded-full flex items-center justify-center shrink-0">
-                          <Check className="size-2.5 text-background" />
+                        <div className="size-4 bg-primary rounded-full flex items-center justify-center shrink-0">
+                          <Check className="size-2.5 text-white" />
                         </div>
                       )}
                     </div>
@@ -172,7 +172,7 @@ export default function MessagesPage() {
                       {chat.lastMessage}
                     </p>
                     {chat.unread > 0 && (
-                      <Badge className="size-5 p-0 flex items-center justify-center rounded-full bg-foreground text-background text-xs">
+                      <Badge className="size-5 p-0 flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-accent text-white text-xs border-0">
                         {chat.unread}
                       </Badge>
                     )}
@@ -190,12 +190,12 @@ export default function MessagesPage() {
               return (
                 <div
                   key={notif.id}
-                  className={`flex items-start gap-3 p-4 rounded-2xl ${
-                    notif.read ? "bg-background" : "bg-muted"
+                  className={`flex items-start gap-3 p-4 rounded-2xl border border-border ${
+                    notif.read ? "bg-card" : "bg-secondary"
                   }`}
                 >
-                  <div className="size-12 rounded-full bg-foreground/10 flex items-center justify-center shrink-0">
-                    <Icon className="size-5 text-foreground" />
+                  <div className="size-12 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+                    <Icon className="size-5 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
@@ -205,7 +205,7 @@ export default function MessagesPage() {
                     <p className="text-sm text-muted-foreground">{notif.message}</p>
                   </div>
                   {!notif.read && (
-                    <span className="size-2 bg-foreground rounded-full shrink-0 mt-2" />
+                    <span className="size-2 bg-primary rounded-full shrink-0 mt-2" />
                   )}
                 </div>
               )

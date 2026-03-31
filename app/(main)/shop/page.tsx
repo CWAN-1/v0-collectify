@@ -36,9 +36,9 @@ const products = [
   {
     id: "1",
     name: "Pikachu VMAX Rainbow Rare",
-    price: 2500000,
-    originalPrice: 3000000,
-    image: "/products/product-1.jpg",
+    price: 250,
+    originalPrice: 300,
+    image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=400&fit=crop",
     seller: "CardMaster",
     rating: 4.9,
     sold: 156,
@@ -50,8 +50,8 @@ const products = [
   {
     id: "2",
     name: "LeBron James Rookie Card",
-    price: 15000000,
-    image: "/products/product-2.jpg",
+    price: 1500,
+    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=400&fit=crop",
     seller: "SportsHub",
     rating: 5.0,
     sold: 23,
@@ -63,9 +63,9 @@ const products = [
   {
     id: "3",
     name: "Blue-Eyes White Dragon 1st Ed",
-    price: 8500000,
-    originalPrice: 10000000,
-    image: "/products/product-3.jpg",
+    price: 850,
+    originalPrice: 1000,
+    image: "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=400&h=400&fit=crop",
     seller: "YugiCollector",
     rating: 4.8,
     sold: 45,
@@ -77,8 +77,8 @@ const products = [
   {
     id: "4",
     name: "Luffy Gear 5 Secret Rare",
-    price: 1800000,
-    image: "/products/product-4.jpg",
+    price: 180,
+    image: "https://images.unsplash.com/photo-1608889825205-eebdb9fc5806?w=400&h=400&fit=crop",
     seller: "OnePieceID",
     rating: 4.7,
     sold: 89,
@@ -90,8 +90,8 @@ const products = [
   {
     id: "5",
     name: "Charizard Base Set Holo",
-    price: 25000000,
-    image: "/products/product-5.jpg",
+    price: 2500,
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
     seller: "VintageCards",
     rating: 4.9,
     sold: 12,
@@ -103,8 +103,8 @@ const products = [
   {
     id: "6",
     name: "Michael Jordan Fleer Rookie",
-    price: 45000000,
-    image: "/products/product-6.jpg",
+    price: 4500,
+    image: "https://images.unsplash.com/photo-1642056446815-3b9b6e1e3d5e?w=400&h=400&fit=crop",
     seller: "LegendaryCards",
     rating: 5.0,
     sold: 5,
@@ -116,9 +116,9 @@ const products = [
 ]
 
 function formatPrice(price: number) {
-  return new Intl.NumberFormat("id-ID", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "IDR",
+    currency: "USD",
     minimumFractionDigits: 0,
   }).format(price)
 }
@@ -130,7 +130,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
     <Link href={`/shop/${product.id}`} className="block">
       <div className="bg-card rounded-2xl overflow-hidden border border-border">
         {/* Image */}
-        <div className="relative aspect-square">
+        <div className="relative aspect-square bg-gradient-to-b from-primary/10 to-transparent">
           <Image
             src={product.image}
             alt={product.name}
@@ -139,7 +139,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
           />
           {/* Hot Badge */}
           {product.isHot && (
-            <Badge className="absolute top-2 left-2 bg-foreground text-background text-xs">
+            <Badge className="absolute top-2 left-2 bg-gradient-to-r from-primary to-accent text-white text-xs border-0">
               Hot
             </Badge>
           )}
@@ -149,7 +149,7 @@ function ProductCard({ product }: { product: typeof products[0] }) {
               e.preventDefault()
               setLiked(!liked)
             }}
-            className="absolute top-2 right-2 size-8 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center"
+            className="absolute top-2 right-2 size-8 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-border"
           >
             <Heart className={`size-4 ${liked ? "fill-red-500 text-red-500" : ""}`} />
           </button>
@@ -162,11 +162,11 @@ function ProductCard({ product }: { product: typeof products[0] }) {
           </h3>
           
           {/* Condition */}
-          <span className="text-xs text-muted-foreground">{product.condition}</span>
+          <span className="text-xs text-green-400">{product.condition}</span>
 
           {/* Price */}
           <div className="mt-2">
-            <span className="font-bold text-foreground">{formatPrice(product.price)}</span>
+            <span className="font-bold text-primary">{formatPrice(product.price)}</span>
             {product.originalPrice && (
               <span className="text-xs text-muted-foreground line-through ml-2">
                 {formatPrice(product.originalPrice)}
@@ -179,13 +179,13 @@ function ProductCard({ product }: { product: typeof products[0] }) {
             <div className="flex items-center gap-1">
               <span className="text-xs text-muted-foreground">{product.seller}</span>
               {product.isVerified && (
-                <div className="size-3.5 bg-foreground rounded-full flex items-center justify-center">
-                  <Check className="size-2 text-background" />
+                <div className="size-3.5 bg-primary rounded-full flex items-center justify-center">
+                  <Check className="size-2 text-white" />
                 </div>
               )}
             </div>
             <div className="flex items-center gap-1">
-              <Star className="size-3 fill-foreground text-foreground" />
+              <Star className="size-3 fill-yellow-500 text-yellow-500" />
               <span className="text-xs font-medium">{product.rating}</span>
             </div>
           </div>
@@ -218,19 +218,19 @@ export default function ShopPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
+      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
         <div className="px-4 pt-12 pb-4">
           {/* Title */}
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-2xl font-bold text-foreground">Shop</h1>
             <Link href="/cart" className="relative">
-              <Button variant="ghost" size="icon">
-                <svg className="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <Button variant="ghost" size="icon" className="bg-card border border-border rounded-xl">
+                <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                   <line x1="3" y1="6" x2="21" y2="6"/>
                   <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
-                <span className="absolute -top-1 -right-1 size-5 bg-foreground text-background text-xs font-bold rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 size-4 bg-gradient-to-r from-primary to-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                   2
                 </span>
               </Button>
@@ -245,7 +245,7 @@ export default function ShopPage() {
               placeholder="Search cards..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-12 pl-12 pr-12 rounded-full bg-muted border-0 text-base"
+              className="h-12 pl-12 pr-12 rounded-xl bg-card border-border text-base"
             />
             <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
               <SheetTrigger asChild>
@@ -267,8 +267,8 @@ export default function ShopPage() {
                         <button
                           key={option.id}
                           onClick={() => setSortBy(option.id)}
-                          className={`w-full flex items-center justify-between p-3 rounded-xl ${
-                            sortBy === option.id ? "bg-foreground text-background" : "bg-muted"
+                          className={`w-full flex items-center justify-between p-3 rounded-xl border ${
+                            sortBy === option.id ? "bg-primary text-primary-foreground border-primary" : "bg-secondary border-border"
                           }`}
                         >
                           <span>{option.label}</span>
@@ -286,10 +286,10 @@ export default function ShopPage() {
                         <button
                           key={condition.id}
                           onClick={() => toggleCondition(condition.id)}
-                          className={`px-4 py-2 rounded-full text-sm font-medium ${
+                          className={`px-4 py-2 rounded-xl text-sm font-medium border ${
                             selectedConditions.includes(condition.id)
-                              ? "bg-foreground text-background"
-                              : "bg-muted text-foreground"
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-secondary text-foreground border-border"
                           }`}
                         >
                           {condition.label}
@@ -299,10 +299,10 @@ export default function ShopPage() {
                   </div>
 
                   {/* Apply Button */}
-                  <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
+                  <div className="fixed bottom-0 left-0 right-0 p-4 bg-card border-t border-border">
                     <Button 
                       onClick={() => setIsFilterOpen(false)}
-                      className="w-full h-14 rounded-full"
+                      className="w-full h-14 rounded-xl bg-gradient-to-r from-primary to-accent"
                     >
                       Apply Filters
                     </Button>
@@ -320,10 +320,10 @@ export default function ShopPage() {
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all border ${
                   selectedCategory === category.id
-                    ? "bg-foreground text-background"
-                    : "bg-muted text-foreground"
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-foreground border-border"
                 }`}
               >
                 {category.label}
