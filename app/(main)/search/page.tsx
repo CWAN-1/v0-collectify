@@ -1,14 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { Search, X, SlidersHorizontal, ArrowUpDown, Star, ChevronDown, Clock, TrendingUp, DollarSign, Check } from "lucide-react"
+import { Search, X, SlidersHorizontal, ArrowUpDown, Star, Clock, TrendingUp, DollarSign, Check, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, ComposedChart, ReferenceLine, Tooltip } from "recharts"
 
 // Mock data
 const mockProducts = [
@@ -37,6 +38,22 @@ const mockUsers = [
   { id: "8", name: "Pokemon Central", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", followers: 0 },
 ]
 
+// Market price history mock data
+const priceHistoryData = [
+  { date: "1/2", price: 8.5, volume: 45 },
+  { date: "1/9", price: 9.2, volume: 52 },
+  { date: "1/16", price: 9.8, volume: 38 },
+  { date: "1/23", price: 10.5, volume: 65 },
+  { date: "1/30", price: 10.2, volume: 48 },
+  { date: "2/1", price: 10.8, volume: 72 },
+  { date: "2/8", price: 9.5, volume: 35 },
+  { date: "2/15", price: 10.2, volume: 42 },
+  { date: "2/22", price: 10.5, volume: 58 },
+  { date: "3/1", price: 11.2, volume: 65 },
+  { date: "3/8", price: 11.5, volume: 78 },
+  { date: "3/15", price: 11.76, volume: 62 },
+]
+
 // Filter options
 const filterOptions = {
   category: ["All", "Single Card", "Set/Bundle", "Booster Pack", "Box", "Case"],
@@ -54,13 +71,14 @@ const sortOptions = [
   { id: "price-low", label: "Price: Low to High", icon: DollarSign },
 ]
 
-export default function SearchPage() {
+function SearchPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get("q") || ""
+  const initialTab = searchParams.get("tab") || "products"
   
   const [searchQuery, setSearchQuery] = useState(initialQuery)
-  const [activeTab, setActiveTab] = useState<"products" | "posts" | "users">("products")
+  const [activeTab, setActiveTab] = useState<"products" | "posts" | "users">(initialTab as "products" | "posts" | "users")
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [showSortSheet, setShowSortSheet] = useState(false)
   const [selectedSort, setSelectedSort] = useState("latest")
@@ -104,6 +122,9 @@ export default function SearchPage() {
   }
 
   const resultCount = activeTab === "products" ? mockProducts.length : activeTab === "posts" ? mockPosts.length : mockUsers.length
+
+  // Show market price section when user has searched for a specific card
+  const showMarketPrice = searchQuery.length > 3 && activeTab === "products"
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -200,6 +221,99 @@ export default function SearchPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto">
+        {/* Market Price History Section - Products Tab Only */}
+        {showMarketPrice && (
+          <div className="mx-3 mb-4 bg-card rounded-2xl border border-border overflow-hidden">
+            <div className="p-4">
+              <h3 className="font-bold text-foreground mb-3">Market Price History</h3>
+              
+              {/* Card Info Badge */}
+              <div className="flex items-center justify-center mb-4">
+                <div className="inline-flex items-center gap-2 bg-secondary px-4 py-2 rounded-full">
+                  <TrendingUp className="size-4 text-primary" />
+                  <span className="text-sm font-medium">Near Mint Holofoil</span>
+                  <span className="text-sm font-bold text-foreground">$11.76</span>
+                  <span className="text-sm font-medium text-green-500">(+35.48%)</span>
+                </div>
+              </div>
+
+              {/* Price Chart */}
+              <div className="h-48 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={priceHistoryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <XAxis 
+                      dataKey="date" 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 10, fill: '#888' }}
+                    />
+                    <YAxis 
+                      yAxisId="price"
+                      orientation="left"
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 10, fill: '#888' }}
+                      tickFormatter={(value) => `$${value.toFixed(2)}`}
+                      domain={[8, 12]}
+                    />
+                    <YAxis 
+                      yAxisId="volume"
+                      orientation="right"
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 10, fill: '#888' }}
+                      domain={[0, 80]}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        fontSize: '12px'
+                      }}
+                    />
+                    <Bar 
+                      yAxisId="volume"
+                      dataKey="volume" 
+                      fill="hsl(var(--primary) / 0.3)" 
+                      radius={[2, 2, 0, 0]}
+                    />
+                    <Line 
+                      yAxisId="price"
+                      type="monotone" 
+                      dataKey="price" 
+                      stroke="hsl(var(--primary))" 
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Card Summary */}
+              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-border">
+                <div className="size-16 rounded-lg overflow-hidden bg-secondary shrink-0">
+                  <Image
+                    src="/cards/pokemon-1.jpg"
+                    alt="Card"
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-sm text-foreground truncate">Pikachu VMAX Rainbow Rare</h4>
+                  <p className="text-xs text-muted-foreground">Vivid Voltage 188/185</p>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-xs text-muted-foreground">Avg: <span className="font-semibold text-foreground">$11.76</span></span>
+                    <span className="text-xs text-muted-foreground">291 listings</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Products Grid */}
         {activeTab === "products" && (
           <div className="grid grid-cols-3 gap-2 p-3">
@@ -300,13 +414,13 @@ export default function SearchPage() {
 
       {/* Filter Sheet */}
       <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
-        <SheetContent side="bottom" className="h-[85vh] rounded-t-3xl">
-          <SheetHeader className="border-b border-border pb-4">
+        <SheetContent side="bottom" className="h-[85vh] rounded-t-3xl px-0" aria-describedby={undefined}>
+          <SheetHeader className="border-b border-border pb-4 px-4">
             <SheetTitle className="text-center">Filter</SheetTitle>
           </SheetHeader>
-          <div className="overflow-y-auto h-[calc(100%-120px)] py-4 space-y-6">
+          <div className="overflow-y-auto h-[calc(100%-140px)] py-4 px-4">
             {/* Category */}
-            <div>
+            <div className="mb-6">
               <h4 className="text-sm font-medium text-foreground mb-3">Category</h4>
               <div className="flex flex-wrap gap-2">
                 {filterOptions.category.map((option) => (
@@ -326,7 +440,7 @@ export default function SearchPage() {
             </div>
 
             {/* Sale Status */}
-            <div>
+            <div className="mb-6">
               <h4 className="text-sm font-medium text-foreground mb-3">Sale Status</h4>
               <div className="flex flex-wrap gap-2">
                 {filterOptions.saleStatus.map((option) => (
@@ -346,7 +460,7 @@ export default function SearchPage() {
             </div>
 
             {/* Sale Type */}
-            <div>
+            <div className="mb-6">
               <h4 className="text-sm font-medium text-foreground mb-3">Sale Type</h4>
               <div className="flex flex-wrap gap-2">
                 {filterOptions.saleType.map((option) => (
@@ -366,7 +480,7 @@ export default function SearchPage() {
             </div>
 
             {/* Graded */}
-            <div>
+            <div className="mb-6">
               <h4 className="text-sm font-medium text-foreground mb-3">Graded</h4>
               <div className="flex flex-wrap gap-2">
                 {filterOptions.graded.map((option) => (
@@ -386,7 +500,7 @@ export default function SearchPage() {
             </div>
 
             {/* Grading Company */}
-            <div>
+            <div className="mb-6">
               <h4 className="text-sm font-medium text-foreground mb-3">Grading Company</h4>
               <div className="flex flex-wrap gap-2">
                 {filterOptions.gradingCompany.map((option) => (
@@ -406,7 +520,7 @@ export default function SearchPage() {
             </div>
 
             {/* Condition */}
-            <div>
+            <div className="mb-6">
               <h4 className="text-sm font-medium text-foreground mb-3">Rating / Condition</h4>
               <div className="flex flex-wrap gap-2">
                 {filterOptions.condition.map((option) => (
@@ -440,31 +554,27 @@ export default function SearchPage() {
 
       {/* Sort Sheet */}
       <Sheet open={showSortSheet} onOpenChange={setShowSortSheet}>
-        <SheetContent side="bottom" className="rounded-t-3xl">
+        <SheetContent side="bottom" className="rounded-t-3xl" aria-describedby={undefined}>
           <SheetHeader className="border-b border-border pb-4">
             <SheetTitle className="text-center">Sort</SheetTitle>
           </SheetHeader>
-          <div className="py-2">
+          <div className="py-4 space-y-2">
             {sortOptions.map((option) => {
               const Icon = option.icon
               return (
                 <button
                   key={option.id}
                   onClick={() => applySort(option.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-colors ${
-                    selectedSort === option.id ? "bg-primary/10" : "hover:bg-secondary"
+                  className={`w-full flex items-center gap-3 p-4 rounded-xl transition-colors ${
+                    selectedSort === option.id
+                      ? "bg-primary/10 border border-primary"
+                      : "bg-secondary border border-transparent"
                   }`}
                 >
-                  <div className={`size-8 rounded-full flex items-center justify-center ${
-                    selectedSort === option.id ? "bg-primary/20" : "bg-secondary"
-                  }`}>
-                    <Icon className={`size-4 ${selectedSort === option.id ? "text-primary" : "text-muted-foreground"}`} />
-                  </div>
-                  <span className={`text-sm ${selectedSort === option.id ? "font-medium text-primary" : "text-foreground"}`}>
-                    {option.label}
-                  </span>
+                  <Icon className="size-5 text-muted-foreground" />
+                  <span className="flex-1 text-left text-sm font-medium">{option.label}</span>
                   {selectedSort === option.id && (
-                    <Check className="size-4 text-primary ml-auto" />
+                    <Check className="size-5 text-primary" />
                   )}
                 </button>
               )
@@ -473,5 +583,13 @@ export default function SearchPage() {
         </SheetContent>
       </Sheet>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
   )
 }

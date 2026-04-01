@@ -275,7 +275,8 @@ export default function HomePage() {
                 alt="Collectify"
                 width={100}
                 height={32}
-                className="h-8 w-auto"
+                className="h-8"
+                style={{ width: 'auto' }}
               />
             </Link>
             
@@ -303,7 +304,7 @@ export default function HomePage() {
       <main className="px-4">
         {/* Brand Categories */}
         <div className="mb-5">
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide py-2">
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide py-2 pl-1">
             {categories.map((category) => (
               <button
                 key={category.id}

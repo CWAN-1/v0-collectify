@@ -1,11 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, SlidersHorizontal, Heart, Star, X, Check, Clock } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { Search, SlidersHorizontal, ArrowUpDown, Heart, Star, X, Check, Clock, TrendingUp, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -19,24 +18,20 @@ const categories = [
   { id: "sports", label: "Sports", avatar: "/brands/sports.jpg", bgColor: "bg-green-600" },
 ]
 
-const saleTypes = [
-  { id: "all", label: "All" },
-  { id: "buy", label: "Buy Now" },
-  { id: "auction", label: "Auction" },
-]
-
-const conditions = [
-  { id: "mint", label: "Mint/Near Mint" },
-  { id: "excellent", label: "Excellent" },
-  { id: "good", label: "Good" },
-  { id: "played", label: "Played" },
-]
+const filterOptions = {
+  category: ["All", "Single Card", "Set/Bundle", "Booster Pack", "Box", "Case"],
+  saleStatus: ["All", "For Sale", "Auction"],
+  saleType: ["All", "Fixed Price", "Negotiable"],
+  graded: ["All", "Graded", "Ungraded"],
+  gradingCompany: ["All", "PSA", "BGS", "CGC", "ACE Grading", "Beckett", "SGC"],
+  condition: ["All", "10", "9.5", "9", "8-8.5", "7-7.5", "6-6.5", "A", "B", "C", "D"],
+}
 
 const sortOptions = [
-  { id: "popular", label: "Most Popular" },
-  { id: "newest", label: "Newest" },
-  { id: "price-low", label: "Price: Low to High" },
-  { id: "price-high", label: "Price: High to Low" },
+  { id: "ending", label: "Ending Soon", icon: Clock },
+  { id: "latest", label: "Latest", icon: TrendingUp },
+  { id: "price-high", label: "Price: High to Low", icon: DollarSign },
+  { id: "price-low", label: "Price: Low to High", icon: DollarSign },
 ]
 
 const products = [
@@ -362,29 +357,45 @@ function AuctionCard({ product }: { product: typeof auctionProducts[0] }) {
 }
 
 export default function ShopPage() {
-  const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
-  const [selectedSaleType, setSelectedSaleType] = useState("all")
-  const [selectedConditions, setSelectedConditions] = useState<string[]>([])
-  const [sortBy, setSortBy] = useState("popular")
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [showFilterSheet, setShowFilterSheet] = useState(false)
+  const [showSortSheet, setShowSortSheet] = useState(false)
+  const [selectedSort, setSelectedSort] = useState("latest")
+  const [filters, setFilters] = useState({
+    category: "All",
+    saleStatus: "All",
+    saleType: "All",
+    graded: "All",
+    gradingCompany: "All",
+    condition: "All",
+  })
 
   const filteredProducts = products.filter(product => 
-    (selectedCategory === "all" || product.category === selectedCategory) &&
-    (selectedConditions.length === 0 || selectedConditions.some(c => product.condition.toLowerCase().includes(c)))
+    (selectedCategory === "all" || product.category === selectedCategory)
   )
 
   const filteredAuctions = auctionProducts.filter(product =>
-    (selectedCategory === "all" || product.category === selectedCategory) &&
-    (selectedConditions.length === 0 || selectedConditions.some(c => product.condition.toLowerCase().includes(c)))
+    (selectedCategory === "all" || product.category === selectedCategory)
   )
 
-  const toggleCondition = (condition: string) => {
-    if (selectedConditions.includes(condition)) {
-      setSelectedConditions(selectedConditions.filter(c => c !== condition))
-    } else {
-      setSelectedConditions([...selectedConditions, condition])
-    }
+  const applyFilters = () => {
+    setShowFilterSheet(false)
+  }
+
+  const resetFilters = () => {
+    setFilters({
+      category: "All",
+      saleStatus: "All",
+      saleType: "All",
+      graded: "All",
+      gradingCompany: "All",
+      condition: "All",
+    })
+  }
+
+  const applySort = (sortId: string) => {
+    setSelectedSort(sortId)
+    setShowSortSheet(false)
   }
 
   return (
@@ -397,80 +408,15 @@ export default function ShopPage() {
             {/* Shop Title */}
             <span className="text-base font-bold text-foreground shrink-0">Shop</span>
             
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search cards..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 pl-9 pr-10 rounded-xl bg-card border-border text-sm"
-              />
-              <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-                <SheetTrigger asChild>
-                  <button className="absolute right-3 top-1/2 -translate-y-1/2">
-                    <SlidersHorizontal className="size-4 text-muted-foreground" />
-                  </button>
-                </SheetTrigger>
-              <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl">
-                <SheetHeader className="pb-4">
-                  <SheetTitle className="text-xl">Filter & Sort</SheetTitle>
-                </SheetHeader>
-                
-                <div className="space-y-6 overflow-auto h-full pb-20">
-                  {/* Sort */}
-                  <div>
-                    <h3 className="font-semibold mb-3">Sort By</h3>
-                    <div className="space-y-2">
-                      {sortOptions.map((option) => (
-                        <button
-                          key={option.id}
-                          onClick={() => setSortBy(option.id)}
-                          className={`w-full flex items-center justify-between p-3 rounded-xl border ${
-                            sortBy === option.id ? "bg-primary text-primary-foreground border-primary" : "bg-secondary border-border"
-                          }`}
-                        >
-                          <span>{option.label}</span>
-                          {sortBy === option.id && <Check className="size-5" />}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Condition */}
-                  <div>
-                    <h3 className="font-semibold mb-3">Condition</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {conditions.map((condition) => (
-                        <button
-                          key={condition.id}
-                          onClick={() => toggleCondition(condition.id)}
-                          className={`px-4 py-2 rounded-xl text-sm font-medium border ${
-                            selectedConditions.includes(condition.id)
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-secondary text-foreground border-border"
-                          }`}
-                        >
-                          {condition.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Apply Button */}
-                  <div className="fixed bottom-0 left-0 right-0 p-4 bg-card border-t border-border">
-                    <Button 
-                      onClick={() => setIsFilterOpen(false)}
-                      className="w-full h-14 rounded-xl bg-gradient-to-r from-primary to-accent"
-                    >
-                      Apply Filters
-                    </Button>
-                  </div>
+            {/* Search - Clickable to navigate to search page */}
+            <Link href="/search?tab=products" className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <div className="h-10 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
+                  Search cards...
                 </div>
-              </SheetContent>
-              </Sheet>
-            </div>
+              </div>
+            </Link>
 
             {/* Cart */}
             <Link href="/cart" className="relative shrink-0">
@@ -524,70 +470,211 @@ export default function ShopPage() {
           </div>
         </div>
 
-        {/* Sale Type Filter - Subtle style */}
+        {/* Filter & Sort Buttons */}
         <div className="px-4 pb-3">
-          <div className="flex gap-1.5">
-            {saleTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setSelectedSaleType(type.id)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                  selectedSaleType === type.id
-                    ? "bg-muted-foreground/20 text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {type.label}
-              </button>
-            ))}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowFilterSheet(true)}
+              className="h-8 rounded-full text-xs gap-1.5 border-border"
+            >
+              <SlidersHorizontal className="size-3.5" />
+              Filter
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSortSheet(true)}
+              className="h-8 rounded-full text-xs gap-1.5 border-border"
+            >
+              <ArrowUpDown className="size-3.5" />
+              Sort
+            </Button>
           </div>
         </div>
       </header>
 
       {/* Product Grid */}
       <main className="px-4 pt-2">
-        {/* Active Filters */}
-        {selectedConditions.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {selectedConditions.map((condition) => (
-              <Badge
-                key={condition}
-                variant="secondary"
-                className="pl-3 pr-2 py-1 gap-1 rounded-full"
-              >
-                {conditions.find(c => c.id === condition)?.label}
-                <button onClick={() => toggleCondition(condition)}>
-                  <X className="size-3" />
-                </button>
-              </Badge>
-            ))}
-          </div>
-        )}
-
         {/* Results Count */}
         <p className="text-sm text-muted-foreground mb-4">
-          {selectedSaleType === "auction" 
-            ? `${filteredAuctions.length} auctions found`
-            : selectedSaleType === "buy"
-            ? `${filteredProducts.length} products found`
-            : `${filteredProducts.length + filteredAuctions.length} items found`
-          }
+          {filteredProducts.length + filteredAuctions.length} items found
         </p>
 
-        {/* Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          {(selectedSaleType === "all" || selectedSaleType === "auction") && 
-            filteredAuctions.map((product) => (
-              <AuctionCard key={product.id} product={product} />
-            ))
-          }
-          {(selectedSaleType === "all" || selectedSaleType === "buy") &&
-            filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          }
+        {/* Products Grid */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
+
+        {/* Auctions */}
+        {filteredAuctions.length > 0 && (
+          <>
+            <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+              <div className="size-2 bg-red-500 rounded-full animate-pulse" />
+              Auctions
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {filteredAuctions.map((product) => (
+                <AuctionCard key={product.id} product={product} />
+              ))}
+            </div>
+          </>
+        )}
       </main>
+
+      {/* Filter Sheet */}
+      <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
+        <SheetContent side="bottom" className="h-[85vh] rounded-t-3xl px-0" aria-describedby={undefined}>
+          <SheetHeader className="border-b border-border pb-4 px-4">
+            <SheetTitle className="text-center">Filter</SheetTitle>
+          </SheetHeader>
+          <div className="overflow-y-auto h-[calc(100%-140px)] py-4 px-4">
+            {/* Category */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Category</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.category.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, category: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.category === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sale Status */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Sale Status</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.saleStatus.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, saleStatus: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.saleStatus === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Graded */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Graded</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.graded.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, graded: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.graded === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Grading Company */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Grading Company</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.gradingCompany.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, gradingCompany: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.gradingCompany === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Condition */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Rating / Condition</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.condition.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, condition: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.condition === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Filter Actions */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t border-border flex gap-3">
+            <Button variant="outline" className="flex-1 h-12 rounded-xl" onClick={resetFilters}>
+              Reset
+            </Button>
+            <Button className="flex-1 h-12 rounded-xl bg-primary" onClick={applyFilters}>
+              Apply
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Sort Sheet */}
+      <Sheet open={showSortSheet} onOpenChange={setShowSortSheet}>
+        <SheetContent side="bottom" className="rounded-t-3xl" aria-describedby={undefined}>
+          <SheetHeader className="border-b border-border pb-4">
+            <SheetTitle className="text-center">Sort</SheetTitle>
+          </SheetHeader>
+          <div className="py-4 space-y-2">
+            {sortOptions.map((option) => {
+              const Icon = option.icon
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => applySort(option.id)}
+                  className={`w-full flex items-center gap-3 p-4 rounded-xl transition-colors ${
+                    selectedSort === option.id
+                      ? "bg-primary/10 border border-primary"
+                      : "bg-secondary border border-transparent"
+                  }`}
+                >
+                  <Icon className="size-5 text-muted-foreground" />
+                  <span className="flex-1 text-left text-sm font-medium">{option.label}</span>
+                  {selectedSort === option.id && (
+                    <Check className="size-5 text-primary" />
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
