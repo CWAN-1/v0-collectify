@@ -225,10 +225,8 @@ function SearchPageContent() {
         {showMarketPrice && (
           <div className="mx-3 mb-4 bg-card rounded-2xl border border-border overflow-hidden">
             <div className="p-4">
-              <h3 className="font-bold text-foreground mb-3">Market Price History</h3>
-
-              {/* Card Info - above chart */}
-              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-border">
+              {/* Card Info */}
+              <div className="flex items-center gap-3 mb-4">
                 <div className="size-14 rounded-lg overflow-hidden bg-secondary shrink-0">
                   <Image
                     src="/cards/pokemon-1.jpg"
@@ -249,20 +247,13 @@ function SearchPageContent() {
                 </div>
               </div>
 
-              {/* Price badge */}
-              <div className="flex items-center gap-2 mb-3">
-                <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-3 py-1.5 rounded-full border border-blue-200 dark:border-blue-800">
-                  <TrendingUp className="size-3.5 text-blue-600" />
-                  <span className="text-xs font-medium text-blue-700 dark:text-blue-300">Near Mint Holofoil</span>
-                  <span className="text-xs font-bold text-blue-700 dark:text-blue-300">$11.76</span>
-                  <span className="text-xs font-medium text-green-500">(+35.48%)</span>
-                </div>
-              </div>
+              {/* Title above chart */}
+              <h3 className="font-bold text-sm text-foreground mb-3">Market Price History</h3>
 
-              {/* Price Chart - full width, no right margin */}
-              <div className="h-44 w-full -mx-0">
+              {/* Price Chart - extend to card edges with negative margin */}
+              <div className="h-44 -mx-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={priceHistoryData} margin={{ top: 5, right: 0, left: -15, bottom: 0 }}>
+                  <ComposedChart data={priceHistoryData} margin={{ top: 5, right: 8, left: -10, bottom: 0 }}>
                     <XAxis
                       dataKey="date"
                       axisLine={false}
