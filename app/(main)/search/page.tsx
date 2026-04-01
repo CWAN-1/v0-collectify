@@ -40,18 +40,28 @@ const mockUsers = [
 
 // Market price history mock data
 const priceHistoryData = [
-  { date: "1/2", price: 8.5, volume: 45 },
-  { date: "1/9", price: 9.2, volume: 52 },
-  { date: "1/16", price: 9.8, volume: 38 },
+  { date: "1/2",  price: 8.5,  volume: 45 },
+  { date: "1/6",  price: 8.8,  volume: 50 },
+  { date: "1/9",  price: 9.2,  volume: 52 },
+  { date: "1/13", price: 9.5,  volume: 60 },
+  { date: "1/16", price: 9.8,  volume: 38 },
+  { date: "1/20", price: 10.1, volume: 55 },
   { date: "1/23", price: 10.5, volume: 65 },
+  { date: "1/27", price: 10.3, volume: 44 },
   { date: "1/30", price: 10.2, volume: 48 },
-  { date: "2/1", price: 10.8, volume: 72 },
-  { date: "2/8", price: 9.5, volume: 35 },
-  { date: "2/15", price: 10.2, volume: 42 },
-  { date: "2/22", price: 10.5, volume: 58 },
-  { date: "3/1", price: 11.2, volume: 65 },
-  { date: "3/8", price: 11.5, volume: 78 },
-  { date: "3/15", price: 11.76, volume: 62 },
+  { date: "2/3",  price: 10.6, volume: 60 },
+  { date: "2/6",  price: 10.8, volume: 72 },
+  { date: "2/10", price: 9.9,  volume: 40 },
+  { date: "2/13", price: 9.5,  volume: 35 },
+  { date: "2/17", price: 10.0, volume: 42 },
+  { date: "2/20", price: 10.3, volume: 50 },
+  { date: "2/24", price: 10.5, volume: 58 },
+  { date: "2/27", price: 10.8, volume: 54 },
+  { date: "3/3",  price: 11.0, volume: 63 },
+  { date: "3/6",  price: 11.2, volume: 65 },
+  { date: "3/10", price: 11.4, volume: 70 },
+  { date: "3/13", price: 11.5, volume: 78 },
+  { date: "3/17", price: 11.76, volume: 62 },
 ]
 
 // Filter options
@@ -120,8 +130,6 @@ function SearchPageContent() {
     setSelectedSort(sortId)
     setShowSortSheet(false)
   }
-
-  const resultCount = activeTab === "products" ? mockProducts.length : activeTab === "posts" ? mockPosts.length : mockUsers.length
 
   // Show market price section when user has searched for a specific card
   const showMarketPrice = searchQuery.length > 3 && activeTab === "products"
@@ -212,13 +220,6 @@ function SearchPageContent() {
         </div>
       )}
 
-      {/* Result Count */}
-      <div className="flex justify-center py-2">
-        <span className="text-xs bg-secondary text-foreground px-3 py-1 rounded-full">
-          {resultCount} results
-        </span>
-      </div>
-
       {/* Content */}
       <div className="flex-1 overflow-auto">
         {/* Market Price History Section - Products Tab Only */}
@@ -282,11 +283,17 @@ function SearchPageContent() {
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'hsl(var(--card))',
-                        border: '1px solid hsl(var(--border))',
+                        backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                        border: 'none',
                         borderRadius: '8px',
                         fontSize: '11px',
+                        color: '#f8fafc',
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                        padding: '8px 12px',
                       }}
+                      labelStyle={{ color: '#94a3b8', marginBottom: '4px', fontSize: '10px' }}
+                      itemStyle={{ color: '#f8fafc' }}
+                      cursor={{ stroke: 'rgba(148,163,184,0.3)', strokeWidth: 1 }}
                       formatter={(value: number, name: string) =>
                         name === "price" ? [`$${value.toFixed(2)}`, "Price"] : [value, "Volume"]
                       }
