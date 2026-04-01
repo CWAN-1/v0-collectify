@@ -1,6 +1,6 @@
 "use client"
 
-import { Settings, ChevronRight, Clock, Heart, Users, Gavel, Wallet, Coins, Package, CreditCard, Truck, CheckCircle, RotateCcw, XCircle, Store, MapPin, Globe, FileText, HelpCircle, Info, LogOut, Star } from "lucide-react"
+import { Settings, ChevronRight, Clock, Heart, Users, Gavel, Wallet, Package, CreditCard, Truck, CheckCircle, RotateCcw, XCircle, Store, MapPin, Globe, FileText, HelpCircle, Info, LogOut, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
@@ -28,7 +28,6 @@ const orderStatuses = [
 const salesMenu = [
   { href: "/profile/shop", icon: Store, label: "My Shop" },
   { href: "/profile/wallet", icon: Wallet, label: "Balance & Withdraw" },
-  { href: "/profile/coins", icon: Coins, label: "CardHub Coins" },
 ]
 
 // Account menu
