@@ -9,7 +9,7 @@ import Image from "next/image"
 // Action buttons
 const actionButtons = [
   { id: "posts", label: "Posts", icon: Package, href: "/profile/posts" },
-  { id: "bids", label: "Bid History", icon: Gavel, href: "/profile/bids" },
+  { id: "bids", label: "Bid History", icon: Gavel, href: "/profile/bid-history" },
   { id: "favorites", label: "Favorites", icon: Heart, href: "/profile/favorites" },
   { id: "following", label: "Following", icon: Users, href: "/profile/following" },
 ]

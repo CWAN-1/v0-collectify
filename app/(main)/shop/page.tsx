@@ -524,17 +524,17 @@ export default function ShopPage() {
           </div>
         </div>
 
-        {/* Sale Type Filter */}
+        {/* Sale Type Filter - Subtle style */}
         <div className="px-4 pb-3">
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             {saleTypes.map((type) => (
               <button
                 key={type.id}
                 onClick={() => setSelectedSaleType(type.id)}
-                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all border ${
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                   selectedSaleType === type.id
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-foreground border-border"
+                    ? "bg-muted-foreground/20 text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {type.label}

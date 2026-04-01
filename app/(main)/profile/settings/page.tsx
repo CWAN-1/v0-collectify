@@ -3,39 +3,38 @@
 import { useRouter } from "next/navigation"
 import { ArrowLeft, User, MapPin, Bell, Lock, Shield, CreditCard, Globe, FileText, HelpCircle, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
 
 const settingsSections = [
   {
-    title: "Akun",
+    title: "Account",
     items: [
-      { href: "/profile/settings/edit", icon: User, label: "Edit Profil" },
-      { href: "/profile/settings/address", icon: MapPin, label: "Alamat Pengiriman" },
-      { href: "/profile/settings/payment", icon: CreditCard, label: "Metode Pembayaran" },
+      { href: "/profile/settings/edit", icon: User, label: "Edit Profile" },
+      { href: "/profile/address", icon: MapPin, label: "Shipping Address" },
+      { href: "/profile/settings/payment", icon: CreditCard, label: "Payment Methods" },
     ]
   },
   {
-    title: "Preferensi",
+    title: "Preferences",
     items: [
-      { href: "/profile/settings/notifications", icon: Bell, label: "Notifikasi" },
-      { href: "/profile/settings/language", icon: Globe, label: "Bahasa", value: "Indonesia" },
+      { href: "/profile/settings/notifications", icon: Bell, label: "Notifications" },
+      { href: "/profile/language", icon: Globe, label: "Language", value: "English" },
     ]
   },
   {
-    title: "Keamanan",
+    title: "Security",
     items: [
-      { href: "/profile/settings/password", icon: Lock, label: "Ubah Kata Sandi" },
-      { href: "/profile/settings/privacy", icon: Shield, label: "Privasi" },
+      { href: "/profile/settings/password", icon: Lock, label: "Change Password" },
+      { href: "/profile/settings/privacy", icon: Shield, label: "Privacy" },
     ]
   },
   {
-    title: "Tentang",
+    title: "About",
     items: [
-      { href: "/terms", icon: FileText, label: "Syarat & Ketentuan" },
-      { href: "/privacy-policy", icon: Shield, label: "Kebijakan Privasi" },
-      { href: "/help", icon: HelpCircle, label: "Bantuan" },
+      { href: "/profile/terms", icon: FileText, label: "Terms & Conditions" },
+      { href: "/privacy-policy", icon: Shield, label: "Privacy Policy" },
+      { href: "/profile/help", icon: HelpCircle, label: "Help Center" },
     ]
   },
 ]
@@ -51,7 +50,7 @@ export default function SettingsPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <h1 className="text-xl font-bold">Pengaturan</h1>
+          <h1 className="text-xl font-bold">Settings</h1>
         </div>
       </header>
 
@@ -60,12 +59,12 @@ export default function SettingsPage() {
         <Link href="/profile/settings/edit">
           <div className="flex items-center gap-4 p-4 bg-card rounded-2xl border border-border mb-6">
             <Avatar className="size-16">
-              <AvatarImage src="/avatars/user-1.jpg" />
-              <AvatarFallback>BS</AvatarFallback>
+              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop" />
+              <AvatarFallback>AC</AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <h2 className="font-semibold text-lg">Budi Santoso</h2>
-              <p className="text-muted-foreground">@budisantoso</p>
+              <h2 className="font-semibold text-lg">Alex Chen</h2>
+              <p className="text-muted-foreground">@alexchen</p>
             </div>
             <ChevronRight className="size-5 text-muted-foreground" />
           </div>
@@ -106,7 +105,7 @@ export default function SettingsPage() {
         {/* App Version */}
         <div className="text-center text-sm text-muted-foreground mt-8">
           <p>CardHub v1.0.0</p>
-          <p>Made with love in Indonesia</p>
+          <p>Made with love</p>
         </div>
       </main>
     </div>

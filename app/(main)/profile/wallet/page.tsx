@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, ArrowUpRight, ArrowDownLeft, Plus, ChevronRight, Eye, EyeOff, CreditCard, Building2 } from "lucide-react"
+import { ArrowLeft, ArrowUpRight, ArrowDownLeft, Plus, ChevronRight, Eye, EyeOff, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
@@ -11,46 +11,46 @@ const transactions = [
   {
     id: "1",
     type: "income",
-    title: "Penjualan - Pikachu VMAX",
-    amount: 2500000,
-    date: "28 Mar 2024",
+    title: "Sale - Pikachu VMAX",
+    amount: 250,
+    date: "Mar 28, 2024",
     status: "completed"
   },
   {
     id: "2",
     type: "withdraw",
-    title: "Penarikan ke BCA",
-    amount: -5000000,
-    date: "25 Mar 2024",
+    title: "Withdrawal to Bank Account",
+    amount: -500,
+    date: "Mar 25, 2024",
     status: "completed"
   },
   {
     id: "3",
     type: "income",
-    title: "Penjualan - Charizard Base Set",
-    amount: 25000000,
-    date: "23 Mar 2024",
+    title: "Sale - Charizard Base Set",
+    amount: 2500,
+    date: "Mar 23, 2024",
     status: "completed"
   },
   {
     id: "4",
     type: "withdraw",
-    title: "Penarikan ke Mandiri",
-    amount: -10000000,
-    date: "20 Mar 2024",
+    title: "Withdrawal to PayPal",
+    amount: -1000,
+    date: "Mar 20, 2024",
     status: "pending"
   },
 ]
 
 const bankAccounts = [
-  { id: "1", bank: "BCA", number: "****4567", name: "Budi Santoso", isDefault: true },
-  { id: "2", bank: "Mandiri", number: "****8901", name: "Budi Santoso", isDefault: false },
+  { id: "1", bank: "Bank of America", number: "****4567", name: "Alex Chen", isDefault: true },
+  { id: "2", bank: "Chase", number: "****8901", name: "Alex Chen", isDefault: false },
 ]
 
 function formatPrice(price: number) {
-  return new Intl.NumberFormat("id-ID", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "IDR",
+    currency: "USD",
     minimumFractionDigits: 0,
   }).format(Math.abs(price))
 }
@@ -60,8 +60,8 @@ export default function WalletPage() {
   const [showBalance, setShowBalance] = useState(true)
   const [withdrawAmount, setWithdrawAmount] = useState("")
 
-  const balance = 45500000
-  const pendingBalance = 2500000
+  const balance = 4550
+  const pendingBalance = 250
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -76,13 +76,13 @@ export default function WalletPage() {
           >
             <ArrowLeft className="size-5" />
           </Button>
-          <h1 className="text-xl font-bold">Saldo Saya</h1>
+          <h1 className="text-xl font-bold">My Balance</h1>
         </div>
 
         {/* Balance Card */}
         <div className="bg-background/10 rounded-2xl p-4 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-background/70">Saldo Tersedia</span>
+            <span className="text-background/70">Available Balance</span>
             <button onClick={() => setShowBalance(!showBalance)}>
               {showBalance ? (
                 <Eye className="size-5 text-background/70" />
@@ -92,7 +92,7 @@ export default function WalletPage() {
             </button>
           </div>
           <p className="text-3xl font-bold mb-4">
-            {showBalance ? formatPrice(balance) : "Rp ••••••••"}
+            {showBalance ? formatPrice(balance) : "$••••••"}
           </p>
           <div className="flex items-center justify-between">
             <div>
@@ -103,37 +103,37 @@ export default function WalletPage() {
               <SheetTrigger asChild>
                 <Button className="bg-background text-foreground hover:bg-background/90 rounded-full gap-2">
                   <ArrowUpRight className="size-4" />
-                  Tarik Dana
+                  Withdraw
                 </Button>
               </SheetTrigger>
               <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl">
                 <SheetHeader className="pb-4">
-                  <SheetTitle>Tarik Dana</SheetTitle>
+                  <SheetTitle>Withdraw Funds</SheetTitle>
                 </SheetHeader>
                 <div className="space-y-6">
                   {/* Amount Input */}
                   <div>
                     <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                      Jumlah Penarikan
+                      Withdrawal Amount
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">Rp</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                       <Input
                         type="number"
                         placeholder="0"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value)}
-                        className="h-14 pl-12 rounded-2xl bg-muted border-0 text-2xl font-bold"
+                        className="h-14 pl-10 rounded-2xl bg-muted border-0 text-2xl font-bold"
                       />
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Saldo tersedia: {formatPrice(balance)}
+                      Available balance: {formatPrice(balance)}
                     </p>
                   </div>
 
                   {/* Quick Amount */}
                   <div className="flex flex-wrap gap-2">
-                    {[1000000, 5000000, 10000000, 25000000].map((amount) => (
+                    {[100, 500, 1000, 2500].map((amount) => (
                       <button
                         key={amount}
                         onClick={() => setWithdrawAmount(amount.toString())}
@@ -147,7 +147,7 @@ export default function WalletPage() {
                   {/* Bank Account */}
                   <div>
                     <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                      Rekening Tujuan
+                      Withdraw To
                     </label>
                     <button className="w-full flex items-center gap-3 p-4 bg-muted rounded-2xl">
                       <div className="size-12 rounded-full bg-background flex items-center justify-center">
@@ -168,7 +168,7 @@ export default function WalletPage() {
                     className="w-full h-14 rounded-full"
                     disabled={!withdrawAmount || Number(withdrawAmount) > balance}
                   >
-                    Tarik Dana
+                    Withdraw
                   </Button>
                 </div>
               </SheetContent>
@@ -181,10 +181,10 @@ export default function WalletPage() {
         {/* Bank Accounts */}
         <div className="bg-card rounded-2xl border border-border p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold">Rekening Bank</h3>
+            <h3 className="font-semibold">Bank Accounts</h3>
             <button className="text-sm text-muted-foreground flex items-center gap-1">
               <Plus className="size-4" />
-              Tambah
+              Add
             </button>
           </div>
           <div className="space-y-2">
@@ -198,7 +198,7 @@ export default function WalletPage() {
                     <span className="font-medium">{account.bank}</span>
                     {account.isDefault && (
                       <span className="text-xs px-2 py-0.5 bg-foreground text-background rounded-full">
-                        Utama
+                        Primary
                       </span>
                     )}
                   </div>
@@ -211,7 +211,7 @@ export default function WalletPage() {
 
         {/* Transaction History */}
         <div>
-          <h3 className="font-semibold mb-3">Riwayat Transaksi</h3>
+          <h3 className="font-semibold mb-3">Transaction History</h3>
           <div className="space-y-3">
             {transactions.map((transaction) => (
               <div key={transaction.id} className="flex items-center gap-3 p-3 bg-card rounded-2xl border border-border">

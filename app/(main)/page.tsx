@@ -179,15 +179,19 @@ function formatTimeLeft(endTime: Date) {
 }
 
 function AuctionCountdown({ endTime }: { endTime: Date }) {
-  const [timeLeft, setTimeLeft] = useState(formatTimeLeft(endTime))
+  const [mounted, setMounted] = useState(false)
+  const [timeLeft, setTimeLeft] = useState("")
 
   useEffect(() => {
+    setMounted(true)
+    setTimeLeft(formatTimeLeft(endTime))
     const timer = setInterval(() => {
       setTimeLeft(formatTimeLeft(endTime))
     }, 1000)
     return () => clearInterval(timer)
   }, [endTime])
 
+  if (!mounted) return <span>--:--</span>
   return <span>{timeLeft}</span>
 }
 
@@ -245,7 +249,6 @@ function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState("all")
-  const [searchQuery, setSearchQuery] = useState("")
 
   const filteredPosts = posts.filter(post => 
     selectedCategory === "all" || post.category === selectedCategory
@@ -276,17 +279,15 @@ export default function HomePage() {
               />
             </Link>
             
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search cards..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 pl-9 pr-4 rounded-xl bg-card border-border text-sm"
-              />
-            </div>
+            {/* Search - Clickable to navigate to search page */}
+            <Link href="/search" className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <div className="h-10 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
+                  Search cards...
+                </div>
+              </div>
+            </Link>
             
             {/* Messages */}
             <Link href="/messages">
@@ -345,12 +346,12 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Live Auctions */}
+        {/* Auctions */}
         <div className="mb-5">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <div className="size-2 bg-red-500 rounded-full animate-pulse" />
-              <h2 className="font-bold text-foreground">Live Auctions</h2>
+              <h2 className="font-bold text-foreground">Auctions</h2>
             </div>
             <Link href="/shop?type=auction" className="flex items-center gap-1 text-sm text-primary">
               See All <ChevronRight className="size-4" />

@@ -207,13 +207,13 @@ export default function ShopManagementPage() {
               })}
             </div>
 
-            {/* Live Auctions */}
+            {/* Auctions */}
             {myAuctions.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <div className="size-2 bg-red-500 rounded-full animate-pulse" />
-                    <h3 className="font-semibold">Live Auctions</h3>
+                    <h3 className="font-semibold">Auctions</h3>
                   </div>
                   <button
                     onClick={() => setActiveTab("auctions")}
