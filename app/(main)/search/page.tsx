@@ -226,89 +226,100 @@ function SearchPageContent() {
           <div className="mx-3 mb-4 bg-card rounded-2xl border border-border overflow-hidden">
             <div className="p-4">
               <h3 className="font-bold text-foreground mb-3">Market Price History</h3>
-              
-              {/* Card Info Badge */}
-              <div className="flex items-center justify-center mb-4">
-                <div className="inline-flex items-center gap-2 bg-secondary px-4 py-2 rounded-full">
-                  <TrendingUp className="size-4 text-primary" />
-                  <span className="text-sm font-medium">Near Mint Holofoil</span>
-                  <span className="text-sm font-bold text-foreground">$11.76</span>
-                  <span className="text-sm font-medium text-green-500">(+35.48%)</span>
-                </div>
-              </div>
 
-              {/* Price Chart */}
-              <div className="h-48 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={priceHistoryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <XAxis 
-                      dataKey="date" 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fontSize: 10, fill: '#888' }}
-                    />
-                    <YAxis 
-                      yAxisId="price"
-                      orientation="left"
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fontSize: 10, fill: '#888' }}
-                      tickFormatter={(value) => `$${value.toFixed(2)}`}
-                      domain={[8, 12]}
-                    />
-                    <YAxis 
-                      yAxisId="volume"
-                      orientation="right"
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fontSize: 10, fill: '#888' }}
-                      domain={[0, 80]}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: '8px',
-                        fontSize: '12px'
-                      }}
-                    />
-                    <Bar 
-                      yAxisId="volume"
-                      dataKey="volume" 
-                      fill="hsl(var(--primary) / 0.3)" 
-                      radius={[2, 2, 0, 0]}
-                    />
-                    <Line 
-                      yAxisId="price"
-                      type="monotone" 
-                      dataKey="price" 
-                      stroke="hsl(var(--primary))" 
-                      strokeWidth={2}
-                      dot={false}
-                    />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Card Summary */}
-              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-border">
-                <div className="size-16 rounded-lg overflow-hidden bg-secondary shrink-0">
+              {/* Card Info - above chart */}
+              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-border">
+                <div className="size-14 rounded-lg overflow-hidden bg-secondary shrink-0">
                   <Image
                     src="/cards/pokemon-1.jpg"
                     alt="Card"
-                    width={64}
-                    height={64}
+                    width={56}
+                    height={56}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-semibold text-sm text-foreground truncate">Pikachu VMAX Rainbow Rare</h4>
-                  <p className="text-xs text-muted-foreground">Vivid Voltage 188/185</p>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-muted-foreground">Avg: <span className="font-semibold text-foreground">$11.76</span></span>
+                  <p className="text-xs text-muted-foreground mb-1.5">Vivid Voltage 188/185</p>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-muted-foreground">Avg: <span className="font-bold text-foreground">$11.76</span></span>
+                    <span className="text-xs text-green-500 font-medium">+35.48%</span>
                     <span className="text-xs text-muted-foreground">291 listings</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Price badge */}
+              <div className="flex items-center gap-2 mb-3">
+                <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 px-3 py-1.5 rounded-full border border-blue-200 dark:border-blue-800">
+                  <TrendingUp className="size-3.5 text-blue-600" />
+                  <span className="text-xs font-medium text-blue-700 dark:text-blue-300">Near Mint Holofoil</span>
+                  <span className="text-xs font-bold text-blue-700 dark:text-blue-300">$11.76</span>
+                  <span className="text-xs font-medium text-green-500">(+35.48%)</span>
+                </div>
+              </div>
+
+              {/* Price Chart - full width, no right margin */}
+              <div className="h-44 w-full -mx-0">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={priceHistoryData} margin={{ top: 5, right: 0, left: -15, bottom: 0 }}>
+                    <XAxis
+                      dataKey="date"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 9, fill: '#9ca3af' }}
+                      interval="preserveStartEnd"
+                    />
+                    <YAxis
+                      yAxisId="price"
+                      orientation="left"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 9, fill: '#9ca3af' }}
+                      tickFormatter={(v) => `$${v}`}
+                      domain={[7, 13]}
+                      tickCount={4}
+                    />
+                    <YAxis
+                      yAxisId="volume"
+                      orientation="right"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 9, fill: '#9ca3af' }}
+                      domain={[0, 100]}
+                      tickCount={5}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                      }}
+                      formatter={(value: number, name: string) =>
+                        name === "price" ? [`$${value.toFixed(2)}`, "Price"] : [value, "Volume"]
+                      }
+                    />
+                    {/* Light blue volume bars */}
+                    <Bar
+                      yAxisId="volume"
+                      dataKey="volume"
+                      fill="#bfdbfe"
+                      radius={[2, 2, 0, 0]}
+                      opacity={0.8}
+                    />
+                    {/* Bright blue price line */}
+                    <Line
+                      yAxisId="price"
+                      type="monotone"
+                      dataKey="price"
+                      stroke="#1d4ed8"
+                      strokeWidth={2.5}
+                      dot={false}
+                      activeDot={{ r: 4, fill: '#1d4ed8' }}
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
               </div>
             </div>
           </div>
