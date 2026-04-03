@@ -20,18 +20,18 @@ const categories = [
 ]
 
 const productTypes = [
-  { id: "single", label: "单卡", description: "单张卡牌" },
-  { id: "set", label: "多卡/套卡", description: "多张卡牌组合或完整套卡" },
-  { id: "pack", label: "卡包", description: "未开封卡包" },
-  { id: "box", label: "卡盒", description: "未开封卡盒" },
-  { id: "case", label: "卡箱", description: "整箱未开封产品" },
+  { id: "single", label: "Single Card", description: "Single collectible card" },
+  { id: "set", label: "Multiple/Set", description: "Multiple cards or complete sets" },
+  { id: "pack", label: "Booster Pack", description: "Unopened booster pack" },
+  { id: "box", label: "Booster Box", description: "Unopened booster box" },
+  { id: "case", label: "Case", description: "Complete sealed case" },
 ]
 
 const conditions = [
-  { id: "mint", label: "Mint/Near Mint", description: "完美状态，无任何瑕疵" },
-  { id: "excellent", label: "Excellent", description: "轻微使用痕迹" },
-  { id: "good", label: "Good", description: "明显使用痕迹" },
-  { id: "played", label: "Played", description: "重度使用痕迹" },
+  { id: "mint", label: "Mint/Near Mint", description: "Perfect condition, no flaws" },
+  { id: "excellent", label: "Excellent", description: "Minor signs of play" },
+  { id: "good", label: "Good", description: "Visible signs of play" },
+  { id: "played", label: "Played", description: "Heavy use visible" },
 ]
 
 const gradingCompanies = [
@@ -40,7 +40,7 @@ const gradingCompanies = [
   { id: "cgc", label: "CGC", description: "Certified Guaranty Company" },
   { id: "sgc", label: "SGC", description: "Sportscard Guaranty Corporation" },
   { id: "ace", label: "ACE", description: "ACE Grading" },
-  { id: "other", label: "其他", description: "其他评级公司" },
+  { id: "other", label: "Other", description: "Other grading company" },
 ]
 
 const gradingScores = {
@@ -53,10 +53,10 @@ const gradingScores = {
 }
 
 const auctionDurations = [
-  { id: "12h", label: "12小时", hours: 12 },
-  { id: "24h", label: "24小时", hours: 24 },
-  { id: "48h", label: "48小时", hours: 48 },
-  { id: "72h", label: "72小时", hours: 72 },
+  { id: "12h", label: "12 Hours", hours: 12 },
+  { id: "24h", label: "24 Hours", hours: 24 },
+  { id: "48h", label: "48 Hours", hours: 48 },
+  { id: "72h", label: "72 Hours", hours: 72 },
 ]
 
 type SaleType = "fixed" | "auction"
@@ -106,75 +106,76 @@ export default function CreateProductPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold">出售卡牌</span>
+          <span className="font-semibold text-base">Sell a Card</span>
           <div className="size-10" />
         </div>
       </header>
 
-      <main className="px-4 py-6">
+      <main className="px-4 py-5">
         {/* Image Upload */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-muted-foreground">商品图片 (最多10张)</h3>
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-2.5">
+            <label className="text-xs font-medium text-muted-foreground">Card Photos (up to 10)</label>
             <span className="text-xs text-muted-foreground">0/10</span>
           </div>
-          <div className="flex gap-3 overflow-x-auto pb-2">
+          <div className="flex gap-2.5 overflow-x-auto pb-2">
             {/* Main Photo */}
-            <label className="size-28 shrink-0 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-foreground/50 transition-colors">
-              <Plus className="size-6 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground text-center px-2">主图</span>
+            <label className="size-24 shrink-0 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-0.5 cursor-pointer hover:border-foreground/50 transition-colors">
+              <Plus className="size-5 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground text-center px-1">Main</span>
               <input type="file" accept="image/*" className="hidden" />
             </label>
             
             {/* Additional Photos */}
             {[1, 2, 3, 4].map((i) => (
-              <label key={i} className="size-28 shrink-0 border-2 border-dashed border-border rounded-xl flex items-center justify-center cursor-pointer hover:border-foreground/50 transition-colors">
+              <label key={i} className="size-24 shrink-0 border-2 border-dashed border-border rounded-xl flex items-center justify-center cursor-pointer hover:border-foreground/50 transition-colors">
                 <Plus className="size-5 text-muted-foreground" />
                 <input type="file" accept="image/*" className="hidden" />
               </label>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground mt-2 flex items-start gap-1">
-            <Info className="size-3.5 shrink-0 mt-0.5" />
-            请上传正面、背面及细节照片
+          <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1">
+            <Info className="size-3 shrink-0 mt-0.5" />
+            Upload front, back, and detail shots for best results
           </p>
         </div>
 
         {/* Product Name */}
         <div className="mb-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">卡牌名称 *</h3>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Card Name *</label>
           <Input
-            placeholder="例如：皮卡丘 VMAX 彩虹稀有"
+            placeholder="e.g., Pikachu VMAX Rainbow Rare"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="h-14 rounded-2xl bg-muted border-0 text-base"
+            className="h-12 rounded-xl bg-muted border-0 text-sm"
           />
         </div>
 
         {/* Category */}
         <div className="mb-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">卡牌类别 *</h3>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Category *</label>
           <Sheet>
             <SheetTrigger asChild>
-              <button className="w-full h-14 px-4 rounded-2xl bg-muted flex items-center justify-between">
-                <span className={category ? "text-foreground" : "text-muted-foreground"}>
-                  {category ? categories.find(c => c.id === category)?.label : "选择类别"}
-                </span>
-                <ChevronRight className="size-5 text-muted-foreground" />
-              </button>
+              <Button variant="outline" className="w-full justify-between h-12 rounded-xl">
+                <span className="text-muted-foreground">{category ? categories.find(c => c.id === category)?.label : "Select category"}</span>
+                <ChevronRight className="size-4" />
+              </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="h-[50vh] rounded-t-3xl">
-              <SheetHeader className="pb-4">
-                <SheetTitle>选择卡牌类别</SheetTitle>
+            <SheetContent side="bottom">
+              <SheetHeader className="text-left mb-4">
+                <SheetTitle className="text-base">Select Category</SheetTitle>
               </SheetHeader>
               <div className="space-y-2">
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
-                    onClick={() => setCategory(cat.id)}
-                    className={`w-full p-4 rounded-xl text-left transition-colors ${
-                      category === cat.id ? "bg-foreground text-background" : "bg-muted hover:bg-border"
-                    }`}
+                    onClick={() => {
+                      setCategory(cat.id)
+                    }}
+                    className={cn(
+                      "w-full p-3 rounded-lg text-left text-sm transition-colors",
+                      category === cat.id ? "bg-primary text-primary-foreground" : "bg-muted text-foreground hover:bg-muted/80"
+                    )}
                   >
                     {cat.label}
                   </button>
@@ -186,33 +187,32 @@ export default function CreateProductPage() {
 
         {/* Product Type */}
         <div className="mb-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">商品类型 *</h3>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Card Type *</label>
           <Sheet>
             <SheetTrigger asChild>
-              <button className="w-full h-14 px-4 rounded-2xl bg-muted flex items-center justify-between">
-                <span className={productType ? "text-foreground" : "text-muted-foreground"}>
-                  {productType ? productTypes.find(t => t.id === productType)?.label : "选择商品类型"}
-                </span>
-                <ChevronRight className="size-5 text-muted-foreground" />
-              </button>
+              <Button variant="outline" className="w-full justify-between h-12 rounded-xl">
+                <span className="text-muted-foreground">{productType ? productTypes.find(p => p.id === productType)?.label : "Select type"}</span>
+                <ChevronRight className="size-4" />
+              </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="h-[60vh] rounded-t-3xl">
-              <SheetHeader className="pb-4">
-                <SheetTitle>选择商品类型</SheetTitle>
+            <SheetContent side="bottom">
+              <SheetHeader className="text-left mb-4">
+                <SheetTitle className="text-base">Select Card Type</SheetTitle>
               </SheetHeader>
               <div className="space-y-2">
                 {productTypes.map((type) => (
                   <button
                     key={type.id}
-                    onClick={() => setProductType(type.id)}
-                    className={`w-full p-4 rounded-xl text-left transition-colors ${
-                      productType === type.id ? "bg-foreground text-background" : "bg-muted hover:bg-border"
-                    }`}
+                    onClick={() => {
+                      setProductType(type.id)
+                    }}
+                    className={cn(
+                      "w-full text-left p-3 rounded-lg transition-colors",
+                      productType === type.id ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                    )}
                   >
-                    <span className="font-medium">{type.label}</span>
-                    <p className={`text-sm ${productType === type.id ? "text-background/70" : "text-muted-foreground"}`}>
-                      {type.description}
-                    </p>
+                    <div className="font-medium text-sm">{type.label}</div>
+                    <div className="text-xs opacity-75">{type.description}</div>
                   </button>
                 ))}
               </div>
@@ -220,344 +220,328 @@ export default function CreateProductPage() {
           </Sheet>
         </div>
 
-        {/* Grading Toggle */}
+        {/* Condition */}
         <div className="mb-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">是否评级</h3>
-          <div className="flex gap-3">
-            <button
-              onClick={() => {
-                setIsGraded(false)
-                setGradingCompany("")
-                setGradingScore("")
-                setCertNumber("")
-              }}
-              className={cn(
-                "flex-1 h-14 rounded-2xl font-medium transition-colors",
-                !isGraded ? "bg-foreground text-background" : "bg-muted text-foreground"
-              )}
-            >
-              裸卡（未评级）
-            </button>
-            <button
-              onClick={() => setIsGraded(true)}
-              className={cn(
-                "flex-1 h-14 rounded-2xl font-medium transition-colors",
-                isGraded ? "bg-foreground text-background" : "bg-muted text-foreground"
-              )}
-            >
-              已评级
-            </button>
-          </div>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Card Condition</label>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="w-full justify-between h-12 rounded-xl">
+                <span className="text-muted-foreground">{condition ? conditions.find(c => c.id === condition)?.label : "Select condition"}</span>
+                <ChevronRight className="size-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom">
+              <SheetHeader className="text-left mb-4">
+                <SheetTitle className="text-base">Select Condition</SheetTitle>
+              </SheetHeader>
+              <div className="space-y-2">
+                {conditions.map((cond) => (
+                  <button
+                    key={cond.id}
+                    onClick={() => {
+                      setCondition(cond.id)
+                    }}
+                    className={cn(
+                      "w-full text-left p-3 rounded-lg transition-colors",
+                      condition === cond.id ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                    )}
+                  >
+                    <div className="font-medium text-sm">{cond.label}</div>
+                    <div className="text-xs opacity-75">{cond.description}</div>
+                  </button>
+                ))}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
 
-        {/* Grading Details - Show if isGraded */}
-        {isGraded && (
-          <div className="mb-4 p-4 bg-card rounded-2xl border border-border space-y-4">
-            <div className="flex items-center gap-2 text-sm text-primary">
-              <AlertCircle className="size-4" />
-              <span>请填写评级信息</span>
-            </div>
+        {/* Grading Section */}
+        <div className="bg-card rounded-xl border border-border p-3 mb-4">
+          <label className="flex items-center gap-2 cursor-pointer mb-3">
+            <input
+              type="checkbox"
+              checked={isGraded}
+              onChange={(e) => {
+                setIsGraded(e.target.checked)
+                if (!e.target.checked) {
+                  setGradingCompany("")
+                  setGradingScore("")
+                  setCertNumber("")
+                }
+              }}
+              className="size-4 rounded"
+            />
+            <span className="text-sm font-medium">Graded Card</span>
+          </label>
 
-            {/* Grading Company */}
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">评级公司 *</h3>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <button className="w-full h-14 px-4 rounded-2xl bg-muted flex items-center justify-between">
-                    <span className={gradingCompany ? "text-foreground" : "text-muted-foreground"}>
-                      {gradingCompany ? gradingCompanies.find(c => c.id === gradingCompany)?.label : "选择评级公司"}
-                    </span>
-                    <ChevronRight className="size-5 text-muted-foreground" />
-                  </button>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="h-[60vh] rounded-t-3xl">
-                  <SheetHeader className="pb-4">
-                    <SheetTitle>选择评级公司</SheetTitle>
-                  </SheetHeader>
-                  <div className="space-y-2">
-                    {gradingCompanies.map((company) => (
-                      <button
-                        key={company.id}
-                        onClick={() => {
-                          setGradingCompany(company.id)
-                          setGradingScore("")
-                        }}
-                        className={`w-full p-4 rounded-xl text-left transition-colors ${
-                          gradingCompany === company.id ? "bg-foreground text-background" : "bg-muted hover:bg-border"
-                        }`}
-                      >
-                        <span className="font-medium">{company.label}</span>
-                        <p className={`text-sm ${gradingCompany === company.id ? "text-background/70" : "text-muted-foreground"}`}>
-                          {company.description}
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
-
-            {/* Grading Score */}
-            {gradingCompany && (
+          {isGraded && (
+            <div className="space-y-3">
+              {/* Grading Company */}
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">评级分数 *</h3>
+                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Grading Company *</label>
                 <Sheet>
                   <SheetTrigger asChild>
-                    <button className="w-full h-14 px-4 rounded-2xl bg-muted flex items-center justify-between">
-                      <span className={gradingScore ? "text-foreground" : "text-muted-foreground"}>
-                        {gradingScore || "选择评级分数"}
-                      </span>
-                      <ChevronRight className="size-5 text-muted-foreground" />
-                    </button>
+                    <Button variant="outline" className="w-full justify-between h-10 rounded-lg text-xs">
+                      <span className="text-muted-foreground">{gradingCompany ? gradingCompanies.find(g => g.id === gradingCompany)?.label : "Select"}</span>
+                      <ChevronRight className="size-3.5" />
+                    </Button>
                   </SheetTrigger>
-                  <SheetContent side="bottom" className="h-[60vh] rounded-t-3xl">
-                    <SheetHeader className="pb-4">
-                      <SheetTitle>选择评级分数</SheetTitle>
+                  <SheetContent side="bottom">
+                    <SheetHeader className="text-left mb-4">
+                      <SheetTitle className="text-base">Select Grading Company</SheetTitle>
                     </SheetHeader>
-                    <div className="space-y-2 max-h-[45vh] overflow-y-auto">
-                      {currentGradingScores.map((score) => (
+                    <div className="space-y-2">
+                      {gradingCompanies.map((company) => (
                         <button
-                          key={score}
-                          onClick={() => setGradingScore(score)}
-                          className={`w-full p-4 rounded-xl text-left transition-colors ${
-                            gradingScore === score ? "bg-foreground text-background" : "bg-muted hover:bg-border"
-                          }`}
+                          key={company.id}
+                          onClick={() => {
+                            setGradingCompany(company.id)
+                            setGradingScore("")
+                          }}
+                          className={cn(
+                            "w-full text-left p-2.5 rounded-lg transition-colors text-xs",
+                            gradingCompany === company.id ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                          )}
                         >
-                          {score}
+                          <div className="font-medium">{company.label}</div>
+                          <div className="opacity-75">{company.description}</div>
                         </button>
                       ))}
                     </div>
                   </SheetContent>
                 </Sheet>
               </div>
-            )}
 
-            {/* Certification Number */}
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">认证编号</h3>
-              <Input
-                placeholder="输入评级证书编号（选填）"
-                value={certNumber}
-                onChange={(e) => setCertNumber(e.target.value)}
-                className="h-14 rounded-2xl bg-muted border-0"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Condition - Only show if not graded */}
-        {!isGraded && (
-          <div className="mb-4">
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">卡牌品相</h3>
-            <Sheet>
-              <SheetTrigger asChild>
-                <button className="w-full h-14 px-4 rounded-2xl bg-muted flex items-center justify-between">
-                  <span className={condition ? "text-foreground" : "text-muted-foreground"}>
-                    {condition ? conditions.find(c => c.id === condition)?.label : "选择品相"}
-                  </span>
-                  <ChevronRight className="size-5 text-muted-foreground" />
-                </button>
-              </SheetTrigger>
-              <SheetContent side="bottom" className="h-[50vh] rounded-t-3xl">
-                <SheetHeader className="pb-4">
-                  <SheetTitle>选择卡牌品相</SheetTitle>
-                </SheetHeader>
-                <div className="space-y-2">
-                  {conditions.map((cond) => (
-                    <button
-                      key={cond.id}
-                      onClick={() => setCondition(cond.id)}
-                      className={`w-full p-4 rounded-xl text-left transition-colors ${
-                        condition === cond.id ? "bg-foreground text-background" : "bg-muted hover:bg-border"
-                      }`}
-                    >
-                      <span className="font-medium">{cond.label}</span>
-                      <p className={`text-sm ${condition === cond.id ? "text-background/70" : "text-muted-foreground"}`}>
-                        {cond.description}
-                      </p>
-                    </button>
-                  ))}
+              {/* Grading Score */}
+              {gradingCompany && (
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Grade *</label>
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" className="w-full justify-between h-10 rounded-lg text-xs">
+                        <span className="text-muted-foreground">{gradingScore || "Select grade"}</span>
+                        <ChevronRight className="size-3.5" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="bottom">
+                      <SheetHeader className="text-left mb-4">
+                        <SheetTitle className="text-base">Select Grade</SheetTitle>
+                      </SheetHeader>
+                      <div className="grid grid-cols-3 gap-2">
+                        {currentGradingScores.map((score) => (
+                          <button
+                            key={score}
+                            onClick={() => {
+                              setGradingScore(score)
+                            }}
+                            className={cn(
+                              "p-2.5 rounded-lg transition-colors text-xs font-medium",
+                              gradingScore === score ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                            )}
+                          >
+                            {score}
+                          </button>
+                        ))}
+                      </div>
+                    </SheetContent>
+                  </Sheet>
                 </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        )}
+              )}
+
+              {/* Certification Number */}
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Cert Number</label>
+                <Input
+                  placeholder="e.g., 12345678"
+                  value={certNumber}
+                  onChange={(e) => setCertNumber(e.target.value)}
+                  className="h-10 rounded-lg bg-muted border-0 text-xs"
+                />
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Set & Number */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-2 gap-2.5 mb-4">
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">系列/扩展包</h3>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Set Name</label>
             <Input
-              placeholder="例如：Vivid Voltage"
+              placeholder="e.g., Base Set"
               value={formData.set}
               onChange={(e) => setFormData({ ...formData, set: e.target.value })}
-              className="h-14 rounded-2xl bg-muted border-0"
+              className="h-12 rounded-xl bg-muted border-0 text-sm"
             />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">卡号</h3>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Card Number</label>
             <Input
-              placeholder="例如：188/185"
+              placeholder="e.g., 4/102"
               value={formData.number}
               onChange={(e) => setFormData({ ...formData, number: e.target.value })}
-              className="h-14 rounded-2xl bg-muted border-0"
+              className="h-12 rounded-xl bg-muted border-0 text-sm"
             />
           </div>
         </div>
 
         {/* Rarity & Language */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-2 gap-2.5 mb-4">
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">稀有度</h3>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Rarity</label>
             <Input
-              placeholder="例如：Rainbow Rare"
+              placeholder="e.g., Holo Rare"
               value={formData.rarity}
               onChange={(e) => setFormData({ ...formData, rarity: e.target.value })}
-              className="h-14 rounded-2xl bg-muted border-0"
+              className="h-12 rounded-xl bg-muted border-0 text-sm"
             />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">语言版本</h3>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Language</label>
             <Input
-              value={formData.language}
-              onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-              className="h-14 rounded-2xl bg-muted border-0"
+              placeholder={formData.language}
+              disabled
+              className="h-12 rounded-xl bg-muted border-0 text-sm opacity-60"
             />
           </div>
         </div>
 
-        {/* Sale Type */}
+        {/* Sale Type Selection */}
         <div className="mb-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">售卖方式 *</h3>
-          <div className="flex gap-3">
+          <label className="text-xs font-medium text-muted-foreground mb-2 block">Sale Type *</label>
+          <div className="grid grid-cols-2 gap-2.5">
             <button
               onClick={() => setSaleType("fixed")}
               className={cn(
-                "flex-1 h-16 rounded-2xl font-medium transition-colors flex flex-col items-center justify-center gap-1",
-                saleType === "fixed" ? "bg-foreground text-background" : "bg-muted text-foreground"
+                "p-3 rounded-xl border-2 transition-colors",
+                saleType === "fixed"
+                  ? "border-primary bg-primary/5"
+                  : "border-border bg-background"
               )}
             >
-              <DollarSign className="size-5" />
-              <span>一口价</span>
+              <DollarSign className="size-4 mb-1 mx-auto" />
+              <div className="text-xs font-medium">Fixed Price</div>
             </button>
             <button
               onClick={() => setSaleType("auction")}
               className={cn(
-                "flex-1 h-16 rounded-2xl font-medium transition-colors flex flex-col items-center justify-center gap-1",
-                saleType === "auction" ? "bg-foreground text-background" : "bg-muted text-foreground"
+                "p-3 rounded-xl border-2 transition-colors",
+                saleType === "auction"
+                  ? "border-primary bg-primary/5"
+                  : "border-border bg-background"
               )}
             >
-              <Gavel className="size-5" />
-              <span>拍卖</span>
+              <Gavel className="size-4 mb-1 mx-auto" />
+              <div className="text-xs font-medium">Auction</div>
             </button>
           </div>
         </div>
 
-        {/* Fixed Price Options */}
-        {saleType === "fixed" && (
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">价格 (USD) *</h3>
-              <Input
-                type="number"
-                placeholder="0"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="h-14 rounded-2xl bg-muted border-0"
-              />
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">库存</h3>
-              <Input
-                type="number"
-                min="1"
-                value={formData.stock}
-                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                className="h-14 rounded-2xl bg-muted border-0"
-              />
-            </div>
+        {/* Pricing */}
+        {saleType === "fixed" ? (
+          <div className="mb-4">
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Price (USD) *</label>
+            <Input
+              type="number"
+              placeholder="0.00"
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              className="h-12 rounded-xl bg-muted border-0 text-sm"
+            />
           </div>
-        )}
-
-        {/* Auction Options */}
-        {saleType === "auction" && (
-          <div className="mb-4 p-4 bg-card rounded-2xl border border-border space-y-4">
-            <div className="flex items-center gap-2 text-sm text-primary">
-              <Gavel className="size-4" />
-              <span>拍卖设置</span>
-            </div>
-
-            {/* Starting Price */}
+        ) : (
+          <div className="space-y-4 mb-4">
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">起拍价 (USD) *</h3>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Starting Price (USD) *</label>
               <Input
                 type="number"
-                placeholder="输入起拍价"
+                placeholder="0.00"
                 value={formData.startingPrice}
                 onChange={(e) => setFormData({ ...formData, startingPrice: e.target.value })}
-                className="h-14 rounded-2xl bg-muted border-0"
+                className="h-12 rounded-xl bg-muted border-0 text-sm"
               />
             </div>
-
-            {/* Buy Now Price (Optional) */}
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">一口价 (选填)</h3>
-              <Input
-                type="number"
-                placeholder="设置后买家可直接购买"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="h-14 rounded-2xl bg-muted border-0"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                可选择设置一口价，买家可直接以此价格购买
-              </p>
-            </div>
-
-            {/* Auction Duration */}
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">拍卖时长 *</h3>
-              <div className="grid grid-cols-4 gap-2">
-                {auctionDurations.map((duration) => (
-                  <button
-                    key={duration.id}
-                    onClick={() => setAuctionDuration(duration.id)}
-                    className={cn(
-                      "h-12 rounded-xl font-medium transition-colors flex items-center justify-center gap-1 text-sm",
-                      auctionDuration === duration.id ? "bg-foreground text-background" : "bg-muted text-foreground"
-                    )}
-                  >
-                    <Clock className="size-3.5" />
-                    {duration.label}
-                  </button>
-                ))}
-              </div>
+              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Auction Duration *</label>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="w-full justify-between h-12 rounded-xl">
+                    <span className="text-muted-foreground">{auctionDurations.find(d => d.id === auctionDuration)?.label}</span>
+                    <ChevronRight className="size-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="bottom">
+                  <SheetHeader className="text-left mb-4">
+                    <SheetTitle className="text-base">Select Duration</SheetTitle>
+                  </SheetHeader>
+                  <div className="space-y-2">
+                    {auctionDurations.map((duration) => (
+                      <button
+                        key={duration.id}
+                        onClick={() => {
+                          setAuctionDuration(duration.id)
+                        }}
+                        className={cn(
+                          "w-full p-3 rounded-lg text-left text-sm transition-colors",
+                          auctionDuration === duration.id ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Clock className="size-4" />
+                          {duration.label}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         )}
 
+        {/* Stock */}
+        <div className="mb-5">
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Quantity</label>
+          <Input
+            type="number"
+            placeholder="1"
+            value={formData.stock}
+            onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+            className="h-12 rounded-xl bg-muted border-0 text-sm"
+            min="1"
+          />
+        </div>
+
         {/* Description */}
-        <div className="mb-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">商品描述</h3>
+        <div className="mb-5">
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Description</label>
           <Textarea
-            placeholder="详细描述卡牌状态、特点等..."
+            placeholder="Describe the card condition, any flaws, or additional details..."
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="min-h-28 rounded-2xl bg-muted border-0 resize-none"
+            className="min-h-20 rounded-xl bg-muted border-0 resize-none text-sm"
           />
         </div>
       </main>
 
-      {/* Bottom Action */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 pb-[calc(env(safe-area-inset-bottom)+8px)]">
-        <Button
-          onClick={handlePublish}
-          disabled={!isFormValid}
-          className="w-full h-14 rounded-full text-base font-semibold"
-        >
-          {saleType === "fixed" ? "立即上架" : "开始拍卖"}
-        </Button>
-      </div>
+      {/* Footer Buttons */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-4 py-3">
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            className="flex-1 h-12 rounded-xl"
+            onClick={() => router.back()}
+          >
+            Cancel
+          </Button>
+          <Button 
+            className="flex-1 h-12 rounded-xl"
+            onClick={handlePublish}
+            disabled={!isFormValid}
+          >
+            Publish
+          </Button>
+        </div>
+      </footer>
     </div>
   )
 }

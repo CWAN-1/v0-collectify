@@ -120,272 +120,269 @@ export default function CreatePostPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold">发布内容</span>
+          <span className="font-semibold text-base">Create Post</span>
           <Button
             onClick={handlePublish}
             disabled={!title || images.length === 0}
-            className="rounded-full px-5"
+            className="rounded-full px-5 text-sm"
           >
-            发布
+            Post
           </Button>
         </div>
       </header>
 
-      <main className="px-4 py-6">
+      <main className="px-4 py-5">
         {/* Image Upload */}
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">图片 (最多9张)</h3>
-          <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="mb-5">
+          <label className="text-xs font-medium text-muted-foreground mb-2.5 block">Photos (up to 9)</label>
+          <div className="flex gap-2.5 overflow-x-auto pb-2">
             {/* Add Photo Button */}
-            <label className="size-24 shrink-0 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-foreground/50 transition-colors">
-              <Plus className="size-6 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">添加</span>
+            <label className="size-20 shrink-0 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-0.5 cursor-pointer hover:border-foreground/50 transition-colors">
+              <Plus className="size-5 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Add</span>
               <input type="file" accept="image/*" multiple className="hidden" />
             </label>
             
             {/* Placeholder Images */}
             {[1, 2, 3].map((i) => (
-              <div key={i} className="size-24 shrink-0 relative rounded-xl overflow-hidden bg-muted">
+              <div key={i} className="size-20 shrink-0 relative rounded-xl overflow-hidden bg-muted">
                 <Image
                   src={`https://images.unsplash.com/photo-161377140478${i}-3a5686aa2be3?w=200&h=200&fit=crop`}
-                  alt={`Photo ${i}`}
+                  alt="placeholder"
                   fill
                   className="object-cover"
                 />
-                <button className="absolute top-1 right-1 size-6 bg-background/80 rounded-full flex items-center justify-center">
-                  <X className="size-3" />
-                </button>
               </div>
             ))}
           </div>
         </div>
 
         {/* Title */}
-        <div className="mb-6">
+        <div className="mb-4">
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Post Title *</label>
           <Input
-            placeholder="输入标题..."
+            placeholder="What's your post about?"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="h-14 rounded-2xl bg-muted border-0 text-base font-semibold"
-            maxLength={100}
+            className="h-12 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground"
           />
-          <p className="text-xs text-muted-foreground mt-2 text-right">{title.length}/100</p>
         </div>
 
         {/* Content */}
-        <div className="mb-6">
+        <div className="mb-4">
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Content</label>
           <Textarea
-            placeholder="分享你的卡牌收藏故事..."
+            placeholder="Share your thoughts, card stories, or collection updates..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="min-h-32 rounded-2xl bg-muted border-0 text-base resize-none"
-            maxLength={2000}
+            className="min-h-20 rounded-xl bg-muted border-0 resize-none text-sm placeholder:text-muted-foreground"
           />
-          <p className="text-xs text-muted-foreground mt-2 text-right">{content.length}/2000</p>
-        </div>
-
-        {/* Link Products */}
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">关联商品 (最多6个)</h3>
-          
-          {/* Linked Products Display */}
-          {linkedProducts.length > 0 && (
-            <div className="flex gap-3 overflow-x-auto pb-3 mb-3">
-              {linkedProducts.map((product) => (
-                <div key={product.id} className="shrink-0 w-32 bg-card rounded-xl border border-border overflow-hidden">
-                  <div className="relative aspect-square">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover"
-                    />
-                    <button
-                      onClick={() => removeLinkedProduct(product.id)}
-                      className="absolute top-1 right-1 size-5 bg-background/80 rounded-full flex items-center justify-center"
-                    >
-                      <X className="size-3" />
-                    </button>
-                  </div>
-                  <div className="p-2">
-                    <p className="text-xs font-medium truncate">{product.name}</p>
-                    <p className="text-xs text-primary font-semibold">${product.price}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Add Product Button */}
-          <Sheet open={isProductSheetOpen} onOpenChange={setIsProductSheetOpen}>
-            <SheetTrigger asChild>
-              <button className="w-full h-14 px-4 rounded-2xl bg-muted flex items-center gap-3 hover:bg-border transition-colors">
-                <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <ShoppingBag className="size-5 text-primary" />
-                </div>
-                <div className="flex-1 text-left">
-                  <span className="text-sm font-medium">
-                    {linkedProducts.length > 0 ? `已关联 ${linkedProducts.length} 个商品` : "关联我的商品"}
-                  </span>
-                  <p className="text-xs text-muted-foreground">让粉丝可以直接购买</p>
-                </div>
-                <Plus className="size-5 text-muted-foreground" />
-              </button>
-            </SheetTrigger>
-            <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl">
-              <SheetHeader className="pb-4">
-                <SheetTitle>选择要关联的商品</SheetTitle>
-              </SheetHeader>
-              
-              {userProducts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-[40vh] text-center">
-                  <div className="size-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                    <Package className="size-8 text-muted-foreground" />
-                  </div>
-                  <h4 className="font-semibold mb-2">暂无上架商品</h4>
-                  <p className="text-sm text-muted-foreground mb-4">您还没有上架任何商品</p>
-                  <Button onClick={() => router.push("/publish/product")} className="rounded-full">
-                    去上架商品
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[55vh] overflow-y-auto">
-                  {userProducts.map((product) => {
-                    const isSelected = linkedProducts.some(p => p.id === product.id)
-                    const isDisabled = !isSelected && linkedProducts.length >= 6
-                    return (
-                      <button
-                        key={product.id}
-                        onClick={() => !isDisabled && toggleProduct(product)}
-                        disabled={isDisabled}
-                        className={cn(
-                          "w-full flex items-center gap-3 p-3 rounded-xl transition-colors",
-                          isSelected ? "bg-primary/10 border border-primary" : "bg-muted hover:bg-border",
-                          isDisabled && "opacity-50 cursor-not-allowed"
-                        )}
-                      >
-                        <div className="size-16 relative rounded-lg overflow-hidden shrink-0">
-                          <Image
-                            src={product.image}
-                            alt={product.name}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="flex-1 text-left">
-                          <p className="font-medium text-sm line-clamp-1">{product.name}</p>
-                          <p className="text-xs text-muted-foreground">{product.category}</p>
-                          <p className="text-sm text-primary font-semibold">${product.price}</p>
-                        </div>
-                        <div className={cn(
-                          "size-6 rounded-full border-2 flex items-center justify-center shrink-0",
-                          isSelected ? "bg-primary border-primary" : "border-muted-foreground/30"
-                        )}>
-                          {isSelected && <Check className="size-4 text-primary-foreground" />}
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-
-              {userProducts.length > 0 && (
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
-                  <Button
-                    onClick={() => setIsProductSheetOpen(false)}
-                    className="w-full h-12 rounded-full"
-                  >
-                    确定 ({linkedProducts.length}/6)
-                  </Button>
-                </div>
-              )}
-            </SheetContent>
-          </Sheet>
         </div>
 
         {/* Tags */}
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">标签 (最多5个)</h3>
-          
-          {/* Selected Tags */}
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-3">
+        <div className="mb-4">
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Tags (up to 5)</label>
+          <div className="bg-muted rounded-xl p-3 min-h-12 mb-2">
+            <div className="flex flex-wrap gap-1.5">
               {tags.map((tag) => (
-                <span
+                <div
                   key={tag}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-foreground text-background rounded-full text-sm"
+                  className="bg-background rounded-lg px-2.5 py-1 flex items-center gap-1.5"
                 >
-                  #{tag}
-                  <button onClick={() => removeTag(tag)}>
-                    <X className="size-3" />
+                  <AtSign className="size-3" />
+                  <span className="text-xs font-medium">{tag}</span>
+                  <button
+                    onClick={() => removeTag(tag)}
+                    className="hover:opacity-60 transition-opacity"
+                  >
+                    <X className="size-3.5" />
                   </button>
-                </span>
+                </div>
               ))}
             </div>
-          )}
+          </div>
 
           {/* Tag Input */}
-          <div className="relative">
-            <Hash className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+          <div className="flex gap-2 mb-2.5">
             <Input
-              placeholder="添加标签..."
+              placeholder="Type tag name..."
               value={tagInput}
-              onChange={(e) => setTagInput(e.target.value.replace(/\s/g, ""))}
-              onKeyDown={(e) => {
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault()
                   addTag(tagInput)
                 }
               }}
-              className="h-12 pl-12 rounded-full bg-muted border-0"
-              disabled={tags.length >= 5}
+              className="h-10 rounded-lg bg-background border border-border text-xs flex-1"
             />
+            <Button
+              onClick={() => addTag(tagInput)}
+              size="sm"
+              className="rounded-lg text-xs px-3"
+            >
+              Add
+            </Button>
           </div>
 
           {/* Suggested Tags */}
-          <div className="flex flex-wrap gap-2 mt-3">
-            {suggestedTags
-              .filter(tag => !tags.includes(tag))
-              .slice(0, 6)
-              .map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => addTag(tag)}
-                  disabled={tags.length >= 5}
-                  className="px-3 py-1.5 bg-muted text-foreground rounded-full text-sm hover:bg-border transition-colors disabled:opacity-40"
-                >
-                  #{tag}
-                </button>
-              ))}
+          <div className="flex flex-wrap gap-1.5">
+            {suggestedTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => addTag(tag)}
+                className="px-2 py-1 bg-secondary text-secondary-foreground rounded-lg text-xs hover:opacity-80 transition-opacity"
+              >
+                {tag}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Location */}
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">位置</h3>
-          <div className="relative">
-            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+        <div className="mb-5">
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Location</label>
+          <div className="flex items-center gap-2">
+            <MapPin className="size-4 text-muted-foreground shrink-0" />
             <Input
-              placeholder="添加位置..."
+              placeholder="Where are you located?"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="h-12 pl-12 rounded-full bg-muted border-0"
+              className="h-10 rounded-lg bg-background border border-border text-xs flex-1"
             />
           </div>
         </div>
 
-        {/* Mention */}
-        <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">提及用户</h3>
-          <div className="relative">
-            <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-            <Input
-              placeholder="提及用户..."
-              className="h-12 pl-12 rounded-full bg-muted border-0"
-            />
+        {/* Linked Products Section */}
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-3">
+            <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+              <ShoppingBag className="size-4" />
+              Link Your Cards (up to 6)
+            </label>
+            <span className="text-xs text-muted-foreground">{linkedProducts.length}/6</span>
           </div>
+
+          {/* Selected Products */}
+          {linkedProducts.length > 0 && (
+            <div className="bg-card rounded-xl border border-border p-3 mb-3">
+              <div className="grid grid-cols-3 gap-2">
+                {linkedProducts.map((product) => (
+                  <div key={product.id} className="relative group">
+                    <div className="aspect-square rounded-lg overflow-hidden bg-muted relative">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <button
+                      onClick={() => removeLinkedProduct(product.id)}
+                      className="absolute -top-1.5 -right-1.5 size-5 bg-destructive rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="size-3 text-background" />
+                    </button>
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                      <Check className="size-5 text-white" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2.5 pt-2.5 border-t border-border/50">
+                <div className="text-xs text-muted-foreground space-y-1">
+                  {linkedProducts.map((product) => (
+                    <div key={product.id} className="flex justify-between">
+                      <span className="truncate flex-1">{product.name}</span>
+                      <span className="font-medium text-foreground ml-2">${product.price}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Add Products Button */}
+          <Sheet open={isProductSheetOpen} onOpenChange={setIsProductSheetOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full h-12 rounded-xl border-dashed"
+                disabled={linkedProducts.length >= 6}
+              >
+                <Plus className="size-4 mr-2" />
+                Add Products
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="h-[80vh]">
+              <SheetHeader className="mb-4">
+                <SheetTitle className="text-base">Select Products to Link</SheetTitle>
+              </SheetHeader>
+              <div className="space-y-2 overflow-y-auto pr-4" style={{ height: "calc(80vh - 100px)" }}>
+                {userProducts.map((product) => {
+                  const isLinked = linkedProducts.some(p => p.id === product.id)
+                  const isDisabled = linkedProducts.length >= 6 && !isLinked
+
+                  return (
+                    <button
+                      key={product.id}
+                      onClick={() => toggleProduct(product)}
+                      disabled={isDisabled}
+                      className={cn(
+                        "w-full flex items-start gap-3 p-3 rounded-xl transition-colors",
+                        isLinked
+                          ? "bg-primary/10 border border-primary/50"
+                          : isDisabled
+                          ? "bg-muted opacity-50 cursor-not-allowed"
+                          : "bg-card border border-border hover:border-primary/50"
+                      )}
+                    >
+                      <div className="relative size-16 shrink-0 rounded-lg overflow-hidden bg-muted">
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 text-left min-w-0">
+                        <div className="font-semibold text-sm truncate">{product.name}</div>
+                        <div className="text-xs text-muted-foreground mb-1">{product.category}</div>
+                        <div className="text-sm font-bold text-primary">${product.price}</div>
+                      </div>
+                      {isLinked && (
+                        <div className="size-5 rounded-full bg-primary flex items-center justify-center shrink-0 mt-1">
+                          <Check className="size-3 text-primary-foreground" />
+                        </div>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </main>
+
+      {/* Footer Buttons */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-4 py-3">
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            className="flex-1 h-12 rounded-xl"
+            onClick={() => router.back()}
+          >
+            Cancel
+          </Button>
+          <Button 
+            className="flex-1 h-12 rounded-xl"
+            onClick={handlePublish}
+            disabled={!title || images.length === 0}
+          >
+            Publish
+          </Button>
+        </div>
+      </footer>
     </div>
   )
 }
