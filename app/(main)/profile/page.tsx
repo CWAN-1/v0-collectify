@@ -126,7 +126,7 @@ export default function ProfilePage() {
                   className="object-contain"
                 />
               </div>
-              <Link href="/profile/shop">
+              <Link href="/seller-onboarding">
                 <Button size="sm" className="h-6 px-3 bg-white text-primary hover:bg-white/90 rounded-md text-[10px] font-semibold">
                   Join
                 </Button>
