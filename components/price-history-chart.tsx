@@ -3,161 +3,158 @@
 import { useState } from "react"
 import { TrendingUp, TrendingDown, ChevronRight } from "lucide-react"
 import {
-  LineChart,
+  ComposedChart,
   Line,
+  Bar,
   XAxis,
   YAxis,
   ResponsiveContainer,
   Tooltip,
 } from "recharts"
+import Image from "next/image"
 
-// Sample historical price data
+// Sample historical price data with volume
 const priceData = [
-  { date: "Jan", price: 180, label: "Jan 2024" },
-  { date: "Feb", price: 195, label: "Feb 2024" },
-  { date: "Mar", price: 210, label: "Mar 2024" },
-  { date: "Apr", price: 185, label: "Apr 2024" },
-  { date: "May", price: 220, label: "May 2024" },
-  { date: "Jun", price: 250, label: "Jun 2024" },
-]
-
-const timeRanges = [
-  { id: "1m", label: "1M" },
-  { id: "3m", label: "3M" },
-  { id: "6m", label: "6M" },
-  { id: "1y", label: "1Y" },
-  { id: "all", label: "All" },
+  { date: "1/2", price: 9.5, volume: 25 },
+  { date: "1/13", price: 9.8, volume: 30 },
+  { date: "1/27", price: 10.2, volume: 35 },
+  { date: "2/10", price: 9.8, volume: 45 },
+  { date: "2/24", price: 10.5, volume: 55 },
+  { date: "3/17", price: 11.76, volume: 75 },
 ]
 
 interface PriceHistoryChartProps {
   currentPrice: number
   cardName?: string
+  cardImage?: string
+  cardSet?: string
 }
 
 function formatPrice(price: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-  }).format(price)
+  return `$${price.toFixed(2)}`
 }
 
-export function PriceHistoryChart({ currentPrice, cardName }: PriceHistoryChartProps) {
-  const [selectedRange, setSelectedRange] = useState("6m")
+export function PriceHistoryChart({ 
+  currentPrice, 
+  cardName = "Pikachu VMAX Rainbow...",
+  cardImage = "/cards/pokemon-1.jpg",
+  cardSet = "Vivid Voltage 188/185"
+}: PriceHistoryChartProps) {
+  const [selectedRange] = useState("3m")
 
   // Calculate price change
   const firstPrice = priceData[0].price
   const lastPrice = priceData[priceData.length - 1].price
-  const priceChange = lastPrice - firstPrice
-  const priceChangePercent = ((priceChange / firstPrice) * 100).toFixed(1)
-  const isPositive = priceChange >= 0
+  const priceChangePercent = (((lastPrice - firstPrice) / firstPrice) * 100).toFixed(2)
+  const isPositive = lastPrice >= firstPrice
 
-  // Calculate stats
-  const prices = priceData.map(d => d.price)
-  const avgPrice = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length)
-  const highPrice = Math.max(...prices)
-  const lowPrice = Math.min(...prices)
+  // Stats
+  const avgPrice = (priceData.reduce((a, b) => a + b.price, 0) / priceData.length).toFixed(2)
+  const totalListings = 291
 
   return (
-    <div className="bg-card px-4 py-4 border-b border-border">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-foreground">Price History</h3>
-        <button className="flex items-center gap-1 text-xs text-primary">
-          View Details
-          <ChevronRight className="size-3" />
-        </button>
-      </div>
-
-      {/* Price Change Summary */}
-      <div className="flex items-center gap-2 mb-4">
-        <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-          isPositive 
-            ? "bg-green-500/20 text-green-500" 
-            : "bg-red-500/20 text-red-500"
-        }`}>
-          {isPositive ? (
-            <TrendingUp className="size-3" />
-          ) : (
-            <TrendingDown className="size-3" />
-          )}
-          <span>{isPositive ? "+" : ""}{priceChangePercent}%</span>
+    <div className="bg-card border-b border-border">
+      {/* Card Info Header */}
+      <div className="flex items-start gap-3 px-4 pt-4 pb-3">
+        <div className="size-14 rounded-lg overflow-hidden bg-muted shrink-0">
+          <Image
+            src={cardImage}
+            alt={cardName}
+            width={56}
+            height={56}
+            className="object-cover w-full h-full"
+          />
         </div>
-        <span className="text-xs text-muted-foreground">
-          {isPositive ? "+" : ""}{formatPrice(priceChange)} in 6 months
-        </span>
+        <div className="flex-1 min-w-0">
+          <h4 className="font-semibold text-sm text-foreground truncate">{cardName}</h4>
+          <p className="text-xs text-muted-foreground mb-1">{cardSet}</p>
+          <div className="flex items-center gap-3">
+            <div>
+              <span className="text-xs text-muted-foreground">Avg:</span>
+              <span className="text-sm font-bold ml-1">${avgPrice}</span>
+            </div>
+            <span className={`text-sm font-semibold ${isPositive ? "text-green-500" : "text-red-500"}`}>
+              {isPositive ? "+" : ""}{priceChangePercent}%
+            </span>
+            <div className="text-right">
+              <span className="text-sm font-medium text-foreground">{totalListings}</span>
+              <span className="text-xs text-muted-foreground ml-1">listings</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Time Range Selector */}
-      <div className="flex gap-1 mb-4">
-        {timeRanges.map((range) => (
-          <button
-            key={range.id}
-            onClick={() => setSelectedRange(range.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-              selectedRange === range.id
-                ? "bg-foreground text-background"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
-            }`}
-          >
-            {range.label}
+      {/* Chart Section */}
+      <div className="px-4 pb-4">
+        {/* Title with View Details */}
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-base font-bold text-foreground">Market Price History</h3>
+          <button className="flex items-center gap-1 text-xs text-primary font-medium">
+            View Details
+            <ChevronRight className="size-3" />
           </button>
-        ))}
-      </div>
-
-      {/* Chart */}
-      <div className="h-32 -mx-2">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={priceData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
-            <XAxis 
-              dataKey="date" 
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
-            />
-            <YAxis 
-              hide 
-              domain={['dataMin - 20', 'dataMax + 20']}
-            />
-            <Tooltip
-              content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const data = payload[0].payload
-                  return (
-                    <div className="bg-popover border border-border rounded-lg px-3 py-2 shadow-lg">
-                      <p className="text-xs text-muted-foreground">{data.label}</p>
-                      <p className="text-sm font-semibold">{formatPrice(data.price)}</p>
-                    </div>
-                  )
-                }
-                return null
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="price"
-              stroke="hsl(var(--primary))"
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 4, fill: 'hsl(var(--primary))' }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-3 mt-4 pt-4 border-t border-border">
-        <div className="text-center">
-          <p className="text-xs text-muted-foreground mb-0.5">Avg</p>
-          <p className="text-sm font-semibold">{formatPrice(avgPrice)}</p>
         </div>
-        <div className="text-center">
-          <p className="text-xs text-muted-foreground mb-0.5">High</p>
-          <p className="text-sm font-semibold text-green-500">{formatPrice(highPrice)}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-xs text-muted-foreground mb-0.5">Low</p>
-          <p className="text-sm font-semibold text-red-500">{formatPrice(lowPrice)}</p>
+
+        {/* Chart */}
+        <div className="h-40 -mx-2">
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={priceData} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
+              <XAxis 
+                dataKey="date" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+              />
+              <YAxis 
+                yAxisId="price"
+                orientation="left"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                domain={[7, 13]}
+                tickFormatter={(value) => `$${value}`}
+              />
+              <YAxis 
+                yAxisId="volume"
+                orientation="right"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                domain={[0, 100]}
+              />
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload
+                    return (
+                      <div className="bg-popover border border-border rounded-lg px-3 py-2 shadow-lg">
+                        <p className="text-xs text-muted-foreground">{data.date}</p>
+                        <p className="text-sm font-semibold">${data.price.toFixed(2)}</p>
+                        <p className="text-xs text-muted-foreground">{data.volume} sales</p>
+                      </div>
+                    )
+                  }
+                  return null
+                }}
+              />
+              <Bar 
+                yAxisId="volume"
+                dataKey="volume" 
+                fill="hsl(var(--muted))"
+                radius={[2, 2, 0, 0]}
+                barSize={12}
+              />
+              <Line
+                yAxisId="price"
+                type="monotone"
+                dataKey="price"
+                stroke="hsl(217, 91%, 60%)"
+                strokeWidth={2}
+                dot={{ r: 3, fill: 'hsl(217, 91%, 60%)' }}
+                activeDot={{ r: 5, fill: 'hsl(217, 91%, 60%)' }}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
