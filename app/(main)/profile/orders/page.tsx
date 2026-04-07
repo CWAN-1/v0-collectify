@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Package, Truck, CheckCircle, Clock, Star, MessageCircle } from "lucide-react"
+import { ArrowLeft, Package, Truck, CheckCircle, Clock, Star, MessageCircle, RotateCcw, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
@@ -13,6 +13,8 @@ const tabs = [
   { id: "processing", label: "Processing" },
   { id: "shipping", label: "Shipping" },
   { id: "completed", label: "Completed" },
+  { id: "refunded", label: "Refunded" },
+  { id: "cancelled", label: "Cancelled" },
 ]
 
 const orders = [
@@ -67,6 +69,40 @@ const orders = [
     date: "27 Mar 2024",
     expiry: "28 Mar 2024, 23:59"
   },
+  {
+    id: "ORD123453",
+    status: "refunded",
+    statusLabel: "Refunded",
+    items: [
+      {
+        name: "Blue Eyes White Dragon 1st Edition",
+        image: "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=200&h=200&fit=crop",
+        price: 850,
+        quantity: 1
+      }
+    ],
+    seller: "YugiohPro",
+    total: 855,
+    date: "20 Mar 2024",
+    refundReason: "Item not as described"
+  },
+  {
+    id: "ORD123452",
+    status: "cancelled",
+    statusLabel: "Cancelled",
+    items: [
+      {
+        name: "Michael Jordan Rookie Card PSA 10",
+        image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=200&h=200&fit=crop",
+        price: 5000,
+        quantity: 1
+      }
+    ],
+    seller: "SportsLegends",
+    total: 5015,
+    date: "18 Mar 2024",
+    cancelReason: "Payment not completed"
+  },
 ]
 
 function formatPrice(price: number) {
@@ -87,6 +123,10 @@ function getStatusIcon(status: string) {
       return Truck
     case "completed":
       return CheckCircle
+    case "refunded":
+      return RotateCcw
+    case "cancelled":
+      return XCircle
     default:
       return Package
   }
@@ -214,6 +254,26 @@ export default function OrdersPage() {
                       <Button variant="outline" className="flex-1 rounded-xl">
                         Buy Again
                       </Button>
+                    )}
+                    {order.status === "refunded" && (
+                      <>
+                        <Button variant="outline" className="flex-1 rounded-xl">
+                          View Details
+                        </Button>
+                        <Button className="flex-1 rounded-xl">
+                          Buy Again
+                        </Button>
+                      </>
+                    )}
+                    {order.status === "cancelled" && (
+                      <>
+                        <Button variant="outline" className="flex-1 rounded-xl">
+                          View Details
+                        </Button>
+                        <Button className="flex-1 rounded-xl">
+                          Reorder
+                        </Button>
+                      </>
                     )}
                   </div>
                 </div>
