@@ -172,20 +172,20 @@ export default function MessagesPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
+      <header className="sticky top-0 z-40 bg-background border-b border-border">
         <div className="px-4 pt-12 pb-4">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Messages</h1>
+          <h1 className="text-xl font-bold text-foreground">Messages</h1>
 
           {/* Tabs */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 mt-4">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all border ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
                   activeTab === tab.id
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-foreground border-border"
+                    ? "bg-primary text-primary-foreground border border-primary"
+                    : "bg-card text-foreground border border-border"
                 }`}
               >
                 {tab.label}
