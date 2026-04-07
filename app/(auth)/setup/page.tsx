@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 
 const cardIPs = [
   { id: "pokemon", name: "Pokemon", color: "bg-yellow-400", emoji: "⚡" },
@@ -238,9 +238,10 @@ function SetupContent() {
 
       {/* Region Sheet */}
       <Sheet open={showRegionSheet} onOpenChange={setShowRegionSheet}>
-        <SheetContent side="bottom" className="h-[65vh] rounded-t-3xl" aria-describedby={undefined}>
+        <SheetContent side="bottom" className="h-[65vh] rounded-t-3xl">
           <SheetHeader className="pb-3">
             <SheetTitle>Select Region</SheetTitle>
+            <SheetDescription className="sr-only">Choose your region from the list below</SheetDescription>
           </SheetHeader>
           <div className="overflow-auto h-[calc(100%-60px)]">
             {regions.map((r) => (
