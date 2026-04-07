@@ -265,7 +265,7 @@ export default function AuctionDetailPage() {
       </div>
 
       {/* Price History Chart */}
-      <PriceHistoryChart currentPrice={currentBid} cardName={auctionProduct.name} />
+      <PriceHistoryChart currentPrice={currentBid} />
 
       {/* Seller Info */}
       <div className="bg-card px-4 py-4 border-b border-border">
@@ -358,24 +358,24 @@ export default function AuctionDetailPage() {
 
       {/* Bid Sheet */}
       <Sheet open={bidSheetOpen} onOpenChange={setBidSheetOpen}>
-        <SheetContent side="bottom" className="rounded-t-3xl">
-          <SheetHeader className="text-left pb-4 border-b border-border">
-            <SheetTitle>Place Your Bid</SheetTitle>
-            <SheetDescription>
-              Current bid is {formatPrice(currentBid)}. Your bid must be higher.
+        <SheetContent side="bottom" className="rounded-t-3xl px-4 pb-8">
+          <SheetHeader className="text-left pb-3">
+            <SheetTitle className="text-lg">Place Your Bid</SheetTitle>
+            <SheetDescription className="text-sm">
+              Current bid: {formatPrice(currentBid)}
             </SheetDescription>
           </SheetHeader>
           
-          <div className="py-6 space-y-6">
+          <div className="space-y-4">
             {/* Quick Bid Options */}
             <div>
-              <p className="text-sm font-medium mb-3">Quick Bid</p>
-              <div className="grid grid-cols-3 gap-3">
+              <p className="text-sm font-medium mb-2">Quick Bid</p>
+              <div className="grid grid-cols-3 gap-2">
                 {quickBidOptions.map((option) => (
                   <Button
                     key={option.value}
                     variant="outline"
-                    className="h-14 rounded-xl text-base font-semibold"
+                    className="h-12 rounded-xl text-sm font-semibold"
                     onClick={() => handleQuickBid(option.value)}
                   >
                     {option.label}
@@ -385,28 +385,28 @@ export default function AuctionDetailPage() {
             </div>
 
             {/* Divider */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <div className="flex-1 h-px bg-border" />
-              <span className="text-sm text-muted-foreground">or</span>
+              <span className="text-xs text-muted-foreground">or</span>
               <div className="flex-1 h-px bg-border" />
             </div>
 
             {/* Custom Bid */}
             <div>
-              <p className="text-sm font-medium mb-3">Custom Bid Amount</p>
-              <div className="flex gap-3">
+              <p className="text-sm font-medium mb-2">Custom Amount</p>
+              <div className="flex gap-2">
                 <div className="relative flex-1">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
                   <Input
                     type="number"
                     placeholder={`${currentBid + 1} or higher`}
                     value={customBidAmount}
                     onChange={(e) => setCustomBidAmount(e.target.value)}
-                    className="h-14 pl-8 text-lg rounded-xl"
+                    className="h-12 pl-7 text-base rounded-xl"
                   />
                 </div>
                 <Button 
-                  className="h-14 px-6 rounded-xl font-semibold"
+                  className="h-12 px-5 rounded-xl font-semibold"
                   onClick={handleCustomBid}
                   disabled={!customBidAmount}
                 >
@@ -416,8 +416,8 @@ export default function AuctionDetailPage() {
             </div>
 
             {/* Info */}
-            <p className="text-xs text-muted-foreground text-center">
-              By placing a bid, you agree to pay if you win the auction.
+            <p className="text-xs text-muted-foreground text-center pt-1">
+              By placing a bid, you agree to pay if you win.
             </p>
           </div>
         </SheetContent>

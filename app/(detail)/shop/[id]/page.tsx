@@ -205,7 +205,7 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Price History Chart */}
-      <PriceHistoryChart currentPrice={product.price} cardName={product.name} />
+      <PriceHistoryChart currentPrice={product.price} />
 
       {/* Seller Info */}
       <div className="bg-card px-4 py-4 border-b border-border">
