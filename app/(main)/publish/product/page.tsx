@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Plus, ChevronRight, Info, AlertCircle, Clock, DollarSign, Gavel } from "lucide-react"
+import { ArrowLeft, Plus, ChevronRight, Info, Clock, DollarSign, Gavel, Check, ImageIcon } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -83,8 +84,19 @@ export default function CreateProductPage() {
     stock: "1",
     description: "",
   })
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
 
   const handlePublish = () => {
+    setShowSuccessDialog(true)
+  }
+
+  const handleCreatePost = () => {
+    setShowSuccessDialog(false)
+    router.push("/publish/post")
+  }
+
+  const handleViewShop = () => {
+    setShowSuccessDialog(false)
     router.push("/profile/shop")
   }
 
@@ -106,8 +118,14 @@ export default function CreateProductPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold text-base">Sell a Card</span>
-          <div className="size-10" />
+          <span className="font-semibold text-base">Sell Something</span>
+          <Button
+            onClick={handlePublish}
+            disabled={!isFormValid}
+            className="rounded-full px-5 text-sm"
+          >
+            Publish
+          </Button>
         </div>
       </header>
 
@@ -523,25 +541,36 @@ export default function CreateProductPage() {
         </div>
       </main>
 
-      {/* Footer Buttons */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-4 py-3">
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            className="flex-1 h-12 rounded-xl"
-            onClick={() => router.back()}
-          >
-            Cancel
-          </Button>
-          <Button 
-            className="flex-1 h-12 rounded-xl"
-            onClick={handlePublish}
-            disabled={!isFormValid}
-          >
-            Publish
-          </Button>
-        </div>
-      </footer>
+      {/* Success Dialog */}
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="mx-4 rounded-2xl max-w-sm">
+          <DialogHeader className="text-center">
+            <div className="mx-auto mb-4 size-16 rounded-full bg-green-500/10 flex items-center justify-center">
+              <Check className="size-8 text-green-500" />
+            </div>
+            <DialogTitle className="text-lg">Listed Successfully!</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Your item is now live. Share it with a post to get more visibility!
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 mt-4">
+            <Button 
+              className="w-full h-12 rounded-xl gap-2"
+              onClick={handleCreatePost}
+            >
+              <ImageIcon className="size-4" />
+              Write a Post
+            </Button>
+            <Button 
+              variant="outline"
+              className="w-full h-12 rounded-xl"
+              onClick={handleViewShop}
+            >
+              View My Shop
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

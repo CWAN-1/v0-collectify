@@ -1,21 +1,27 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Search, Bell, Heart, MessageCircle, ChevronRight, Clock } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { useState } from "react"
+import { Search, Bell, Heart, MessageCircle, ChevronRight, Plus, Flame, Gavel, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import Link from "next/link"
 import Image from "next/image"
 
-const categories = [
-  { id: "all", label: "All", avatar: null, bgColor: "bg-gradient-to-br from-primary to-accent" },
+// All available categories/IPs
+const allCategories = [
   { id: "pokemon", label: "Pokemon", avatar: "/brands/pikachu.jpg", bgColor: "bg-yellow-500" },
   { id: "yugioh", label: "Yu-Gi-Oh!", avatar: "/brands/yugioh.jpg", bgColor: "bg-orange-600" },
   { id: "onepiece", label: "One Piece", avatar: "/brands/luffy.jpg", bgColor: "bg-red-600" },
   { id: "mtg", label: "MTG", avatar: "/brands/mtg.jpg", bgColor: "bg-amber-700" },
   { id: "sports", label: "Sports", avatar: "/brands/sports.jpg", bgColor: "bg-green-600" },
+  { id: "digimon", label: "Digimon", avatar: "/brands/digimon.jpg", bgColor: "bg-blue-600" },
+  { id: "dbz", label: "Dragon Ball", avatar: "/brands/dbz.jpg", bgColor: "bg-orange-500" },
+  { id: "weiss", label: "Weiss", avatar: "/brands/weiss.jpg", bgColor: "bg-pink-500" },
 ]
+
+// User's selected interests (from onboarding)
+const userInterests = ["pokemon", "yugioh", "onepiece"]
 
 const featuredCards = [
   {
@@ -64,45 +70,6 @@ const featuredCards = [
     name: "Black Lotus",
     set: "Alpha",
     price: 25000,
-    category: "mtg",
-  },
-]
-
-const auctionCards = [
-  {
-    id: "auction-1",
-    image: "/cards/pokemon-1.jpg",
-    name: "Walking Wake ex Hyper Rare",
-    currentBid: 225,
-    bidCount: 7,
-    endTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours
-    category: "pokemon",
-  },
-  {
-    id: "auction-2",
-    image: "/cards/yugioh-1.jpg",
-    name: "Dark Magician Ultimate",
-    currentBid: 450,
-    bidCount: 12,
-    endTime: new Date(Date.now() + 45 * 60 * 1000), // 45 minutes
-    category: "yugioh",
-  },
-  {
-    id: "auction-3",
-    image: "/cards/onepiece-1.jpg",
-    name: "Shanks Secret Rare",
-    currentBid: 320,
-    bidCount: 9,
-    endTime: new Date(Date.now() + 5 * 60 * 60 * 1000), // 5 hours
-    category: "onepiece",
-  },
-  {
-    id: "auction-4",
-    image: "/cards/mtg-1.jpg",
-    name: "Mox Pearl Alpha",
-    currentBid: 8500,
-    bidCount: 15,
-    endTime: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes
     category: "mtg",
   },
 ]
@@ -164,37 +131,6 @@ const posts = [
   },
 ]
 
-function formatTimeLeft(endTime: Date) {
-  const now = new Date().getTime()
-  const end = endTime.getTime()
-  const diff = Math.max(0, end - now)
-  
-  const hours = Math.floor(diff / (1000 * 60 * 60))
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-  
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`
-  }
-  return `${minutes}m`
-}
-
-function AuctionCountdown({ endTime }: { endTime: Date }) {
-  const [mounted, setMounted] = useState(false)
-  const [timeLeft, setTimeLeft] = useState("")
-
-  useEffect(() => {
-    setMounted(true)
-    setTimeLeft(formatTimeLeft(endTime))
-    const timer = setInterval(() => {
-      setTimeLeft(formatTimeLeft(endTime))
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [endTime])
-
-  if (!mounted) return <span>--:--</span>
-  return <span>{timeLeft}</span>
-}
-
 function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?: boolean }) {
   const [liked, setLiked] = useState(false)
 
@@ -249,12 +185,35 @@ function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const [interests, setInterests] = useState(userInterests)
+  const [showAddInterestSheet, setShowAddInterestSheet] = useState(false)
+
+  // Build the tabs: All + user interests
+  const displayedCategories = [
+    { id: "all", label: "All", avatar: null, bgColor: "bg-gradient-to-br from-primary to-accent" },
+    ...allCategories.filter(cat => interests.includes(cat.id))
+  ]
+
+  const availableToAdd = allCategories.filter(cat => !interests.includes(cat.id))
+
+  const addInterest = (categoryId: string) => {
+    if (!interests.includes(categoryId)) {
+      setInterests([...interests, categoryId])
+    }
+  }
+
+  const removeInterest = (categoryId: string) => {
+    setInterests(interests.filter(id => id !== categoryId))
+    if (selectedCategory === categoryId) {
+      setSelectedCategory("all")
+    }
+  }
 
   const filteredPosts = posts.filter(post => 
     selectedCategory === "all" || post.category === selectedCategory
   )
 
-  const filteredAuctions = auctionCards.filter(card =>
+  const filteredFeatured = featuredCards.filter(card =>
     selectedCategory === "all" || card.category === selectedCategory
   )
 
@@ -302,93 +261,78 @@ export default function HomePage() {
       </header>
 
       <main className="px-4">
-        {/* Brand Categories */}
-        <div className="mb-5">
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide py-2 pl-1">
-            {categories.map((category) => (
+        {/* IP Category Tabs */}
+        <div className="mb-4">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide py-2">
+            {displayedCategories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`flex flex-col items-center gap-1.5 shrink-0 transition-transform ${
-                  selectedCategory === category.id ? "scale-110" : ""
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all border whitespace-nowrap ${
+                  selectedCategory === category.id
+                    ? "border-primary bg-primary/10"
+                    : "bg-card border-border"
                 }`}
               >
-                <div className={`size-14 rounded-2xl overflow-hidden border-2 ${
-                  selectedCategory === category.id
-                    ? "border-white shadow-lg shadow-primary/40"
-                    : "border-transparent"
-                }`}>
+                <div className="size-5 rounded-full overflow-hidden shrink-0">
                   {category.avatar ? (
                     <Image
                       src={category.avatar}
                       alt={category.label}
-                      width={56}
-                      height={56}
+                      width={20}
+                      height={20}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className={`w-full h-full ${category.bgColor} flex items-center justify-center`}>
-                      <svg className="size-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <rect x="3" y="3" width="7" height="7" />
-                        <rect x="14" y="3" width="7" height="7" />
-                        <rect x="14" y="14" width="7" height="7" />
-                        <rect x="3" y="14" width="7" height="7" />
-                      </svg>
+                      <span className="text-[6px] font-bold text-white">ALL</span>
                     </div>
                   )}
                 </div>
-                <span className={`text-[10px] font-medium ${
-                  selectedCategory === category.id ? "text-primary" : "text-muted-foreground"
-                }`}>
-                  {category.label}
-                </span>
+                <span className={`text-xs font-medium ${
+                  selectedCategory === category.id ? "text-primary" : "text-foreground"
+                }`}>{category.label}</span>
               </button>
             ))}
+            {/* Add Interest Button */}
+            <button
+              onClick={() => setShowAddInterestSheet(true)}
+              className="flex items-center justify-center size-8 rounded-full border border-dashed border-border hover:border-primary/50 transition-colors shrink-0"
+            >
+              <Plus className="size-4 text-muted-foreground" />
+            </button>
           </div>
         </div>
 
-        {/* Auctions */}
-        <div className="mb-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="size-2 bg-red-500 rounded-full animate-pulse" />
-              <h2 className="font-bold text-foreground">Auctions</h2>
+        {/* Hot & Auction Banners */}
+        <div className="flex gap-3 mb-5">
+          <Link href={`/hot${selectedCategory !== "all" ? `?category=${selectedCategory}` : ""}`} className="flex-1">
+            <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl p-3 flex items-center gap-2">
+              <div className="size-8 rounded-full bg-white/20 flex items-center justify-center">
+                <Flame className="size-4 text-white" />
+              </div>
+              <div>
+                <span className="text-white font-semibold text-sm">Hot</span>
+                <p className="text-white/70 text-[10px]">Trending now</p>
+              </div>
+              <ChevronRight className="size-4 text-white/70 ml-auto" />
             </div>
-            <Link href="/shop?type=auction" className="flex items-center gap-1 text-sm text-primary">
-              See All <ChevronRight className="size-4" />
-            </Link>
-          </div>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {filteredAuctions.map((card) => (
-              <Link key={card.id} href={`/auction/${card.id}`} className="shrink-0">
-                <div className="w-32 bg-card rounded-xl overflow-hidden border border-border">
-                  <div className="relative aspect-[3/4]">
-                    <Image
-                      src={card.image}
-                      alt={card.name}
-                      fill
-                      className="object-cover"
-                    />
-                    {/* Countdown Badge */}
-                    <div className="absolute top-2 left-2 bg-red-500/90 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex items-center gap-1">
-                      <Clock className="size-2.5" />
-                      <AuctionCountdown endTime={card.endTime} />
-                    </div>
-                  </div>
-                  <div className="p-2">
-                    <p className="text-[11px] font-semibold text-foreground truncate">{card.name}</p>
-                    <div className="flex items-center justify-between mt-1">
-                      <p className="text-xs font-bold text-primary">${card.currentBid}</p>
-                      <span className="text-[10px] text-muted-foreground">{card.bidCount} bids</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          </Link>
+          <Link href={`/auctions${selectedCategory !== "all" ? `?category=${selectedCategory}` : ""}`} className="flex-1">
+            <div className="bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl p-3 flex items-center gap-2">
+              <div className="size-8 rounded-full bg-white/20 flex items-center justify-center">
+                <Gavel className="size-4 text-white" />
+              </div>
+              <div>
+                <span className="text-white font-semibold text-sm">Auction</span>
+                <p className="text-white/70 text-[10px]">Live bidding</p>
+              </div>
+              <ChevronRight className="size-4 text-white/70 ml-auto" />
+            </div>
+          </Link>
         </div>
 
-        {/* Featured Collection */}
+        {/* Featured Collection - 2 Rows */}
         <div className="mb-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-foreground">Featured Collection</h2>
@@ -396,12 +340,10 @@ export default function HomePage() {
               See All <ChevronRight className="size-4" />
             </Link>
           </div>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {featuredCards.filter(card => 
-              selectedCategory === "all" || card.category === selectedCategory
-            ).map((card) => (
-              <Link key={card.id} href={`/shop/${card.id}`} className="shrink-0">
-                <div className="w-28 bg-card rounded-xl overflow-hidden border border-border">
+          <div className="grid grid-cols-3 gap-2">
+            {filteredFeatured.slice(0, 6).map((card) => (
+              <Link key={card.id} href={`/shop/${card.id}`}>
+                <div className="bg-card rounded-xl overflow-hidden border border-border">
                   <div className="relative aspect-[3/4]">
                     <Image
                       src={card.image}
@@ -411,9 +353,9 @@ export default function HomePage() {
                     />
                   </div>
                   <div className="p-2">
-                    <p className="text-[11px] font-semibold text-foreground truncate">{card.name}</p>
-                    <p className="text-[10px] text-muted-foreground">{card.set}</p>
-                    <p className="text-xs font-bold text-primary mt-1">${card.price}</p>
+                    <p className="text-[10px] font-semibold text-foreground truncate">{card.name}</p>
+                    <p className="text-[9px] text-muted-foreground truncate">{card.set}</p>
+                    <p className="text-xs font-bold text-primary mt-0.5">${card.price}</p>
                   </div>
                 </div>
               </Link>
@@ -426,7 +368,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-foreground">Community</h2>
             <span className="text-xs text-muted-foreground">
-              {selectedCategory === "all" ? "All Categories" : categories.find(c => c.id === selectedCategory)?.label}
+              {selectedCategory === "all" ? "All Categories" : displayedCategories.find(c => c.id === selectedCategory)?.label}
             </span>
           </div>
           <div className="flex gap-3 w-full">
@@ -443,6 +385,67 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+
+      {/* Add Interest Sheet */}
+      <Sheet open={showAddInterestSheet} onOpenChange={setShowAddInterestSheet}>
+        <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl">
+          <SheetHeader className="mb-4">
+            <SheetTitle className="text-base">Add Interests</SheetTitle>
+          </SheetHeader>
+          
+          {/* Current Interests */}
+          {interests.length > 0 && (
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-muted-foreground mb-3">Your Interests</h4>
+              <div className="flex flex-wrap gap-2">
+                {interests.map(id => {
+                  const cat = allCategories.find(c => c.id === id)
+                  if (!cat) return null
+                  return (
+                    <div
+                      key={id}
+                      className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full bg-primary/10 border border-primary/30"
+                    >
+                      <div className="size-5 rounded-full overflow-hidden">
+                        <Image src={cat.avatar} alt={cat.label} width={20} height={20} className="w-full h-full object-cover" />
+                      </div>
+                      <span className="text-xs font-medium text-primary">{cat.label}</span>
+                      <button
+                        onClick={() => removeInterest(id)}
+                        className="size-5 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors"
+                      >
+                        <X className="size-3 text-primary" />
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+          
+          {/* Available to Add */}
+          <div>
+            <h4 className="text-sm font-medium text-muted-foreground mb-3">Available</h4>
+            <div className="grid grid-cols-2 gap-2">
+              {availableToAdd.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => addInterest(cat.id)}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border hover:border-primary/50 transition-colors"
+                >
+                  <div className="size-10 rounded-xl overflow-hidden">
+                    <Image src={cat.avatar} alt={cat.label} width={40} height={40} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="text-left">
+                    <span className="text-sm font-medium">{cat.label}</span>
+                  </div>
+                  <Plus className="size-4 text-muted-foreground ml-auto" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

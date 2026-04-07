@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, X, Plus, MapPin, Hash, AtSign, ShoppingBag, Check, Package } from "lucide-react"
+import { ArrowLeft, X, Plus, MapPin, AtSign, ShoppingBag, Check } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
@@ -77,6 +78,7 @@ export default function CreatePostPage() {
   const [location, setLocation] = useState("")
   const [linkedProducts, setLinkedProducts] = useState<LinkedProduct[]>([])
   const [isProductSheetOpen, setIsProductSheetOpen] = useState(false)
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false)
 
   const addTag = (tag: string) => {
     if (tag && !tags.includes(tag) && tags.length < 5) {
@@ -109,6 +111,16 @@ export default function CreatePostPage() {
   }
 
   const handlePublish = () => {
+    setShowSuccessDialog(true)
+  }
+
+  const handleAddNewProduct = () => {
+    setIsProductSheetOpen(false)
+    router.push("/publish/product")
+  }
+
+  const handleGoHome = () => {
+    setShowSuccessDialog(false)
     router.push("/")
   }
 
@@ -120,7 +132,7 @@ export default function CreatePostPage() {
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold text-base">Create Post</span>
+          <span className="font-semibold text-base">Write Post</span>
           <Button
             onClick={handlePublish}
             disabled={!title || images.length === 0}
@@ -358,6 +370,20 @@ export default function CreatePostPage() {
                     </button>
                   )
                 })}
+
+                {/* Add New Product Option */}
+                <button
+                  onClick={handleAddNewProduct}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl border-2 border-dashed border-border hover:border-primary/50 transition-colors"
+                >
+                  <div className="size-16 shrink-0 rounded-lg bg-muted flex items-center justify-center">
+                    <Plus className="size-6 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className="font-semibold text-sm">Add New Product</div>
+                    <div className="text-xs text-muted-foreground">List a new item for sale</div>
+                  </div>
+                </button>
               </div>
             </SheetContent>
           </Sheet>
@@ -383,6 +409,29 @@ export default function CreatePostPage() {
           </Button>
         </div>
       </footer>
+
+      {/* Success Dialog */}
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="mx-4 rounded-2xl max-w-sm">
+          <DialogHeader className="text-center">
+            <div className="mx-auto mb-4 size-16 rounded-full bg-green-500/10 flex items-center justify-center">
+              <Check className="size-8 text-green-500" />
+            </div>
+            <DialogTitle className="text-lg">Post Published!</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Your post is now live. Keep sharing your collection stories!
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            <Button 
+              className="w-full h-12 rounded-xl"
+              onClick={handleGoHome}
+            >
+              Go to Home
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
