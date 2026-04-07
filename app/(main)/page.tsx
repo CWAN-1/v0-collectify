@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Search, Heart, MessageCircle, ChevronRight, Plus, Flame, Gavel, X, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -311,29 +311,23 @@ export default function HomePage() {
         </div>
 
         {/* Hot & Auction Banners */}
-        <div className="flex gap-3 mb-5">
+        <div className="flex gap-2 mb-4">
           <Link href={`/hot${selectedCategory !== "all" ? `?category=${selectedCategory}` : ""}`} className="flex-1">
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl p-3 flex items-center gap-2">
-              <div className="size-8 rounded-full bg-white/20 flex items-center justify-center">
-                <Flame className="size-4 text-white" />
+            <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-lg px-3 py-2 flex items-center gap-2">
+              <div className="size-6 rounded-full bg-white/20 flex items-center justify-center">
+                <Flame className="size-3 text-white" />
               </div>
-              <div>
-                <span className="text-white font-semibold text-sm">Hot</span>
-                <p className="text-white/70 text-[10px]">Trending now</p>
-              </div>
-              <ChevronRight className="size-4 text-white/70 ml-auto" />
+              <span className="text-white font-semibold text-xs">Hot</span>
+              <ChevronRight className="size-3.5 text-white/70 ml-auto" />
             </div>
           </Link>
           <Link href={`/auctions${selectedCategory !== "all" ? `?category=${selectedCategory}` : ""}`} className="flex-1">
-            <div className="bg-gradient-to-r from-purple-500 to-indigo-500 rounded-xl p-3 flex items-center gap-2">
-              <div className="size-8 rounded-full bg-white/20 flex items-center justify-center">
-                <Gavel className="size-4 text-white" />
+            <div className="bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg px-3 py-2 flex items-center gap-2">
+              <div className="size-6 rounded-full bg-white/20 flex items-center justify-center">
+                <Gavel className="size-3 text-white" />
               </div>
-              <div>
-                <span className="text-white font-semibold text-sm">Auction</span>
-                <p className="text-white/70 text-[10px]">Live bidding</p>
-              </div>
-              <ChevronRight className="size-4 text-white/70 ml-auto" />
+              <span className="text-white font-semibold text-xs">Auction</span>
+              <ChevronRight className="size-3.5 text-white/70 ml-auto" />
             </div>
           </Link>
         </div>
@@ -394,60 +388,60 @@ export default function HomePage() {
 
       {/* Add Interest Sheet */}
       <Sheet open={showAddInterestSheet} onOpenChange={setShowAddInterestSheet}>
-        <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl">
-          <SheetHeader className="mb-4">
+        <SheetContent side="bottom" className="h-[60vh] rounded-t-3xl px-4 pb-8">
+          <SheetHeader className="mb-3">
             <SheetTitle className="text-base">Add Interests</SheetTitle>
+            <SheetDescription className="sr-only">Select categories you are interested in</SheetDescription>
           </SheetHeader>
           
-          {/* Current Interests */}
-          {interests.length > 0 && (
-            <div className="mb-6">
-              <h4 className="text-sm font-medium text-muted-foreground mb-3">Your Interests</h4>
-              <div className="flex flex-wrap gap-2">
-                {interests.map(id => {
-                  const cat = allCategories.find(c => c.id === id)
-                  if (!cat) return null
-                  return (
-                    <div
-                      key={id}
-                      className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full bg-primary/10 border border-primary/30"
-                    >
-                      <div className="size-5 rounded-full overflow-hidden">
-                        <Image src={cat.avatar} alt={cat.label} width={20} height={20} className="w-full h-full object-cover" />
-                      </div>
-                      <span className="text-xs font-medium text-primary">{cat.label}</span>
-                      <button
-                        onClick={() => removeInterest(id)}
-                        className="size-5 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors"
+          <div className="overflow-y-auto" style={{ height: "calc(60vh - 80px)" }}>
+            {/* Current Interests */}
+            {interests.length > 0 && (
+              <div className="mb-4">
+                <h4 className="text-xs font-medium text-muted-foreground mb-2">Your Interests</h4>
+                <div className="flex flex-wrap gap-2">
+                  {interests.map(id => {
+                    const cat = allCategories.find(c => c.id === id)
+                    if (!cat) return null
+                    return (
+                      <div
+                        key={id}
+                        className="flex items-center gap-2 pl-1.5 pr-1 py-1 rounded-full bg-primary/10 border border-primary/30"
                       >
-                        <X className="size-3 text-primary" />
-                      </button>
-                    </div>
-                  )
-                })}
+                        <div className="size-6 rounded-full overflow-hidden">
+                          <Image src={cat.avatar} alt={cat.label} width={24} height={24} className="w-full h-full object-cover" />
+                        </div>
+                        <span className="text-xs font-medium text-primary">{cat.label}</span>
+                        <button
+                          onClick={() => removeInterest(id)}
+                          className="size-5 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/30 transition-colors"
+                        >
+                          <X className="size-3 text-primary" />
+                        </button>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          )}
-          
-          {/* Available to Add */}
-          <div>
-            <h4 className="text-sm font-medium text-muted-foreground mb-3">Available</h4>
-            <div className="grid grid-cols-2 gap-2">
-              {availableToAdd.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => addInterest(cat.id)}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border hover:border-primary/50 transition-colors"
-                >
-                  <div className="size-10 rounded-xl overflow-hidden">
-                    <Image src={cat.avatar} alt={cat.label} width={40} height={40} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="text-left">
-                    <span className="text-sm font-medium">{cat.label}</span>
-                  </div>
-                  <Plus className="size-4 text-muted-foreground ml-auto" />
-                </button>
-              ))}
+            )}
+            
+            {/* Available to Add */}
+            <div>
+              <h4 className="text-xs font-medium text-muted-foreground mb-2">Available</h4>
+              <div className="grid grid-cols-4 gap-2">
+                {availableToAdd.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => addInterest(cat.id)}
+                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-card border border-border hover:border-primary/50 transition-colors"
+                  >
+                    <div className="size-14 rounded-xl overflow-hidden">
+                      <Image src={cat.avatar} alt={cat.label} width={56} height={56} className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-[10px] font-medium text-center">{cat.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </SheetContent>

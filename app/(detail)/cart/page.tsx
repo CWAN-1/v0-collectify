@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Minus, Plus, Trash2, Check } from "lucide-react"
+import { ArrowLeft, Minus, Plus, Trash2, Check, Gavel, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import Image from "next/image"
@@ -17,7 +17,8 @@ const cartItems = [
     seller: { name: "CardMaster", verified: true },
     condition: "Mint",
     quantity: 1,
-    maxQuantity: 1
+    maxQuantity: 1,
+    type: "buy_now" as const,
   },
   {
     id: "2",
@@ -27,7 +28,20 @@ const cartItems = [
     seller: { name: "VintageCards", verified: true },
     condition: "Excellent",
     quantity: 1,
-    maxQuantity: 1
+    maxQuantity: 1,
+    type: "auction_won" as const,
+    winningBid: 2500,
+  },
+  {
+    id: "3",
+    name: "Blue-Eyes White Dragon 1st Ed",
+    price: 850,
+    image: "/products/product-3.jpg",
+    seller: { name: "YugiohPro", verified: true },
+    condition: "Near Mint",
+    quantity: 1,
+    maxQuantity: 1,
+    type: "buy_now" as const,
   },
 ]
 
@@ -115,14 +129,33 @@ export default function CartPage() {
                     className="mt-3 size-4"
                   />
                   <div className="flex-1 bg-card rounded-xl border border-border p-2.5">
-                    {/* Seller */}
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <span className="font-medium text-xs">{item.seller.name}</span>
-                      {item.seller.verified && (
-                        <div className="size-3.5 bg-foreground rounded-full flex items-center justify-center">
-                          <Check className="size-2 text-background" />
-                        </div>
-                      )}
+                    {/* Seller & Type */}
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-medium text-xs">{item.seller.name}</span>
+                        {item.seller.verified && (
+                          <div className="size-3.5 bg-foreground rounded-full flex items-center justify-center">
+                            <Check className="size-2 text-background" />
+                          </div>
+                        )}
+                      </div>
+                      <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium ${
+                        item.type === "auction_won" 
+                          ? "bg-purple-500/10 text-purple-500" 
+                          : "bg-blue-500/10 text-blue-500"
+                      }`}>
+                        {item.type === "auction_won" ? (
+                          <>
+                            <Gavel className="size-2.5" />
+                            Won
+                          </>
+                        ) : (
+                          <>
+                            <ShoppingBag className="size-2.5" />
+                            Buy Now
+                          </>
+                        )}
+                      </div>
                     </div>
 
                     {/* Product */}

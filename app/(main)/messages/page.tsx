@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Package, Heart, UserPlus, MessageCircle, Check, Bell, Settings, FolderPlus, Folder, MoreVertical, X, Plus } from "lucide-react"
+import { Package, Heart, UserPlus, MessageCircle, Check, Bell, Settings, FolderPlus, Folder, MoreVertical, X, Plus, Gavel, TrendingUp, Trophy, XCircle } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,7 @@ const tabs = [
 
 const notificationCategories = [
   { id: "all", label: "All" },
+  { id: "auction", label: "Auction" },
   { id: "order", label: "Order" },
   { id: "post", label: "Post" },
   { id: "follow", label: "Follow" },
@@ -63,6 +64,9 @@ const initialChats = [
 ]
 
 const notifications = [
+  { id: "a1", type: "auction_outbid", category: "auction", icon: TrendingUp, title: "You've Been Outbid!", message: "Charizard Base Set Holo - New bid: $2,600", time: "5 min ago", read: false, link: "/profile/auction" },
+  { id: "a2", type: "auction_won", category: "auction", icon: Trophy, title: "Auction Won!", message: "Congratulations! You won Pikachu VMAX for $250", time: "1 hour ago", read: false, link: "/profile/auction" },
+  { id: "a3", type: "auction_lost", category: "auction", icon: XCircle, title: "Auction Ended", message: "Blue-Eyes Dragon sold to another bidder", time: "3 hours ago", read: true, link: "/profile/auction" },
   { id: "1", type: "order", category: "order", icon: Package, title: "Order Shipped", message: "Order #ORD123456 is on its way", time: "2 hours ago", read: false },
   { id: "5", type: "order", category: "order", icon: Package, title: "Order Completed", message: "Order #ORD123455 completed. Leave a review?", time: "2 days ago", read: true },
   { id: "2", type: "like", category: "post", icon: Heart, title: "Post liked", message: "Alex and 23 others liked your post", time: "3 hours ago", read: false },
@@ -279,20 +283,21 @@ export default function MessagesPage() {
             ) : (
               filteredNotifications.map((notif) => {
                 const Icon = notif.icon
-                return (
+                const notifContent = (
                   <div
-                    key={notif.id}
-                    className={`flex items-start gap-3 p-3 rounded-xl border border-border ${
+                    className={`flex items-start gap-3 p-3 rounded-xl border border-border transition-colors ${
                       notif.read ? "bg-card" : "bg-secondary"
-                    }`}
+                    } ${notif.link ? "hover:bg-secondary/80 cursor-pointer" : ""}`}
                   >
                     <div className={`size-10 rounded-full flex items-center justify-center shrink-0 ${
+                      notif.category === "auction" ? "bg-purple-500/20" :
                       notif.category === "order" ? "bg-blue-500/20" :
                       notif.category === "post" ? "bg-pink-500/20" :
                       notif.category === "follow" ? "bg-green-500/20" :
                       "bg-orange-500/20"
                     }`}>
                       <Icon className={`size-4 ${
+                        notif.category === "auction" ? "text-purple-500" :
                         notif.category === "order" ? "text-blue-500" :
                         notif.category === "post" ? "text-pink-500" :
                         notif.category === "follow" ? "text-green-500" :
@@ -310,6 +315,14 @@ export default function MessagesPage() {
                       <span className="size-2 bg-primary rounded-full shrink-0 mt-2" />
                     )}
                   </div>
+                )
+                
+                return notif.link ? (
+                  <Link key={notif.id} href={notif.link}>
+                    {notifContent}
+                  </Link>
+                ) : (
+                  <div key={notif.id}>{notifContent}</div>
                 )
               })
             )}

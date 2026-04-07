@@ -53,38 +53,38 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header with gradient background */}
-      <header className="bg-gradient-to-br from-primary via-primary to-accent px-4 pt-12 pb-4 relative">
+      <header className="bg-gradient-to-br from-primary via-primary to-accent px-4 pt-14 pb-4 relative">
         {/* Settings button — absolute top right */}
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-12 right-3">
           <Link href="/profile/settings">
-            <Button variant="ghost" size="icon" className="text-white/80 hover:bg-white/10 size-9">
-              <Settings className="size-5" />
+            <Button variant="ghost" size="icon" className="text-white/80 hover:bg-white/10 size-8">
+              <Settings className="size-4" />
             </Button>
           </Link>
         </div>
 
         {/* Profile Info */}
         <div className="flex items-center gap-3">
-          <Avatar className="size-14 border-2 border-white/30 shrink-0">
+          <Avatar className="size-12 border-2 border-white/30 shrink-0">
             <AvatarImage src={user.avatar} />
-            <AvatarFallback className="text-primary bg-white text-lg">
+            <AvatarFallback className="text-primary bg-white text-base">
               {user.name[0]}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h2 className="text-base font-bold text-white truncate">{user.name}</h2>
-            {/* Stats Row */}
-            <div className="flex items-center gap-3 mt-1">
+            <h2 className="text-sm font-bold text-white truncate">{user.name}</h2>
+            {/* Stats Row - Two Lines */}
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
               <div className="flex items-center gap-1">
-                <Star className="size-3.5 text-yellow-400 fill-yellow-400" />
-                <span className="text-xs text-white/90 font-medium">{user.rating}</span>
+                <Star className="size-3 text-yellow-400 fill-yellow-400" />
+                <span className="text-[10px] text-white/90 font-medium">{user.rating}</span>
               </div>
-              <div className="w-px h-3 bg-white/30" />
-              <span className="text-xs text-white/80">{user.totalSold} sold</span>
-              <div className="w-px h-3 bg-white/30" />
-              <span className="text-xs text-white/80">{user.followers} followers</span>
-              <div className="w-px h-3 bg-white/30" />
-              <span className="text-xs text-white/80">{user.following} following</span>
+              <div className="w-px h-2.5 bg-white/30" />
+              <span className="text-[10px] text-white/80">{user.totalSold} sold</span>
+              <div className="w-px h-2.5 bg-white/30" />
+              <span className="text-[10px] text-white/80">{user.followers} followers</span>
+              <div className="w-px h-2.5 bg-white/30" />
+              <span className="text-[10px] text-white/80">{user.following} following</span>
             </div>
           </div>
         </div>
