@@ -1,0 +1,328 @@
+"use client"
+
+import { useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { ArrowLeft, Heart, Star, Check, Flame, SlidersHorizontal, ArrowUpDown, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
+import { Slider } from "@/components/ui/slider"
+import Link from "next/link"
+import Image from "next/image"
+
+const categories = [
+  { id: "all", label: "All" },
+  { id: "pokemon", label: "Pokemon" },
+  { id: "yugioh", label: "Yu-Gi-Oh!" },
+  { id: "onepiece", label: "One Piece" },
+  { id: "mtg", label: "MTG" },
+  { id: "sports", label: "Sports" },
+]
+
+const sortOptions = [
+  { id: "trending", label: "Trending" },
+  { id: "price-high", label: "Price: High to Low" },
+  { id: "price-low", label: "Price: Low to High" },
+  { id: "newest", label: "Newest" },
+]
+
+const hotProducts = [
+  {
+    id: "1",
+    name: "Pikachu VMAX Rainbow Rare",
+    price: 250,
+    originalPrice: 300,
+    image: "/cards/pokemon-1.jpg",
+    seller: "CardMaster",
+    rating: 4.9,
+    sold: 156,
+    condition: "Mint",
+    isVerified: true,
+    category: "pokemon",
+    trend: "+15%"
+  },
+  {
+    id: "2",
+    name: "Charizard Base Set Holo",
+    price: 2500,
+    image: "/cards/pokemon-2.jpg",
+    seller: "VintageCards",
+    rating: 4.9,
+    sold: 12,
+    condition: "Excellent",
+    isVerified: true,
+    category: "pokemon",
+    trend: "+8%"
+  },
+  {
+    id: "3",
+    name: "Blue-Eyes White Dragon 1st Ed",
+    price: 850,
+    originalPrice: 1000,
+    image: "/cards/yugioh-1.jpg",
+    seller: "YugiCollector",
+    rating: 4.8,
+    sold: 45,
+    condition: "Near Mint",
+    isVerified: true,
+    category: "yugioh",
+    trend: "+22%"
+  },
+  {
+    id: "4",
+    name: "Luffy Gear 5 Secret Rare",
+    price: 180,
+    image: "/cards/onepiece-1.jpg",
+    seller: "OnePieceID",
+    rating: 4.7,
+    sold: 89,
+    condition: "Mint",
+    isVerified: false,
+    category: "onepiece",
+    trend: "+30%"
+  },
+  {
+    id: "5",
+    name: "LeBron James Rookie Card",
+    price: 1500,
+    image: "/cards/sports-1.jpg",
+    seller: "SportsHub",
+    rating: 5.0,
+    sold: 23,
+    condition: "Excellent",
+    isVerified: true,
+    category: "sports",
+    trend: "+12%"
+  },
+  {
+    id: "6",
+    name: "Black Lotus",
+    price: 4500,
+    image: "/cards/mtg-1.jpg",
+    seller: "LegendaryCards",
+    rating: 5.0,
+    sold: 5,
+    condition: "Mint",
+    isVerified: true,
+    category: "mtg",
+    trend: "+5%"
+  },
+]
+
+function formatPrice(price: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+  }).format(price)
+}
+
+function ProductCard({ product }: { product: typeof hotProducts[0] }) {
+  const [liked, setLiked] = useState(false)
+
+  return (
+    <Link href={`/shop/${product.id}`} className="block">
+      <div className="bg-card rounded-xl overflow-hidden border border-border">
+        <div className="relative aspect-square bg-gradient-to-b from-primary/10 to-transparent">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover"
+          />
+          <div className="absolute top-2 left-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+            <Flame className="size-2.5" />
+            {product.trend}
+          </div>
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              setLiked(!liked)
+            }}
+            className="absolute top-2 right-2 size-7 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-border"
+          >
+            <Heart className={`size-3.5 ${liked ? "fill-red-500 text-red-500" : ""}`} />
+          </button>
+        </div>
+
+        <div className="p-2.5">
+          <h3 className="font-medium text-xs text-foreground line-clamp-2 mb-1">
+            {product.name}
+          </h3>
+          <span className="text-[10px] text-green-500">{product.condition}</span>
+          <div className="mt-1.5">
+            <span className="font-bold text-sm text-primary">{formatPrice(product.price)}</span>
+            {product.originalPrice && (
+              <span className="text-[10px] text-muted-foreground line-through ml-1">
+                {formatPrice(product.originalPrice)}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center justify-between mt-1.5 pt-1.5 border-t border-border">
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] text-muted-foreground truncate max-w-16">{product.seller}</span>
+              {product.isVerified && (
+                <div className="size-3 bg-primary rounded-full flex items-center justify-center shrink-0">
+                  <Check className="size-1.5 text-white" />
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-0.5">
+              <Star className="size-2.5 fill-yellow-500 text-yellow-500" />
+              <span className="text-[10px] font-medium">{product.rating}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+export default function HotPage() {
+  const searchParams = useSearchParams()
+  const categoryParam = searchParams.get("category") || "all"
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam)
+  const [selectedSort, setSelectedSort] = useState("trending")
+  const [showFilterSheet, setShowFilterSheet] = useState(false)
+  const [showSortSheet, setShowSortSheet] = useState(false)
+  const [priceRange, setPriceRange] = useState([0, 5000])
+
+  const filteredProducts = hotProducts.filter(product => 
+    (selectedCategory === "all" || product.category === selectedCategory) &&
+    product.price >= priceRange[0] && product.price <= priceRange[1]
+  )
+
+  return (
+    <div className="min-h-screen bg-background pb-20">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-background border-b border-border">
+        <div className="flex items-center gap-3 px-4 pt-12 pb-3">
+          <Link href="/">
+            <Button variant="ghost" size="icon" className="size-9">
+              <ArrowLeft className="size-5" />
+            </Button>
+          </Link>
+          <div className="flex items-center gap-2 flex-1">
+            <Flame className="size-5 text-orange-500" />
+            <span className="font-semibold">Hot Items</span>
+          </div>
+        </div>
+
+        {/* Category Tabs */}
+        <div className="px-4 pb-2">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all border ${
+                  selectedCategory === cat.id
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-foreground border-border"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Filter & Sort */}
+        <div className="px-4 pb-3 flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFilterSheet(true)}
+            className="h-8 rounded-full text-xs gap-1.5"
+          >
+            <SlidersHorizontal className="size-3.5" />
+            Filter
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowSortSheet(true)}
+            className="h-8 rounded-full text-xs gap-1.5"
+          >
+            <ArrowUpDown className="size-3.5" />
+            {sortOptions.find(s => s.id === selectedSort)?.label}
+          </Button>
+        </div>
+      </header>
+
+      <main className="px-4 pt-4">
+        <p className="text-xs text-muted-foreground mb-3">
+          {filteredProducts.length} trending items
+        </p>
+        <div className="grid grid-cols-2 gap-2.5">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </main>
+
+      {/* Filter Sheet */}
+      <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
+        <SheetContent side="bottom" className="h-[50vh] rounded-t-3xl">
+          <SheetHeader className="pb-4">
+            <SheetTitle className="text-base">Filter</SheetTitle>
+            <SheetDescription className="sr-only">Filter hot items by price</SheetDescription>
+          </SheetHeader>
+          
+          <div className="space-y-6">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium">Price Range</span>
+                <span className="text-sm text-primary">${priceRange[0]} - ${priceRange[1]}</span>
+              </div>
+              <Slider
+                value={priceRange}
+                onValueChange={setPriceRange}
+                min={0}
+                max={5000}
+                step={50}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3 mt-6">
+            <Button variant="outline" className="flex-1 h-10 rounded-xl" onClick={() => setPriceRange([0, 5000])}>
+              Reset
+            </Button>
+            <Button className="flex-1 h-10 rounded-xl" onClick={() => setShowFilterSheet(false)}>
+              Apply
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Sort Sheet */}
+      <Sheet open={showSortSheet} onOpenChange={setShowSortSheet}>
+        <SheetContent side="bottom" className="rounded-t-3xl">
+          <SheetHeader className="pb-4">
+            <SheetTitle className="text-base">Sort By</SheetTitle>
+            <SheetDescription className="sr-only">Sort hot items</SheetDescription>
+          </SheetHeader>
+          <div className="space-y-2">
+            {sortOptions.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => {
+                  setSelectedSort(option.id)
+                  setShowSortSheet(false)
+                }}
+                className={`w-full p-3 rounded-xl text-left text-sm font-medium transition-colors ${
+                  selectedSort === option.id
+                    ? "bg-primary/10 text-primary border border-primary/30"
+                    : "bg-card border border-border"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
+  )
+}

@@ -9,9 +9,8 @@ import Image from "next/image"
 // Action buttons
 const actionButtons = [
   { id: "posts", label: "Posts", icon: Package, href: "/profile/posts" },
-  { id: "bids", label: "Bid History", icon: Gavel, href: "/profile/bid-history" },
+  { id: "auction", label: "Auction", icon: Gavel, href: "/profile/auction" },
   { id: "favorites", label: "Favorites", icon: Heart, href: "/profile/favorites" },
-  { id: "following", label: "Following", icon: Users, href: "/profile/following" },
 ]
 
 // Order statuses
@@ -47,42 +46,51 @@ const user = {
   rating: 4.9,
   totalSold: 156,
   followers: 1250,
+  following: 328,
 }
 
 export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header with gradient background */}
-      <header className="bg-gradient-to-br from-primary via-primary to-accent px-4 pt-12 pb-4 relative">
+      <header className="bg-gradient-to-br from-primary via-primary to-accent px-4 pt-14 pb-4 relative">
         {/* Settings button — absolute top right */}
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-12 right-3">
           <Link href="/profile/settings">
-            <Button variant="ghost" size="icon" className="text-white/80 hover:bg-white/10 size-9">
-              <Settings className="size-5" />
+            <Button variant="ghost" size="icon" className="text-white/80 hover:bg-white/10 size-8">
+              <Settings className="size-4" />
             </Button>
           </Link>
         </div>
 
         {/* Profile Info */}
-        <div className="flex items-center gap-3">
-          <Avatar className="size-14 border-2 border-white/30 shrink-0">
+        <div className="flex items-center gap-3 pr-10">
+          <Avatar className="size-11 border-2 border-white/30 shrink-0">
             <AvatarImage src={user.avatar} />
-            <AvatarFallback className="text-primary bg-white text-lg">
+            <AvatarFallback className="text-primary bg-white text-sm">
               {user.name[0]}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h2 className="text-base font-bold text-white truncate">{user.name}</h2>
-            {/* Stats Row */}
-            <div className="flex items-center gap-3 mt-1">
-              <div className="flex items-center gap-1">
-                <Star className="size-3.5 text-yellow-400 fill-yellow-400" />
-                <span className="text-xs text-white/90 font-medium">{user.rating}</span>
+            {/* Name + Rating */}
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-bold text-white truncate">{user.name}</h2>
+              <div className="flex items-center gap-0.5 shrink-0">
+                <Star className="size-3 text-yellow-400 fill-yellow-400" />
+                <span className="text-[10px] text-white font-medium">{user.rating}</span>
               </div>
-              <div className="w-px h-3 bg-white/30" />
-              <span className="text-xs text-white/80">{user.totalSold} sold</span>
-              <div className="w-px h-3 bg-white/30" />
-              <span className="text-xs text-white/80">{user.followers} followers</span>
+            </div>
+            {/* Stats Row */}
+            <div className="flex items-center gap-1.5 mt-1">
+              <span className="text-[10px] text-white/80">{user.totalSold} sold</span>
+              <span className="text-white/40">·</span>
+              <Link href="/profile/followers" className="text-[10px] text-white/80 hover:text-white transition-colors">
+                {user.followers} followers
+              </Link>
+              <span className="text-white/40">·</span>
+              <Link href="/profile/following" className="text-[10px] text-white/80 hover:text-white transition-colors">
+                {user.following} following
+              </Link>
             </div>
           </div>
         </div>
@@ -91,7 +99,7 @@ export default function ProfilePage() {
       <main className="px-4 pt-4">
         {/* Action Buttons */}
         <div className="bg-card rounded-2xl border border-border p-3 mb-4">
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {actionButtons.map((btn) => {
               const Icon = btn.icon
               return (
@@ -141,7 +149,7 @@ export default function ProfilePage() {
             <h3 className="font-semibold text-sm">My Orders</h3>
             <ChevronRight className="size-4 text-muted-foreground" />
           </Link>
-          <div className="grid grid-cols-4 gap-y-3 gap-x-2">
+          <div className="grid grid-cols-3 gap-y-3 gap-x-2">
             {orderStatuses.map((status) => {
               const Icon = status.icon
               return (

@@ -5,6 +5,7 @@ import { Search, SlidersHorizontal, ArrowUpDown, Heart, Star, X, Check, Clock, T
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Slider } from "@/components/ui/slider"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -367,8 +368,8 @@ export default function ShopPage() {
     saleType: "All",
     graded: "All",
     gradingCompany: "All",
-    condition: "All",
   })
+  const [ratingRange, setRatingRange] = useState([1, 10])
 
   const filteredProducts = products.filter(product => 
     (selectedCategory === "all" || product.category === selectedCategory)
@@ -389,8 +390,8 @@ export default function ShopPage() {
       saleType: "All",
       graded: "All",
       gradingCompany: "All",
-      condition: "All",
     })
+    setRatingRange([1, 10])
   }
 
   const applySort = (sortId: string) => {
@@ -400,8 +401,8 @@ export default function ShopPage() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
         <div className="px-4 pt-12 pb-3">
           {/* Search Row */}
           <div className="flex items-center gap-3">
@@ -412,7 +413,7 @@ export default function ShopPage() {
             <Link href="/search?tab=products" className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <div className="h-10 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
+                <div className="h-9 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
                   Search cards...
                 </div>
               </div>
@@ -420,8 +421,8 @@ export default function ShopPage() {
 
             {/* Cart */}
             <Link href="/cart" className="relative shrink-0">
-              <Button variant="ghost" size="icon" className="size-10 bg-card border border-border rounded-xl">
-                <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <Button variant="ghost" size="icon" className="size-9 bg-card border border-border rounded-xl">
+                <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                   <line x1="3" y1="6" x2="21" y2="6"/>
                   <path d="M16 10a4 4 0 0 1-8 0"/>
@@ -494,6 +495,9 @@ export default function ShopPage() {
           </div>
         </div>
       </header>
+      
+      {/* Spacer for fixed header */}
+      <div className="h-48" />
 
       {/* Product Grid */}
       <main className="px-4 pt-2">
@@ -612,23 +616,25 @@ export default function ShopPage() {
               </div>
             </div>
 
-            {/* Condition */}
+            {/* Rating / Condition */}
             <div className="mb-6">
-              <h4 className="text-sm font-medium text-foreground mb-3">Rating / Condition</h4>
-              <div className="flex flex-wrap gap-2">
-                {filterOptions.condition.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setFilters({ ...filters, condition: option })}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
-                      filters.condition === option
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-background text-foreground border-border"
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm font-medium text-foreground">Rating / Condition</h4>
+                <span className="text-sm text-primary font-medium">{ratingRange[0]} - {ratingRange[1]}</span>
+              </div>
+              <div className="px-2">
+                <Slider
+                  value={ratingRange}
+                  onValueChange={setRatingRange}
+                  min={1}
+                  max={10}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between mt-2">
+                  <span className="text-xs text-muted-foreground">1</span>
+                  <span className="text-xs text-muted-foreground">10</span>
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Camera, ShoppingBag, ImageIcon, Video, Sparkles } from "lucide-react"
+import { ArrowLeft, ShoppingBag, ImageIcon, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const publishOptions = [
@@ -9,7 +9,7 @@ const publishOptions = [
     id: "post",
     href: "/publish/post",
     icon: ImageIcon,
-    title: "Create Post",
+    title: "Write Post",
     description: "Share your collection and card stories",
     color: "bg-muted"
   },
@@ -17,7 +17,7 @@ const publishOptions = [
     id: "product",
     href: "/publish/product",
     icon: ShoppingBag,
-    title: "Sell Card",
+    title: "Sell Something",
     description: "List your collectible cards for sale",
     color: "bg-muted"
   },
