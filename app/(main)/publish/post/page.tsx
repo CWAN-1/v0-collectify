@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -329,6 +329,7 @@ export default function CreatePostPage() {
             <SheetContent side="bottom" className="h-[80vh]">
               <SheetHeader className="mb-4">
                 <SheetTitle className="text-base">Select Products to Link</SheetTitle>
+                <SheetDescription className="sr-only">Choose up to 6 products to link to your post</SheetDescription>
               </SheetHeader>
               <div className="space-y-2 overflow-y-auto pr-4" style={{ height: "calc(80vh - 100px)" }}>
                 {userProducts.map((product) => {

@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 
 const categories = [
@@ -182,6 +182,7 @@ export default function CreateProductPage() {
             <SheetContent side="bottom">
               <SheetHeader className="text-left mb-4">
                 <SheetTitle className="text-base">Select Category</SheetTitle>
+                <SheetDescription className="sr-only">Choose a category for your card</SheetDescription>
               </SheetHeader>
               <div className="space-y-2">
                 {categories.map((cat) => (
@@ -216,6 +217,7 @@ export default function CreateProductPage() {
             <SheetContent side="bottom">
               <SheetHeader className="text-left mb-4">
                 <SheetTitle className="text-base">Select Card Type</SheetTitle>
+                <SheetDescription className="sr-only">Choose the type of card product</SheetDescription>
               </SheetHeader>
               <div className="space-y-2">
                 {productTypes.map((type) => (
@@ -251,6 +253,7 @@ export default function CreateProductPage() {
             <SheetContent side="bottom">
               <SheetHeader className="text-left mb-4">
                 <SheetTitle className="text-base">Select Condition</SheetTitle>
+                <SheetDescription className="sr-only">Choose the card condition</SheetDescription>
               </SheetHeader>
               <div className="space-y-2">
                 {conditions.map((cond) => (
@@ -307,6 +310,7 @@ export default function CreateProductPage() {
                   <SheetContent side="bottom">
                     <SheetHeader className="text-left mb-4">
                       <SheetTitle className="text-base">Select Grading Company</SheetTitle>
+                      <SheetDescription className="sr-only">Choose a grading company</SheetDescription>
                     </SheetHeader>
                     <div className="space-y-2">
                       {gradingCompanies.map((company) => (
@@ -344,6 +348,7 @@ export default function CreateProductPage() {
                     <SheetContent side="bottom">
                       <SheetHeader className="text-left mb-4">
                         <SheetTitle className="text-base">Select Grade</SheetTitle>
+                        <SheetDescription className="sr-only">Choose the grading score</SheetDescription>
                       </SheetHeader>
                       <div className="grid grid-cols-3 gap-2">
                         {currentGradingScores.map((score) => (
@@ -490,6 +495,7 @@ export default function CreateProductPage() {
                 <SheetContent side="bottom">
                   <SheetHeader className="text-left mb-4">
                     <SheetTitle className="text-base">Select Duration</SheetTitle>
+                    <SheetDescription className="sr-only">Choose the auction duration</SheetDescription>
                   </SheetHeader>
                   <div className="space-y-2">
                     {auctionDurations.map((duration) => (
