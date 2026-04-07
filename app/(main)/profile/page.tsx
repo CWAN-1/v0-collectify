@@ -64,27 +64,33 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile Info */}
-        <div className="flex items-center gap-3">
-          <Avatar className="size-12 border-2 border-white/30 shrink-0">
+        <div className="flex items-center gap-3 pr-10">
+          <Avatar className="size-11 border-2 border-white/30 shrink-0">
             <AvatarImage src={user.avatar} />
-            <AvatarFallback className="text-primary bg-white text-base">
+            <AvatarFallback className="text-primary bg-white text-sm">
               {user.name[0]}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h2 className="text-sm font-bold text-white truncate">{user.name}</h2>
-            {/* Stats Row - Two Lines */}
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
-              <div className="flex items-center gap-1">
+            {/* Name + Rating */}
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-bold text-white truncate">{user.name}</h2>
+              <div className="flex items-center gap-0.5 shrink-0">
                 <Star className="size-3 text-yellow-400 fill-yellow-400" />
-                <span className="text-[10px] text-white/90 font-medium">{user.rating}</span>
+                <span className="text-[10px] text-white font-medium">{user.rating}</span>
               </div>
-              <div className="w-px h-2.5 bg-white/30" />
+            </div>
+            {/* Stats Row */}
+            <div className="flex items-center gap-1.5 mt-1">
               <span className="text-[10px] text-white/80">{user.totalSold} sold</span>
-              <div className="w-px h-2.5 bg-white/30" />
-              <span className="text-[10px] text-white/80">{user.followers} followers</span>
-              <div className="w-px h-2.5 bg-white/30" />
-              <span className="text-[10px] text-white/80">{user.following} following</span>
+              <span className="text-white/40">·</span>
+              <Link href="/profile/followers" className="text-[10px] text-white/80 hover:text-white transition-colors">
+                {user.followers} followers
+              </Link>
+              <span className="text-white/40">·</span>
+              <Link href="/profile/following" className="text-[10px] text-white/80 hover:text-white transition-colors">
+                {user.following} following
+              </Link>
             </div>
           </div>
         </div>

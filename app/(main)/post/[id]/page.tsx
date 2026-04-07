@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Heart, MessageCircle, Bookmark, Share2, Send, MoreHorizontal } from "lucide-react"
+import { ArrowLeft, Heart, MessageCircle, Bookmark, Share2, Send, MoreHorizontal, ShoppingBag, Gavel, ChevronRight } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -26,7 +27,27 @@ const post = {
   likes: 2431,
   comments: 89,
   createdAt: "2 hours ago",
-  tags: ["Pokemon", "PullRates", "VividVoltage", "Pikachu"]
+  tags: ["Pokemon", "PullRates", "VividVoltage", "Pikachu"],
+  linkedProducts: [
+    {
+      id: "p1",
+      name: "Pikachu VMAX Rainbow Rare",
+      image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=200&h=200&fit=crop",
+      price: 250,
+      type: "buy_now" as const,
+      condition: "PSA 10"
+    },
+    {
+      id: "p2",
+      name: "Charizard Base Set Holo",
+      image: "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=200&h=200&fit=crop",
+      price: 1500,
+      currentBid: 1850,
+      type: "auction" as const,
+      condition: "BGS 9.5",
+      endsIn: "2h 15m"
+    }
+  ]
 }
 
 const comments = [
@@ -158,13 +179,75 @@ export default function PostDetailPage() {
         </div>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-4">
           {post.tags.map((tag) => (
             <span key={tag} className="text-sm text-muted-foreground">
               #{tag}
             </span>
           ))}
         </div>
+
+        {/* Linked Products */}
+        {post.linkedProducts && post.linkedProducts.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold mb-3">Shop These Items</h3>
+            <div className="space-y-2">
+              {post.linkedProducts.map((product) => (
+                <Link 
+                  key={product.id} 
+                  href={product.type === "auction" ? `/auction/${product.id}` : `/shop/${product.id}`}
+                >
+                  <div className="flex items-center gap-3 p-2.5 bg-card rounded-xl border border-border hover:border-primary/50 transition-colors">
+                    <div className="relative size-14 rounded-lg overflow-hidden bg-muted shrink-0">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium ${
+                          product.type === "auction" 
+                            ? "bg-purple-500/10 text-purple-500" 
+                            : "bg-blue-500/10 text-blue-500"
+                        }`}>
+                          {product.type === "auction" ? (
+                            <>
+                              <Gavel className="size-2.5" />
+                              Auction
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingBag className="size-2.5" />
+                              Buy Now
+                            </>
+                          )}
+                        </div>
+                        {product.condition && (
+                          <span className="text-[9px] text-muted-foreground">{product.condition}</span>
+                        )}
+                      </div>
+                      <p className="text-xs font-medium truncate">{product.name}</p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        {product.type === "auction" ? (
+                          <>
+                            <span className="text-xs font-bold text-primary">${product.currentBid}</span>
+                            <span className="text-[10px] text-muted-foreground">Ends in {product.endsIn}</span>
+                          </>
+                        ) : (
+                          <span className="text-xs font-bold text-primary">${product.price}</span>
+                        )}
+                      </div>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground shrink-0" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Comments */}
         <div className="border-t border-border pt-4">
