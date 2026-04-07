@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Bell, Heart, MessageCircle, ChevronRight, Plus, Flame, Gavel, X } from "lucide-react"
+import { Search, Heart, MessageCircle, ChevronRight, Plus, Flame, Gavel, X, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -222,10 +222,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
         <div className="px-4 pt-12 pb-3">
-          {/* Logo + Search + Messages */}
+          {/* Logo + Search + Cart */}
           <div className="flex items-center gap-3">
           {/* Logo */}
             <Link href="/" className="shrink-0">
@@ -234,7 +234,7 @@ export default function HomePage() {
                 alt="Collectify"
                 width={100}
                 height={32}
-                className="h-8"
+                className="h-7"
                 style={{ width: 'auto' }}
               />
             </Link>
@@ -243,63 +243,69 @@ export default function HomePage() {
             <Link href="/search" className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <div className="h-10 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
+                <div className="h-9 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
                   Search cards...
                 </div>
               </div>
             </Link>
             
-            {/* Messages */}
-            <Link href="/messages">
-              <Button variant="ghost" size="icon" className="relative size-10 bg-card border border-border rounded-xl shrink-0">
-                <Bell className="size-5" />
-                <span className="absolute -top-1 -right-1 size-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">3</span>
+            {/* Cart */}
+            <Link href="/cart">
+              <Button variant="ghost" size="icon" className="relative size-9 bg-card border border-border rounded-xl shrink-0">
+                <ShoppingCart className="size-4" />
+                <span className="absolute -top-1 -right-1 size-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">2</span>
               </Button>
             </Link>
           </div>
         </div>
       </header>
+      
+      {/* Spacer for fixed header */}
+      <div className="h-24" />
 
       <main className="px-4">
-        {/* IP Category Tabs */}
+        {/* IP Category Tabs - Square Icons */}
         <div className="mb-4">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide py-2">
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide py-2">
             {displayedCategories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all border whitespace-nowrap ${
-                  selectedCategory === category.id
-                    ? "border-primary bg-primary/10"
-                    : "bg-card border-border"
-                }`}
+                className="flex flex-col items-center gap-1.5 shrink-0"
               >
-                <div className="size-5 rounded-full overflow-hidden shrink-0">
+                <div className={`size-14 rounded-xl overflow-hidden border-2 transition-all ${
+                  selectedCategory === category.id
+                    ? "border-primary ring-2 ring-primary/20"
+                    : "border-border"
+                }`}>
                   {category.avatar ? (
                     <Image
                       src={category.avatar}
                       alt={category.label}
-                      width={20}
-                      height={20}
+                      width={56}
+                      height={56}
                       className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className={`w-full h-full ${category.bgColor} flex items-center justify-center`}>
-                      <span className="text-[6px] font-bold text-white">ALL</span>
+                      <span className="text-xs font-bold text-white">ALL</span>
                     </div>
                   )}
                 </div>
-                <span className={`text-xs font-medium ${
-                  selectedCategory === category.id ? "text-primary" : "text-foreground"
+                <span className={`text-[10px] font-medium ${
+                  selectedCategory === category.id ? "text-primary" : "text-muted-foreground"
                 }`}>{category.label}</span>
               </button>
             ))}
             {/* Add Interest Button */}
             <button
               onClick={() => setShowAddInterestSheet(true)}
-              className="flex items-center justify-center size-8 rounded-full border border-dashed border-border hover:border-primary/50 transition-colors shrink-0"
+              className="flex flex-col items-center gap-1.5 shrink-0"
             >
-              <Plus className="size-4 text-muted-foreground" />
+              <div className="size-14 rounded-xl border-2 border-dashed border-border hover:border-primary/50 transition-colors flex items-center justify-center">
+                <Plus className="size-5 text-muted-foreground" />
+              </div>
+              <span className="text-[10px] text-muted-foreground">Add</span>
             </button>
           </div>
         </div>

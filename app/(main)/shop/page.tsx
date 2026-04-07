@@ -401,8 +401,8 @@ export default function ShopPage() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
         <div className="px-4 pt-12 pb-3">
           {/* Search Row */}
           <div className="flex items-center gap-3">
@@ -413,7 +413,7 @@ export default function ShopPage() {
             <Link href="/search?tab=products" className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <div className="h-10 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
+                <div className="h-9 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
                   Search cards...
                 </div>
               </div>
@@ -421,8 +421,8 @@ export default function ShopPage() {
 
             {/* Cart */}
             <Link href="/cart" className="relative shrink-0">
-              <Button variant="ghost" size="icon" className="size-10 bg-card border border-border rounded-xl">
-                <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <Button variant="ghost" size="icon" className="size-9 bg-card border border-border rounded-xl">
+                <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                   <line x1="3" y1="6" x2="21" y2="6"/>
                   <path d="M16 10a4 4 0 0 1-8 0"/>
@@ -495,6 +495,9 @@ export default function ShopPage() {
           </div>
         </div>
       </header>
+      
+      {/* Spacer for fixed header */}
+      <div className="h-48" />
 
       {/* Product Grid */}
       <main className="px-4 pt-2">

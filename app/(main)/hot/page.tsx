@@ -2,8 +2,10 @@
 
 import { useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { ArrowLeft, Heart, Star, Check, Flame } from "lucide-react"
+import { ArrowLeft, Heart, Star, Check, Flame, SlidersHorizontal, ArrowUpDown, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
+import { Slider } from "@/components/ui/slider"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -14,6 +16,13 @@ const categories = [
   { id: "onepiece", label: "One Piece" },
   { id: "mtg", label: "MTG" },
   { id: "sports", label: "Sports" },
+]
+
+const sortOptions = [
+  { id: "trending", label: "Trending" },
+  { id: "price-high", label: "Price: High to Low" },
+  { id: "price-low", label: "Price: Low to High" },
+  { id: "newest", label: "Newest" },
 ]
 
 const hotProducts = [
@@ -112,7 +121,7 @@ function ProductCard({ product }: { product: typeof hotProducts[0] }) {
 
   return (
     <Link href={`/shop/${product.id}`} className="block">
-      <div className="bg-card rounded-2xl overflow-hidden border border-border">
+      <div className="bg-card rounded-xl overflow-hidden border border-border">
         <div className="relative aspect-square bg-gradient-to-b from-primary/10 to-transparent">
           <Image
             src={product.image}
@@ -120,48 +129,46 @@ function ProductCard({ product }: { product: typeof hotProducts[0] }) {
             fill
             className="object-cover"
           />
-          {/* Hot Badge */}
           <div className="absolute top-2 left-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
             <Flame className="size-2.5" />
             {product.trend}
           </div>
-          {/* Wishlist */}
           <button
             onClick={(e) => {
               e.preventDefault()
               setLiked(!liked)
             }}
-            className="absolute top-2 right-2 size-8 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-border"
+            className="absolute top-2 right-2 size-7 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-border"
           >
-            <Heart className={`size-4 ${liked ? "fill-red-500 text-red-500" : ""}`} />
+            <Heart className={`size-3.5 ${liked ? "fill-red-500 text-red-500" : ""}`} />
           </button>
         </div>
 
-        <div className="p-3">
-          <h3 className="font-medium text-sm text-foreground line-clamp-2 mb-1">
+        <div className="p-2.5">
+          <h3 className="font-medium text-xs text-foreground line-clamp-2 mb-1">
             {product.name}
           </h3>
-          <span className="text-xs text-green-400">{product.condition}</span>
-          <div className="mt-2">
-            <span className="font-bold text-primary">{formatPrice(product.price)}</span>
+          <span className="text-[10px] text-green-500">{product.condition}</span>
+          <div className="mt-1.5">
+            <span className="font-bold text-sm text-primary">{formatPrice(product.price)}</span>
             {product.originalPrice && (
-              <span className="text-xs text-muted-foreground line-through ml-2">
+              <span className="text-[10px] text-muted-foreground line-through ml-1">
                 {formatPrice(product.originalPrice)}
               </span>
             )}
           </div>
-          <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
+          <div className="flex items-center justify-between mt-1.5 pt-1.5 border-t border-border">
             <div className="flex items-center gap-1">
-              <span className="text-xs text-muted-foreground">{product.seller}</span>
+              <span className="text-[10px] text-muted-foreground truncate max-w-16">{product.seller}</span>
               {product.isVerified && (
-                <div className="size-3.5 bg-primary rounded-full flex items-center justify-center">
-                  <Check className="size-2 text-white" />
+                <div className="size-3 bg-primary rounded-full flex items-center justify-center shrink-0">
+                  <Check className="size-1.5 text-white" />
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-1">
-              <Star className="size-3 fill-yellow-500 text-yellow-500" />
-              <span className="text-xs font-medium">{product.rating}</span>
+            <div className="flex items-center gap-0.5">
+              <Star className="size-2.5 fill-yellow-500 text-yellow-500" />
+              <span className="text-[10px] font-medium">{product.rating}</span>
             </div>
           </div>
         </div>
@@ -174,29 +181,34 @@ export default function HotPage() {
   const searchParams = useSearchParams()
   const categoryParam = searchParams.get("category") || "all"
   const [selectedCategory, setSelectedCategory] = useState(categoryParam)
+  const [selectedSort, setSelectedSort] = useState("trending")
+  const [showFilterSheet, setShowFilterSheet] = useState(false)
+  const [showSortSheet, setShowSortSheet] = useState(false)
+  const [priceRange, setPriceRange] = useState([0, 5000])
 
   const filteredProducts = hotProducts.filter(product => 
-    selectedCategory === "all" || product.category === selectedCategory
+    (selectedCategory === "all" || product.category === selectedCategory) &&
+    product.price >= priceRange[0] && product.price <= priceRange[1]
   )
 
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
-        <div className="flex items-center gap-3 px-4 pt-12 pb-4">
+        <div className="flex items-center gap-3 px-4 pt-12 pb-3">
           <Link href="/">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="size-9">
               <ArrowLeft className="size-5" />
             </Button>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-1">
             <Flame className="size-5 text-orange-500" />
-            <span className="font-semibold text-lg">Hot Items</span>
+            <span className="font-semibold">Hot Items</span>
           </div>
         </div>
 
         {/* Category Tabs */}
-        <div className="px-4 pb-3">
+        <div className="px-4 pb-2">
           <div className="flex gap-2 overflow-x-auto scrollbar-hide">
             {categories.map((cat) => (
               <button
@@ -213,18 +225,104 @@ export default function HotPage() {
             ))}
           </div>
         </div>
+
+        {/* Filter & Sort */}
+        <div className="px-4 pb-3 flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFilterSheet(true)}
+            className="h-8 rounded-full text-xs gap-1.5"
+          >
+            <SlidersHorizontal className="size-3.5" />
+            Filter
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowSortSheet(true)}
+            className="h-8 rounded-full text-xs gap-1.5"
+          >
+            <ArrowUpDown className="size-3.5" />
+            {sortOptions.find(s => s.id === selectedSort)?.label}
+          </Button>
+        </div>
       </header>
 
       <main className="px-4 pt-4">
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-xs text-muted-foreground mb-3">
           {filteredProducts.length} trending items
         </p>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </main>
+
+      {/* Filter Sheet */}
+      <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
+        <SheetContent side="bottom" className="h-[50vh] rounded-t-3xl">
+          <SheetHeader className="pb-4">
+            <SheetTitle className="text-base">Filter</SheetTitle>
+            <SheetDescription className="sr-only">Filter hot items by price</SheetDescription>
+          </SheetHeader>
+          
+          <div className="space-y-6">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium">Price Range</span>
+                <span className="text-sm text-primary">${priceRange[0]} - ${priceRange[1]}</span>
+              </div>
+              <Slider
+                value={priceRange}
+                onValueChange={setPriceRange}
+                min={0}
+                max={5000}
+                step={50}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3 mt-6">
+            <Button variant="outline" className="flex-1 h-10 rounded-xl" onClick={() => setPriceRange([0, 5000])}>
+              Reset
+            </Button>
+            <Button className="flex-1 h-10 rounded-xl" onClick={() => setShowFilterSheet(false)}>
+              Apply
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Sort Sheet */}
+      <Sheet open={showSortSheet} onOpenChange={setShowSortSheet}>
+        <SheetContent side="bottom" className="rounded-t-3xl">
+          <SheetHeader className="pb-4">
+            <SheetTitle className="text-base">Sort By</SheetTitle>
+            <SheetDescription className="sr-only">Sort hot items</SheetDescription>
+          </SheetHeader>
+          <div className="space-y-2">
+            {sortOptions.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => {
+                  setSelectedSort(option.id)
+                  setShowSortSheet(false)
+                }}
+                className={`w-full p-3 rounded-xl text-left text-sm font-medium transition-colors ${
+                  selectedSort === option.id
+                    ? "bg-primary/10 text-primary border border-primary/30"
+                    : "bg-card border border-border"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
