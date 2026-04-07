@@ -2,25 +2,25 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, MapPin, ChevronRight, CreditCard, Wallet, Building2, Check, Shield } from "lucide-react"
+import { ArrowLeft, MapPin, ChevronRight, CreditCard, Wallet, Building2, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet"
 import Image from "next/image"
 
 const orderItems = [
   {
     id: "1",
     name: "Pikachu VMAX Rainbow Rare",
-    price: 2500000,
+    price: 250,
     image: "/products/product-1.jpg",
-    seller: "CardMaster Jakarta",
+    seller: "CardMaster",
     quantity: 1
   },
   {
     id: "2",
     name: "Charizard Base Set Holo",
-    price: 25000000,
+    price: 2500,
     image: "/products/product-5.jpg",
     seller: "VintageCards",
     quantity: 1
@@ -30,32 +30,32 @@ const orderItems = [
 const addresses = [
   {
     id: "1",
-    label: "Rumah",
-    name: "Budi Santoso",
-    phone: "+62 812 3456 7890",
-    address: "Jl. Sudirman No. 123, RT 01/RW 02, Menteng, Jakarta Pusat, DKI Jakarta, 10310",
+    label: "Home",
+    name: "John Smith",
+    phone: "+1 (555) 123-4567",
+    address: "123 Main Street, Apt 4B, New York, NY 10001",
     isDefault: true
   },
   {
     id: "2",
-    label: "Kantor",
-    name: "Budi Santoso",
-    phone: "+62 812 3456 7890",
-    address: "Gedung Menara ABC Lt. 15, Jl. Gatot Subroto, Jakarta Selatan, 12930",
+    label: "Office",
+    name: "John Smith",
+    phone: "+1 (555) 123-4567",
+    address: "456 Business Ave, Floor 15, New York, NY 10002",
     isDefault: false
   },
 ]
 
 const paymentMethods = [
-  { id: "ewallet", icon: Wallet, label: "E-Wallet", options: ["GoPay", "OVO", "DANA", "ShopeePay"] },
-  { id: "va", icon: Building2, label: "Virtual Account", options: ["BCA", "Mandiri", "BNI", "BRI"] },
-  { id: "card", icon: CreditCard, label: "Kartu Kredit/Debit", options: ["Visa", "Mastercard"] },
+  { id: "ewallet", icon: Wallet, label: "E-Wallet", options: ["PayPal", "Apple Pay", "Google Pay"] },
+  { id: "card", icon: CreditCard, label: "Credit/Debit Card", options: ["Visa", "Mastercard", "Amex"] },
+  { id: "bank", icon: Building2, label: "Bank Transfer", options: ["ACH", "Wire Transfer"] },
 ]
 
 function formatPrice(price: number) {
-  return new Intl.NumberFormat("id-ID", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "IDR",
+    currency: "USD",
     minimumFractionDigits: 0,
   }).format(price)
 }
@@ -63,12 +63,12 @@ function formatPrice(price: number) {
 export default function CheckoutPage() {
   const router = useRouter()
   const [selectedAddress, setSelectedAddress] = useState(addresses[0])
-  const [selectedPayment, setSelectedPayment] = useState("ewallet")
+  const [selectedPayment, setSelectedPayment] = useState("card")
   const [isProcessing, setIsProcessing] = useState(false)
 
   const subtotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const shippingFee = 25000
-  const serviceFee = 5000
+  const shippingFee = 15
+  const serviceFee = 5
   const total = subtotal + shippingFee + serviceFee
 
   const handleOrder = () => {
@@ -79,7 +79,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-40">
+    <div className="min-h-screen bg-background pb-36">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
         <div className="flex items-center gap-3 px-4 pt-12 pb-4">
@@ -101,7 +101,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold">Alamat Pengiriman</span>
+                    <span className="font-semibold">Shipping Address</span>
                     <span className="text-xs px-2 py-0.5 bg-muted rounded-full">{selectedAddress.label}</span>
                   </div>
                   <p className="font-medium">{selectedAddress.name}</p>
@@ -114,7 +114,8 @@ export default function CheckoutPage() {
           </SheetTrigger>
           <SheetContent side="bottom" className="h-[60vh] rounded-t-3xl">
             <SheetHeader className="pb-4">
-              <SheetTitle>Pilih Alamat</SheetTitle>
+              <SheetTitle>Select Address</SheetTitle>
+              <SheetDescription>Choose a shipping address for your order</SheetDescription>
             </SheetHeader>
             <div className="space-y-3">
               {addresses.map((address) => (
@@ -144,7 +145,7 @@ export default function CheckoutPage() {
 
         {/* Order Items */}
         <div className="bg-card rounded-2xl border border-border p-4">
-          <h3 className="font-semibold mb-3">Pesanan ({orderItems.length} item)</h3>
+          <h3 className="font-semibold mb-3">Order Items ({orderItems.length})</h3>
           <div className="space-y-3">
             {orderItems.map((item) => (
               <div key={item.id} className="flex gap-3">
@@ -172,7 +173,7 @@ export default function CheckoutPage() {
 
         {/* Payment Method */}
         <div className="bg-card rounded-2xl border border-border p-4">
-          <h3 className="font-semibold mb-3">Metode Pembayaran</h3>
+          <h3 className="font-semibold mb-3">Payment Method</h3>
           <RadioGroup value={selectedPayment} onValueChange={setSelectedPayment}>
             <div className="space-y-3">
               {paymentMethods.map((method) => {
@@ -201,18 +202,18 @@ export default function CheckoutPage() {
 
         {/* Order Summary */}
         <div className="bg-card rounded-2xl border border-border p-4">
-          <h3 className="font-semibold mb-3">Ringkasan Pembayaran</h3>
+          <h3 className="font-semibold mb-3">Order Summary</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Subtotal</span>
               <span>{formatPrice(subtotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Ongkos Kirim</span>
+              <span className="text-muted-foreground">Shipping</span>
               <span>{formatPrice(shippingFee)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Biaya Layanan</span>
+              <span className="text-muted-foreground">Service Fee</span>
               <span>{formatPrice(serviceFee)}</span>
             </div>
             <div className="flex justify-between pt-2 border-t border-border font-bold text-base">
@@ -226,24 +227,24 @@ export default function CheckoutPage() {
         <div className="flex items-center gap-3 p-4 bg-muted rounded-2xl">
           <Shield className="size-5 text-foreground" />
           <div className="text-sm">
-            <span className="font-medium">Perlindungan Pembeli</span>
-            <p className="text-muted-foreground">Jaminan uang kembali jika barang tidak sesuai</p>
+            <span className="font-medium">Buyer Protection</span>
+            <p className="text-muted-foreground">Money-back guarantee if item not as described</p>
           </div>
         </div>
       </main>
 
       {/* Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 pb-8">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-muted-foreground">Total Pembayaran</span>
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-4 pt-4 pb-6">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-muted-foreground">Total Payment</span>
           <span className="text-xl font-bold">{formatPrice(total)}</span>
         </div>
         <Button
           onClick={handleOrder}
           disabled={isProcessing}
-          className="w-full h-14 rounded-full text-base font-semibold"
+          className="w-full h-12 rounded-xl text-base font-semibold"
         >
-          {isProcessing ? "Memproses..." : "Bayar Sekarang"}
+          {isProcessing ? "Processing..." : "Pay Now"}
         </Button>
       </div>
     </div>

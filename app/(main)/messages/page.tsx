@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Package, Heart, UserPlus, MessageCircle, Check } from "lucide-react"
+import { Package, Heart, UserPlus, MessageCircle, Check, Bell, Settings } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
@@ -9,6 +9,14 @@ import Link from "next/link"
 const tabs = [
   { id: "chats", label: "Chats" },
   { id: "notifications", label: "Notifications" },
+]
+
+const notificationCategories = [
+  { id: "all", label: "All" },
+  { id: "order", label: "Order" },
+  { id: "post", label: "Post" },
+  { id: "follow", label: "Follow" },
+  { id: "system", label: "System" },
 ]
 
 const chats = [
@@ -47,9 +55,11 @@ const chats = [
 ]
 
 const notifications = [
+  // Order notifications
   {
     id: "1",
     type: "order",
+    category: "order",
     icon: Package,
     title: "Order Shipped",
     message: "Order #ORD123456 is on its way",
@@ -57,8 +67,30 @@ const notifications = [
     read: false
   },
   {
+    id: "5",
+    type: "order",
+    category: "order",
+    icon: Package,
+    title: "Order Completed",
+    message: "Order #ORD123455 completed. Leave a review?",
+    time: "2 days ago",
+    read: true
+  },
+  {
+    id: "9",
+    type: "order",
+    category: "order",
+    icon: Package,
+    title: "Payment Received",
+    message: "Payment for order #ORD123460 confirmed",
+    time: "3 days ago",
+    read: true
+  },
+  // Post notifications
+  {
     id: "2",
     type: "like",
+    category: "post",
     icon: Heart,
     title: "Post liked",
     message: "Alex and 23 others liked your post",
@@ -66,17 +98,9 @@ const notifications = [
     read: false
   },
   {
-    id: "3",
-    type: "follow",
-    icon: UserPlus,
-    title: "New follower",
-    message: "CardMaster started following you",
-    time: "5 hours ago",
-    read: true
-  },
-  {
     id: "4",
     type: "comment",
+    category: "post",
     icon: MessageCircle,
     title: "New comment",
     message: "Maya commented on your post",
@@ -84,36 +108,84 @@ const notifications = [
     read: true
   },
   {
-    id: "5",
-    type: "order",
-    icon: Package,
-    title: "Order Completed",
-    message: "Order #ORD123455 completed. Leave a review?",
+    id: "7",
+    type: "like",
+    category: "post",
+    icon: Heart,
+    title: "Post liked",
+    message: "John and 15 others liked your collection",
     time: "2 days ago",
+    read: true
+  },
+  // Follow notifications
+  {
+    id: "3",
+    type: "follow",
+    category: "follow",
+    icon: UserPlus,
+    title: "New follower",
+    message: "CardMaster started following you",
+    time: "5 hours ago",
+    read: true
+  },
+  {
+    id: "6",
+    type: "follow",
+    category: "follow",
+    icon: UserPlus,
+    title: "New follower",
+    message: "PokeFan99 started following you",
+    time: "1 day ago",
+    read: true
+  },
+  // System notifications
+  {
+    id: "8",
+    type: "system",
+    category: "system",
+    icon: Bell,
+    title: "Account Verified",
+    message: "Your seller account has been verified",
+    time: "3 days ago",
+    read: true
+  },
+  {
+    id: "10",
+    type: "system",
+    category: "system",
+    icon: Settings,
+    title: "Security Alert",
+    message: "New login detected from iOS device",
+    time: "4 days ago",
     read: true
   },
 ]
 
 export default function MessagesPage() {
   const [activeTab, setActiveTab] = useState("chats")
+  const [activeCategory, setActiveCategory] = useState("all")
+
+  const filteredNotifications = activeCategory === "all" 
+    ? notifications 
+    : notifications.filter(n => n.category === activeCategory)
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg">
+      <header className="sticky top-0 z-40 bg-background border-b border-border">
         <div className="px-4 pt-12 pb-4">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Messages</h1>
+          <h1 className="text-xl font-bold text-foreground">Messages</h1>
 
           {/* Tabs */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 mt-4">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all border ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
                   activeTab === tab.id
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-foreground border-border"
+                    ? "bg-primary text-primary-foreground border border-primary"
+                    : "bg-card text-foreground border border-border"
                 }`}
               >
                 {tab.label}
@@ -121,6 +193,27 @@ export default function MessagesPage() {
             ))}
           </div>
         </div>
+
+        {/* Notification Category Tabs */}
+        {activeTab === "notifications" && (
+          <div className="px-4 pb-3">
+            <div className="flex gap-2 overflow-x-auto no-scrollbar">
+              {notificationCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+                    activeCategory === cat.id
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "bg-secondary text-muted-foreground border border-border"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
 
       <main className="px-4 py-4">
@@ -171,31 +264,47 @@ export default function MessagesPage() {
 
         {activeTab === "notifications" && (
           <div className="space-y-2">
-            {notifications.map((notif) => {
-              const Icon = notif.icon
-              return (
-                <div
-                  key={notif.id}
-                  className={`flex items-start gap-3 p-4 rounded-2xl border border-border ${
-                    notif.read ? "bg-card" : "bg-secondary"
-                  }`}
-                >
-                  <div className="size-12 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                    <Icon className="size-5 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-semibold">{notif.title}</span>
-                      <span className="text-xs text-muted-foreground">{notif.time}</span>
+            {filteredNotifications.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-sm">No notifications</p>
+              </div>
+            ) : (
+              filteredNotifications.map((notif) => {
+                const Icon = notif.icon
+                return (
+                  <div
+                    key={notif.id}
+                    className={`flex items-start gap-3 p-4 rounded-2xl border border-border ${
+                      notif.read ? "bg-card" : "bg-secondary"
+                    }`}
+                  >
+                    <div className={`size-12 rounded-full flex items-center justify-center shrink-0 ${
+                      notif.category === "order" ? "bg-blue-500/20" :
+                      notif.category === "post" ? "bg-pink-500/20" :
+                      notif.category === "follow" ? "bg-green-500/20" :
+                      "bg-orange-500/20"
+                    }`}>
+                      <Icon className={`size-5 ${
+                        notif.category === "order" ? "text-blue-500" :
+                        notif.category === "post" ? "text-pink-500" :
+                        notif.category === "follow" ? "text-green-500" :
+                        "text-orange-500"
+                      }`} />
                     </div>
-                    <p className="text-sm text-muted-foreground">{notif.message}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-semibold text-sm">{notif.title}</span>
+                        <span className="text-xs text-muted-foreground">{notif.time}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{notif.message}</p>
+                    </div>
+                    {!notif.read && (
+                      <span className="size-2 bg-primary rounded-full shrink-0 mt-2" />
+                    )}
                   </div>
-                  {!notif.read && (
-                    <span className="size-2 bg-primary rounded-full shrink-0 mt-2" />
-                  )}
-                </div>
-              )
-            })}
+                )
+              })
+            )}
           </div>
         )}
       </main>

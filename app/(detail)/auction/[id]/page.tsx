@@ -2,10 +2,21 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Heart, Share2, Check, MessageCircle, ChevronRight, Info, Truck, AlertCircle, Clock, HelpCircle } from "lucide-react"
+import Link from "next/link"
+import { ArrowLeft, Heart, Share2, Check, MessageCircle, ChevronRight, Info, Truck, AlertCircle, Clock, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Input } from "@/components/ui/input"
+import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
+import { PriceHistoryChart } from "@/components/price-history-chart"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet"
 
 const auctionProduct = {
   id: "auction-1",
@@ -33,7 +44,7 @@ const auctionProduct = {
   rarity: "Hyper Rare",
   cardType: "Holo",
   description: "Set: Scarlet & Violet—Temporal Forces\nCard Number: 215/162\nRarity: Hyper Rare\nType: Basic Pokemon, Water type\nFreshly pulled, sleeved and put in toploader immediately.",
-  endTime: new Date(Date.now() + 11 * 1000), // 11 seconds from now for demo
+  endTime: new Date(Date.now() + 3600 * 1000), // 1 hour from now
   bidCount: 7,
 }
 
@@ -46,7 +57,7 @@ function formatPrice(price: number) {
 }
 
 function CountdownTimer({ endTime }: { endTime: Date }) {
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 0 })
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 })
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -54,10 +65,11 @@ function CountdownTimer({ endTime }: { endTime: Date }) {
       const end = endTime.getTime()
       const diff = Math.max(0, end - now)
       
+      const hours = Math.floor(diff / (1000 * 60 * 60))
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       const seconds = Math.floor((diff % (1000 * 60)) / 1000)
       
-      setTimeLeft({ minutes, seconds })
+      setTimeLeft({ hours, minutes, seconds })
       
       if (diff <= 0) {
         clearInterval(timer)
@@ -71,15 +83,54 @@ function CountdownTimer({ endTime }: { endTime: Date }) {
 
   return (
     <span className="text-primary font-semibold">
-      {pad(timeLeft.minutes)}m {pad(timeLeft.seconds)}s
+      {pad(timeLeft.hours)}h {pad(timeLeft.minutes)}m {pad(timeLeft.seconds)}s
     </span>
   )
 }
 
 export default function AuctionDetailPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [liked, setLiked] = useState(false)
   const [selectedImage, setSelectedImage] = useState(0)
+  const [bidSheetOpen, setBidSheetOpen] = useState(false)
+  const [customBidAmount, setCustomBidAmount] = useState("")
+  const [currentBid, setCurrentBid] = useState(auctionProduct.currentBid)
+
+  const quickBidOptions = [
+    { value: 1, label: "+$1" },
+    { value: 5, label: "+$5" },
+    { value: 10, label: "+$10" },
+  ]
+
+  const handleQuickBid = (increment: number) => {
+    const newBid = currentBid + increment
+    setCurrentBid(newBid)
+    setBidSheetOpen(false)
+    toast({
+      title: "Bid Placed",
+      description: `Your bid of ${formatPrice(newBid)} has been placed successfully.`,
+    })
+  }
+
+  const handleCustomBid = () => {
+    const bidAmount = parseFloat(customBidAmount)
+    if (isNaN(bidAmount) || bidAmount <= currentBid) {
+      toast({
+        title: "Invalid Bid",
+        description: `Your bid must be higher than the current bid of ${formatPrice(currentBid)}.`,
+        variant: "destructive",
+      })
+      return
+    }
+    setCurrentBid(bidAmount)
+    setCustomBidAmount("")
+    setBidSheetOpen(false)
+    toast({
+      title: "Bid Placed",
+      description: `Your bid of ${formatPrice(bidAmount)} has been placed successfully.`,
+    })
+  }
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -147,8 +198,9 @@ export default function AuctionDetailPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-primary">
-              {formatPrice(auctionProduct.currentBid)}
+              {formatPrice(currentBid)}
             </span>
+            <span className="text-xs text-muted-foreground">Current Bid</span>
           </div>
           <div className="bg-primary/20 text-primary text-xs font-semibold px-2.5 py-1 rounded-full">
             {auctionProduct.bidCount} bids
@@ -212,7 +264,10 @@ export default function AuctionDetailPage() {
         </button>
       </div>
 
-      {/* Seller Info - Moved below description */}
+      {/* Price History Chart */}
+      <PriceHistoryChart currentPrice={currentBid} />
+
+      {/* Seller Info */}
       <div className="bg-card px-4 py-4 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -281,10 +336,15 @@ export default function AuctionDetailPage() {
       {/* Bottom Actions */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border safe-area-bottom">
         <div className="flex gap-2 p-3 max-w-md mx-auto">
-          <Button variant="outline" size="icon" className="size-11 rounded-xl border-border bg-secondary shrink-0">
-            <HelpCircle className="size-5" />
-          </Button>
-          <Button className="flex-1 h-11 rounded-xl bg-gradient-to-r from-primary to-accent text-sm font-semibold gap-2">
+          <Link href="/cart">
+            <Button variant="outline" size="icon" className="size-11 rounded-xl border-border bg-secondary shrink-0">
+              <ShoppingCart className="size-5" />
+            </Button>
+          </Link>
+          <Button 
+            className="flex-1 h-11 rounded-xl bg-gradient-to-r from-primary to-accent text-sm font-semibold gap-2"
+            onClick={() => setBidSheetOpen(true)}
+          >
             <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 2L2 7l10 5 10-5-10-5z" />
               <path d="M2 17l10 5 10-5" />
@@ -295,6 +355,73 @@ export default function AuctionDetailPage() {
         </div>
         <div className="h-[env(safe-area-inset-bottom)]" />
       </div>
+
+      {/* Bid Sheet */}
+      <Sheet open={bidSheetOpen} onOpenChange={setBidSheetOpen}>
+        <SheetContent side="bottom" className="rounded-t-3xl px-4 pb-8">
+          <SheetHeader className="text-left pb-3">
+            <SheetTitle className="text-lg">Place Your Bid</SheetTitle>
+            <SheetDescription className="text-sm">
+              Current bid: {formatPrice(currentBid)}
+            </SheetDescription>
+          </SheetHeader>
+          
+          <div className="space-y-4">
+            {/* Quick Bid Options */}
+            <div>
+              <p className="text-sm font-medium mb-2">Quick Bid</p>
+              <div className="grid grid-cols-3 gap-2">
+                {quickBidOptions.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant="outline"
+                    className="h-12 rounded-xl text-sm font-semibold"
+                    onClick={() => handleQuickBid(option.value)}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-muted-foreground">or</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            {/* Custom Bid */}
+            <div>
+              <p className="text-sm font-medium mb-2">Custom Amount</p>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">$</span>
+                  <Input
+                    type="number"
+                    placeholder={`${currentBid + 1} or higher`}
+                    value={customBidAmount}
+                    onChange={(e) => setCustomBidAmount(e.target.value)}
+                    className="h-12 pl-7 text-base rounded-xl"
+                  />
+                </div>
+                <Button 
+                  className="h-12 px-5 rounded-xl font-semibold"
+                  onClick={handleCustomBid}
+                  disabled={!customBidAmount}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </div>
+
+            {/* Info */}
+            <p className="text-xs text-muted-foreground text-center pt-1">
+              By placing a bid, you agree to pay if you win.
+            </p>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

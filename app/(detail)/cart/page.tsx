@@ -12,9 +12,9 @@ const cartItems = [
   {
     id: "1",
     name: "Pikachu VMAX Rainbow Rare",
-    price: 2500000,
+    price: 250,
     image: "/products/product-1.jpg",
-    seller: { name: "CardMaster Jakarta", verified: true },
+    seller: { name: "CardMaster", verified: true },
     condition: "Mint",
     quantity: 1,
     maxQuantity: 1
@@ -22,7 +22,7 @@ const cartItems = [
   {
     id: "2",
     name: "Charizard Base Set Holo",
-    price: 25000000,
+    price: 2500,
     image: "/products/product-5.jpg",
     seller: { name: "VintageCards", verified: true },
     condition: "Excellent",
@@ -32,9 +32,9 @@ const cartItems = [
 ]
 
 function formatPrice(price: number) {
-  return new Intl.NumberFormat("id-ID", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "IDR",
+    currency: "USD",
     minimumFractionDigits: 0,
   }).format(price)
 }
@@ -80,15 +80,15 @@ export default function CartPage() {
     .reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return (
-    <div className="min-h-screen bg-background pb-32">
+    <div className="min-h-screen bg-background pb-36">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
         <div className="flex items-center gap-3 px-4 pt-12 pb-4">
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <h1 className="text-xl font-bold flex-1">Keranjang</h1>
-          <span className="text-muted-foreground">{items.length} item</span>
+          <h1 className="text-xl font-bold flex-1">Shopping Cart</h1>
+          <span className="text-muted-foreground">{items.length} items</span>
         </div>
       </header>
 
@@ -101,7 +101,7 @@ export default function CartPage() {
                 checked={selectedItems.length === items.length}
                 onCheckedChange={toggleSelectAll}
               />
-              <span className="font-medium">Pilih Semua ({items.length})</span>
+              <span className="font-medium">Select All ({items.length})</span>
             </div>
 
             {/* Items */}
@@ -149,7 +149,7 @@ export default function CartPage() {
                         className="flex items-center gap-1 text-muted-foreground text-sm"
                       >
                         <Trash2 className="size-4" />
-                        Hapus
+                        Remove
                       </button>
                       <div className="flex items-center gap-3">
                         <button
@@ -183,12 +183,12 @@ export default function CartPage() {
                 <path d="M16 10a4 4 0 0 1-8 0"/>
               </svg>
             </div>
-            <h3 className="font-semibold text-lg mb-2">Keranjang Kosong</h3>
+            <h3 className="font-semibold text-lg mb-2">Your Cart is Empty</h3>
             <p className="text-muted-foreground text-center mb-6">
-              Belum ada produk di keranjang. Yuk mulai belanja!
+              No items in your cart yet. Start shopping now!
             </p>
             <Link href="/shop">
-              <Button className="rounded-full">Belanja Sekarang</Button>
+              <Button className="rounded-full">Browse Shop</Button>
             </Link>
           </div>
         )}
@@ -196,17 +196,17 @@ export default function CartPage() {
 
       {/* Bottom Bar */}
       {items.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 pb-8">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-muted-foreground">Total ({selectedItems.length} item)</span>
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-4 pt-4 pb-6">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-muted-foreground">Total ({selectedItems.length} items)</span>
             <span className="text-xl font-bold">{formatPrice(selectedTotal)}</span>
           </div>
-          <Link href="/checkout">
+          <Link href="/checkout" className="block">
             <Button
               disabled={selectedItems.length === 0}
-              className="w-full h-14 rounded-full text-base font-semibold"
+              className="w-full h-12 rounded-xl text-base font-semibold"
             >
-              Checkout
+              Proceed to Checkout
             </Button>
           </Link>
         </div>

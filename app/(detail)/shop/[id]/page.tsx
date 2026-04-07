@@ -2,10 +2,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Heart, Share2, Check, Minus, Plus, MessageCircle, ShoppingBag, ChevronRight, Info, Truck, AlertCircle } from "lucide-react"
+import Link from "next/link"
+import { ArrowLeft, Heart, Share2, Check, Minus, Plus, MessageCircle, ShoppingCart, ChevronRight, Info, Truck, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
+import { PriceHistoryChart } from "@/components/price-history-chart"
 
 const product = {
   id: "1",
@@ -46,9 +49,21 @@ function formatPrice(price: number) {
 
 export default function ProductDetailPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [liked, setLiked] = useState(false)
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
+
+  const handleAddToCart = () => {
+    toast({
+      title: "Added to Cart",
+      description: `${product.name} x${quantity} has been added to your cart.`,
+    })
+  }
+
+  const handleBuyNow = () => {
+    router.push(`/checkout?product=${product.id}&quantity=${quantity}`)
+  }
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -189,6 +204,9 @@ export default function ProductDetailPage() {
         </p>
       </div>
 
+      {/* Price History Chart */}
+      <PriceHistoryChart currentPrice={product.price} />
+
       {/* Seller Info */}
       <div className="bg-card px-4 py-4 border-b border-border">
         <div className="flex items-center justify-between">
@@ -258,14 +276,23 @@ export default function ProductDetailPage() {
       {/* Bottom Actions */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border safe-area-bottom">
         <div className="flex gap-2 p-3 max-w-md mx-auto">
-          <Button variant="outline" size="icon" className="size-11 rounded-xl border-border bg-secondary shrink-0">
-            <ShoppingBag className="size-5" />
-          </Button>
-          <Button variant="outline" className="h-11 px-4 rounded-xl border-border bg-secondary gap-1.5 shrink-0">
+          <Link href="/cart">
+            <Button variant="outline" size="icon" className="size-11 rounded-xl border-border bg-secondary shrink-0">
+              <ShoppingCart className="size-5" />
+            </Button>
+          </Link>
+          <Button 
+            variant="outline" 
+            className="h-11 px-4 rounded-xl border-border bg-secondary gap-1.5 shrink-0"
+            onClick={handleAddToCart}
+          >
             <Plus className="size-4" />
             <span className="text-sm">Add to Cart</span>
           </Button>
-          <Button className="flex-1 h-11 rounded-xl bg-gradient-to-r from-primary to-accent text-sm font-semibold">
+          <Button 
+            className="flex-1 h-11 rounded-xl bg-gradient-to-r from-primary to-accent text-sm font-semibold"
+            onClick={handleBuyNow}
+          >
             Buy Now
           </Button>
         </div>
