@@ -18,12 +18,18 @@ const cardIPs = [
 ]
 
 const regions = [
-  "United States", "United Kingdom", "Canada", "Australia",
+  "Indonesia", "United States", "United Kingdom", "Canada", "Australia",
   "Japan", "South Korea", "Germany", "France",
-  "Singapore", "Malaysia", "Philippines", "Thailand", "Other",
+  "Singapore", "Malaysia", "Philippines", "Thailand",
 ]
 
-const genders = ["Male", "Female", "Other", "Prefer not to say"]
+const indonesiaCities = [
+  "Jakarta", "Surabaya", "Bandung", "Medan", "Semarang",
+  "Makassar", "Palembang", "Tangerang", "Depok", "Bekasi",
+  "Yogyakarta", "Bali", "Other",
+]
+
+const genders = ["Male", "Female", "Prefer not to say"]
 const ageRanges = ["Under 18", "18-24", "25-34", "35-44", "45-54", "55+"]
 
 const DEFAULT_AVATAR = "https://api.dicebear.com/7.x/adventurer/svg?seed=default&backgroundColor=b6e3f4"
@@ -36,12 +42,14 @@ function SetupContent() {
   const [step, setStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [showRegionSheet, setShowRegionSheet] = useState(false)
+  const [showCitySheet, setShowCitySheet] = useState(false)
   const [showGenderSheet, setShowGenderSheet] = useState(false)
   const [showAgeSheet, setShowAgeSheet] = useState(false)
 
   const [avatar, setAvatar] = useState<string>(DEFAULT_AVATAR)
   const [nickname, setNickname] = useState("")
-  const [region, setRegion] = useState("")
+  const [region, setRegion] = useState("Indonesia")
+  const [city, setCity] = useState("")
   const [gender, setGender] = useState("")
   const [age, setAge] = useState("")
   const [selectedIPs, setSelectedIPs] = useState<string[]>([])
@@ -111,10 +119,10 @@ function SetupContent() {
           <div className="space-y-2.5 flex-1">
             {/* Nickname */}
             <div>
-              <label className="text-[10px] font-medium text-muted-foreground mb-1 block">NICKNAME (max 20 chars)</label>
+              <label className="text-[10px] font-medium text-muted-foreground mb-1 block">NICKNAME (2-20 characters)</label>
               <Input
                 type="text"
-                placeholder="Enter your nickname"
+                placeholder="Enter your nickname (min 2 chars)"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 maxLength={20}
@@ -122,21 +130,32 @@ function SetupContent() {
               />
             </div>
 
-            {/* Region */}
-            <div>
-              <label className="text-[10px] font-medium text-muted-foreground mb-1 block">REGION</label>
-              <button
-                onClick={() => setShowRegionSheet(true)}
-                className="w-full h-10 px-3 rounded-xl bg-card border border-border flex items-center justify-between text-left"
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <MapPin className="size-3.5 text-muted-foreground shrink-0" />
+            {/* Region & City */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-[10px] font-medium text-muted-foreground mb-1 block">REGION</label>
+                <button
+                  onClick={() => setShowRegionSheet(true)}
+                  className="w-full h-10 px-3 rounded-xl bg-card border border-border flex items-center justify-between text-left"
+                >
                   <span className={`text-sm truncate ${region ? "text-foreground" : "text-muted-foreground"}`}>
-                    {region || "Select region"}
+                    {region || "Select"}
                   </span>
-                </div>
-                <ChevronDown className="size-4 text-muted-foreground shrink-0" />
-              </button>
+                  <ChevronDown className="size-4 text-muted-foreground shrink-0" />
+                </button>
+              </div>
+              <div>
+                <label className="text-[10px] font-medium text-muted-foreground mb-1 block">CITY</label>
+                <button
+                  onClick={() => setShowCitySheet(true)}
+                  className="w-full h-10 px-3 rounded-xl bg-card border border-border flex items-center justify-between text-left"
+                >
+                  <span className={`text-sm truncate ${city ? "text-foreground" : "text-muted-foreground"}`}>
+                    {city || "Select"}
+                  </span>
+                  <ChevronDown className="size-4 text-muted-foreground shrink-0" />
+                </button>
+              </div>
             </div>
 
             {/* Gender & Age Row */}
@@ -259,11 +278,33 @@ function SetupContent() {
             {regions.map((r) => (
               <button
                 key={r}
-                onClick={() => { setRegion(r); setShowRegionSheet(false) }}
+                onClick={() => { setRegion(r); setCity(""); setShowRegionSheet(false) }}
                 className={`w-full flex items-center justify-between py-3 border-b border-border last:border-0 ${region === r ? "text-primary" : "text-foreground"}`}
               >
                 <span className="text-sm">{r}</span>
                 {region === r && <Check className="size-4 text-primary" />}
+              </button>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* City Sheet */}
+      <Sheet open={showCitySheet} onOpenChange={setShowCitySheet}>
+        <SheetContent side="bottom" className="h-[50vh] rounded-t-3xl px-4">
+          <SheetHeader className="pb-2">
+            <SheetTitle className="text-base">Select City</SheetTitle>
+            <SheetDescription className="sr-only">Choose your city</SheetDescription>
+          </SheetHeader>
+          <div className="overflow-auto h-[calc(100%-50px)]">
+            {(region === "Indonesia" ? indonesiaCities : ["Other"]).map((c) => (
+              <button
+                key={c}
+                onClick={() => { setCity(c); setShowCitySheet(false) }}
+                className={`w-full flex items-center justify-between py-3 border-b border-border last:border-0 ${city === c ? "text-primary" : "text-foreground"}`}
+              >
+                <span className="text-sm">{c}</span>
+                {city === c && <Check className="size-4 text-primary" />}
               </button>
             ))}
           </div>

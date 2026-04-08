@@ -128,15 +128,15 @@ export default function CreatePostPage() {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center justify-between px-4 pt-12 pb-4">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+        <div className="flex items-center justify-between px-4 h-14">
+          <Button variant="ghost" size="icon" className="size-9" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold text-base">Write Post</span>
+          <span className="font-semibold text-sm">Write Post</span>
           <Button
             onClick={handlePublish}
             disabled={!title || images.length === 0}
-            className="rounded-full px-5 text-sm"
+            className="h-8 rounded-full px-4 text-xs"
           >
             Post
           </Button>
