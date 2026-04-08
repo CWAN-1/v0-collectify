@@ -280,7 +280,7 @@ function HotContent() {
             className="h-8 rounded-full text-xs gap-1.5"
           >
             <ArrowUpDown className="size-3.5" />
-            {sortOptions.find(s => s.id === selectedSort)?.label}
+            Sort
           </Button>
         </div>
       </header>
@@ -421,28 +421,35 @@ function HotContent() {
 
       {/* Sort Sheet */}
       <Sheet open={showSortSheet} onOpenChange={setShowSortSheet}>
-        <SheetContent side="bottom" className="rounded-t-3xl">
-          <SheetHeader className="pb-4">
-            <SheetTitle className="text-base">Sort By</SheetTitle>
-            <SheetDescription className="sr-only">Sort hot items</SheetDescription>
+        <SheetContent side="bottom" className="rounded-t-3xl pb-8">
+          <SheetHeader className="border-b border-border pb-3">
+            <SheetTitle className="text-center text-base">Sort</SheetTitle>
+            <SheetDescription className="sr-only">Sort hot items by different criteria</SheetDescription>
           </SheetHeader>
-          <div className="space-y-2">
-            {sortOptions.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => {
-                  setSelectedSort(option.id)
-                  setShowSortSheet(false)
-                }}
-                className={`w-full p-3 rounded-xl text-left text-sm font-medium transition-colors ${
-                  selectedSort === option.id
-                    ? "bg-primary/10 text-primary border border-primary/30"
-                    : "bg-card border border-border"
-                }`}
-              >
-                {option.label}
-              </button>
-            ))}
+          <div className="py-3 space-y-2">
+            {sortOptions.map((option) => {
+              const Icon = option.icon
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => {
+                    setSelectedSort(option.id)
+                    setShowSortSheet(false)
+                  }}
+                  className={`w-full flex items-center gap-3 p-4 rounded-xl transition-colors ${
+                    selectedSort === option.id
+                      ? "bg-primary/10 border border-primary"
+                      : "bg-secondary border border-transparent"
+                  }`}
+                >
+                  <Icon className="size-5 text-muted-foreground" />
+                  <span className="flex-1 text-left text-sm font-medium">{option.label}</span>
+                  {selectedSort === option.id && (
+                    <Check className="size-5 text-primary" />
+                  )}
+                </button>
+              )
+            })}
           </div>
         </SheetContent>
       </Sheet>
