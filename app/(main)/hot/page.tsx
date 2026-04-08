@@ -201,17 +201,31 @@ function HotContent() {
   const [selectedSort, setSelectedSort] = useState("latest")
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [showSortSheet, setShowSortSheet] = useState(false)
-  const [priceRange, setPriceRange] = useState([0, 5000])
-  const [selectedCardType, setSelectedCardType] = useState("All")
-  const [selectedSaleStatus, setSelectedSaleStatus] = useState("All")
-  const [selectedSaleType, setSelectedSaleType] = useState("All")
-  const [selectedGraded, setSelectedGraded] = useState("All")
-  const [selectedCondition, setSelectedCondition] = useState("All")
+  const [filters, setFilters] = useState({
+    category: "All",
+    saleStatus: "All",
+    graded: "All",
+    gradingCompany: "All",
+  })
+  const [ratingRange, setRatingRange] = useState([1, 10])
 
   const filteredProducts = hotProducts.filter(product => 
-    (selectedCategory === "all" || product.category === selectedCategory) &&
-    product.price >= priceRange[0] && product.price <= priceRange[1]
+    (selectedCategory === "all" || product.category === selectedCategory)
   )
+
+  const resetFilters = () => {
+    setFilters({
+      category: "All",
+      saleStatus: "All",
+      graded: "All",
+      gradingCompany: "All",
+    })
+    setRatingRange([1, 10])
+  }
+
+  const applyFilters = () => {
+    setShowFilterSheet(false)
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -284,154 +298,121 @@ function HotContent() {
 
       {/* Filter Sheet */}
       <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
-        <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl overflow-y-auto">
-          <SheetHeader className="pb-4 sticky top-0 bg-background z-10">
-            <div className="flex items-center justify-between">
-              <SheetTitle className="text-base">Filter</SheetTitle>
-              <Button variant="ghost" size="icon" onClick={() => setShowFilterSheet(false)}>
-                <X className="size-5" />
-              </Button>
-            </div>
+        <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl px-0">
+          <SheetHeader className="border-b border-border pb-3 px-4">
+            <SheetTitle className="text-center text-base">Filter</SheetTitle>
             <SheetDescription className="sr-only">Filter hot items</SheetDescription>
           </SheetHeader>
-          
-          <div className="space-y-4 pb-6">
-            {/* Price Range */}
-            <div className="pb-4 border-b border-border">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-semibold">Price Range</span>
-                <span className="text-sm text-primary">${priceRange[0]} - ${priceRange[1]}</span>
-              </div>
-              <Slider
-                value={priceRange}
-                onValueChange={setPriceRange}
-                min={0}
-                max={5000}
-                step={50}
-                className="w-full"
-              />
-            </div>
-
-            {/* Card Type */}
-            <div className="pb-4 border-b border-border">
-              <p className="text-sm font-semibold mb-2">Card Type</p>
+          <div className="overflow-y-auto h-[calc(100%-140px)] py-4 px-4">
+            {/* Category */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Category</h4>
               <div className="flex flex-wrap gap-2">
-                {filterOptions.category.map((type) => (
+                {filterOptions.category.map((option) => (
                   <button
-                    key={type}
-                    onClick={() => setSelectedCardType(type)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                      selectedCardType === type
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-card border-border"
+                    key={option}
+                    onClick={() => setFilters({ ...filters, category: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.category === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
                     }`}
                   >
-                    {type}
+                    {option}
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Sale Status */}
-            <div className="pb-4 border-b border-border">
-              <p className="text-sm font-semibold mb-2">Sale Status</p>
-              <div className="space-y-1.5">
-                {filterOptions.saleStatus.map((status) => (
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Sale Status</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.saleStatus.map((option) => (
                   <button
-                    key={status}
-                    onClick={() => setSelectedSaleStatus(status)}
-                    className={`w-full px-3 py-2 rounded-lg text-xs text-left transition-colors ${
-                      selectedSaleStatus === status
-                        ? "bg-primary/10 text-primary"
-                        : "bg-card"
+                    key={option}
+                    onClick={() => setFilters({ ...filters, saleStatus: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.saleStatus === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
                     }`}
                   >
-                    {status}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Sale Type */}
-            <div className="pb-4 border-b border-border">
-              <p className="text-sm font-semibold mb-2">Sale Type</p>
-              <div className="space-y-1.5">
-                {filterOptions.saleType.map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => setSelectedSaleType(type)}
-                    className={`w-full px-3 py-2 rounded-lg text-xs text-left transition-colors ${
-                      selectedSaleType === type
-                        ? "bg-primary/10 text-primary"
-                        : "bg-card"
-                    }`}
-                  >
-                    {type}
+                    {option}
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Graded */}
-            <div className="pb-4 border-b border-border">
-              <p className="text-sm font-semibold mb-2">Graded</p>
-              <div className="space-y-1.5">
-                {filterOptions.graded.map((grade) => (
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Graded</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.graded.map((option) => (
                   <button
-                    key={grade}
-                    onClick={() => setSelectedGraded(grade)}
-                    className={`w-full px-3 py-2 rounded-lg text-xs text-left transition-colors ${
-                      selectedGraded === grade
-                        ? "bg-primary/10 text-primary"
-                        : "bg-card"
+                    key={option}
+                    onClick={() => setFilters({ ...filters, graded: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.graded === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
                     }`}
                   >
-                    {grade}
+                    {option}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Condition */}
-            <div className="pb-4">
-              <p className="text-sm font-semibold mb-2">Condition</p>
-              <div className="flex flex-wrap gap-1.5">
-                {filterOptions.condition.map((cond) => (
+            {/* Grading Company */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Grading Company</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.gradingCompany.map((option) => (
                   <button
-                    key={cond}
-                    onClick={() => setSelectedCondition(cond)}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                      selectedCondition === cond
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-card border-border"
+                    key={option}
+                    onClick={() => setFilters({ ...filters, gradingCompany: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.gradingCompany === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
                     }`}
                   >
-                    {cond}
+                    {option}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Rating / Condition */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm font-medium text-foreground">Rating / Condition</h4>
+                <span className="text-sm text-primary font-medium">{ratingRange[0]} - {ratingRange[1]}</span>
+              </div>
+              <div className="px-2">
+                <Slider
+                  value={ratingRange}
+                  onValueChange={setRatingRange}
+                  min={1}
+                  max={10}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between mt-2">
+                  <span className="text-xs text-muted-foreground">1</span>
+                  <span className="text-xs text-muted-foreground">10</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex gap-3 sticky bottom-0 bg-background pt-4 border-t border-border">
-            <Button 
-              variant="outline" 
-              className="flex-1 h-10 rounded-lg"
-              onClick={() => {
-                setPriceRange([0, 5000])
-                setSelectedCardType("All")
-                setSelectedSaleStatus("All")
-                setSelectedSaleType("All")
-                setSelectedGraded("All")
-                setSelectedCondition("All")
-              }}
-            >
+          {/* Filter Actions */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t border-border flex gap-3">
+            <Button variant="outline" className="flex-1 h-10 rounded-xl text-sm" onClick={resetFilters}>
               Reset
             </Button>
-            <Button 
-              className="flex-1 h-10 rounded-lg"
-              onClick={() => setShowFilterSheet(false)}
-            >
+            <Button className="flex-1 h-10 rounded-xl bg-primary text-sm" onClick={applyFilters}>
               Apply
             </Button>
           </div>
