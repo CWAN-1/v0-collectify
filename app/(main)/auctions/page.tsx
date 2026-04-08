@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { ArrowLeft, Heart, Check, Clock, Gavel, SlidersHorizontal, ArrowUpDown } from "lucide-react"
+import { ArrowLeft, Heart, Check, Clock, Gavel, SlidersHorizontal, ArrowUpDown, X, TrendingUp, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Slider } from "@/components/ui/slider"
@@ -18,11 +18,20 @@ const categories = [
   { id: "sports", label: "Sports" },
 ]
 
+const filterOptions = {
+  category: ["All", "Single Card", "Set/Bundle", "Booster Pack", "Box", "Case"],
+  saleStatus: ["All", "Fixed Price", "Auction"],
+  saleType: ["All", "Fixed Price", "Negotiable"],
+  graded: ["All", "Graded", "Ungraded"],
+  gradingCompany: ["All", "PSA", "BGS", "CGC", "ACE Grading", "Beckett", "SGC"],
+  condition: ["All", "10", "9.5", "9", "8-8.5", "7-7.5", "6-6.5", "A", "B", "C", "D"],
+}
+
 const sortOptions = [
-  { id: "ending", label: "Ending Soon" },
-  { id: "bids-high", label: "Most Bids" },
-  { id: "price-high", label: "Price: High to Low" },
-  { id: "price-low", label: "Price: Low to High" },
+  { id: "ending", label: "Ending Soon", icon: Clock },
+  { id: "latest", label: "Latest", icon: TrendingUp },
+  { id: "price-high", label: "Price: High to Low", icon: DollarSign },
+  { id: "price-low", label: "Price: Low to High", icon: DollarSign },
 ]
 
 const auctionProducts = [
@@ -207,12 +216,31 @@ function AuctionsContent() {
   const [selectedSort, setSelectedSort] = useState("ending")
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [showSortSheet, setShowSortSheet] = useState(false)
-  const [priceRange, setPriceRange] = useState([0, 20000])
+  const [filters, setFilters] = useState({
+    category: "All",
+    saleStatus: "All",
+    graded: "All",
+    gradingCompany: "All",
+  })
+  const [ratingRange, setRatingRange] = useState([1, 10])
 
   const filteredProducts = auctionProducts.filter(product => 
-    (selectedCategory === "all" || product.category === selectedCategory) &&
-    product.currentBid >= priceRange[0] && product.currentBid <= priceRange[1]
+    (selectedCategory === "all" || product.category === selectedCategory)
   )
+
+  const resetFilters = () => {
+    setFilters({
+      category: "All",
+      saleStatus: "All",
+      graded: "All",
+      gradingCompany: "All",
+    })
+    setRatingRange([1, 10])
+  }
+
+  const applyFilters = () => {
+    setShowFilterSheet(false)
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -267,7 +295,7 @@ function AuctionsContent() {
             className="h-8 rounded-full text-xs gap-1.5"
           >
             <ArrowUpDown className="size-3.5" />
-            {sortOptions.find(s => s.id === selectedSort)?.label}
+            Sort
           </Button>
         </div>
       </header>
@@ -285,34 +313,121 @@ function AuctionsContent() {
 
       {/* Filter Sheet */}
       <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
-        <SheetContent side="bottom" className="h-[50vh] rounded-t-3xl">
-          <SheetHeader className="pb-4">
-            <SheetTitle className="text-base">Filter</SheetTitle>
-            <SheetDescription className="sr-only">Filter auctions by price</SheetDescription>
+        <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl px-0">
+          <SheetHeader className="border-b border-border pb-3 px-4">
+            <SheetTitle className="text-center text-base">Filter</SheetTitle>
+            <SheetDescription className="sr-only">Filter auctions</SheetDescription>
           </SheetHeader>
-          
-          <div className="space-y-6">
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium">Bid Range</span>
-                <span className="text-sm text-primary">${priceRange[0]} - ${priceRange[1]}</span>
+          <div className="overflow-y-auto h-[calc(100%-140px)] py-4 px-4">
+            {/* Category */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Category</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.category.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, category: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.category === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
               </div>
-              <Slider
-                value={priceRange}
-                onValueChange={setPriceRange}
-                min={0}
-                max={20000}
-                step={100}
-                className="w-full"
-              />
+            </div>
+
+            {/* Sale Status */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Sale Status</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.saleStatus.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, saleStatus: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.saleStatus === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Graded */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Graded</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.graded.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, graded: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.graded === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Grading Company */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-foreground mb-3">Grading Company</h4>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.gradingCompany.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setFilters({ ...filters, gradingCompany: option })}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      filters.gradingCompany === option
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-background text-foreground border-border"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Rating / Condition */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm font-medium text-foreground">Rating / Condition</h4>
+                <span className="text-sm text-primary font-medium">{ratingRange[0]} - {ratingRange[1]}</span>
+              </div>
+              <div className="px-2">
+                <Slider
+                  value={ratingRange}
+                  onValueChange={setRatingRange}
+                  min={1}
+                  max={10}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between mt-2">
+                  <span className="text-xs text-muted-foreground">1</span>
+                  <span className="text-xs text-muted-foreground">10</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="flex gap-3 mt-6">
-            <Button variant="outline" className="flex-1 h-10 rounded-xl" onClick={() => setPriceRange([0, 20000])}>
+          {/* Filter Actions */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t border-border flex gap-3">
+            <Button variant="outline" className="flex-1 h-10 rounded-xl text-sm" onClick={resetFilters}>
               Reset
             </Button>
-            <Button className="flex-1 h-10 rounded-xl" onClick={() => setShowFilterSheet(false)}>
+            <Button className="flex-1 h-10 rounded-xl bg-primary text-sm" onClick={applyFilters}>
               Apply
             </Button>
           </div>
@@ -321,28 +436,35 @@ function AuctionsContent() {
 
       {/* Sort Sheet */}
       <Sheet open={showSortSheet} onOpenChange={setShowSortSheet}>
-        <SheetContent side="bottom" className="rounded-t-3xl">
-          <SheetHeader className="pb-4">
-            <SheetTitle className="text-base">Sort By</SheetTitle>
-            <SheetDescription className="sr-only">Sort auctions</SheetDescription>
+        <SheetContent side="bottom" className="rounded-t-3xl pb-8">
+          <SheetHeader className="border-b border-border pb-3">
+            <SheetTitle className="text-center text-base">Sort</SheetTitle>
+            <SheetDescription className="sr-only">Sort auctions by different criteria</SheetDescription>
           </SheetHeader>
-          <div className="space-y-2">
-            {sortOptions.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => {
-                  setSelectedSort(option.id)
-                  setShowSortSheet(false)
-                }}
-                className={`w-full p-3 rounded-xl text-left text-sm font-medium transition-colors ${
-                  selectedSort === option.id
-                    ? "bg-primary/10 text-primary border border-primary/30"
-                    : "bg-card border border-border"
-                }`}
-              >
-                {option.label}
-              </button>
-            ))}
+          <div className="py-3 space-y-2">
+            {sortOptions.map((option) => {
+              const Icon = option.icon
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => {
+                    setSelectedSort(option.id)
+                    setShowSortSheet(false)
+                  }}
+                  className={`w-full flex items-center gap-3 p-4 rounded-xl transition-colors ${
+                    selectedSort === option.id
+                      ? "bg-primary/10 border border-primary"
+                      : "bg-secondary border border-transparent"
+                  }`}
+                >
+                  <Icon className="size-5 text-muted-foreground" />
+                  <span className="flex-1 text-left text-sm font-medium">{option.label}</span>
+                  {selectedSort === option.id && (
+                    <Check className="size-5 text-primary" />
+                  )}
+                </button>
+              )
+            })}
           </div>
         </SheetContent>
       </Sheet>
