@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { ArrowLeft, Heart, Star, Check, Flame, SlidersHorizontal, ArrowUpDown, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -178,6 +178,14 @@ function ProductCard({ product }: { product: typeof hotProducts[0] }) {
 }
 
 export default function HotPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <HotContent />
+    </Suspense>
+  )
+}
+
+function HotContent() {
   const searchParams = useSearchParams()
   const categoryParam = searchParams.get("category") || "all"
   const [selectedCategory, setSelectedCategory] = useState(categoryParam)

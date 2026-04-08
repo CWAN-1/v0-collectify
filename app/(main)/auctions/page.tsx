@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { ArrowLeft, Heart, Check, Clock, Gavel, SlidersHorizontal, ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -193,6 +193,14 @@ function AuctionCard({ product }: { product: typeof auctionProducts[0] }) {
 }
 
 export default function AuctionsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <AuctionsContent />
+    </Suspense>
+  )
+}
+
+function AuctionsContent() {
   const searchParams = useSearchParams()
   const categoryParam = searchParams.get("category") || "all"
   const [selectedCategory, setSelectedCategory] = useState(categoryParam)
