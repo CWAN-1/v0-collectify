@@ -47,7 +47,7 @@ export default function FollowersPage() {
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center justify-between px-4 pt-12 pb-3">
+        <div className="flex items-center justify-between px-4 h-14">
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>

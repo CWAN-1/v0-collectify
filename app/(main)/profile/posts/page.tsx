@@ -56,13 +56,13 @@ export default function MyPostsPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
-        <div className="flex items-center gap-3 px-4 py-3">
+        <div className="flex items-center gap-3 px-4 h-14">
           <Link href="/profile">
             <Button variant="ghost" size="icon" className="size-9">
               <ArrowLeft className="size-5" />
             </Button>
           </Link>
-          <h1 className="text-lg font-semibold">My Posts</h1>
+          <h1 className="text-base font-semibold">My Posts</h1>
         </div>
       </header>
 

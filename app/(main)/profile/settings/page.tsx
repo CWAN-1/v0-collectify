@@ -1,112 +1,151 @@
 "use client"
 
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, User, MapPin, Bell, Lock, Shield, CreditCard, Globe, FileText, HelpCircle, ChevronRight } from "lucide-react"
+import { ArrowLeft, ChevronRight, Lock, Phone, Shield, LogOut, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 
-const settingsSections = [
-  {
-    title: "Account",
-    items: [
-      { href: "/profile/settings/edit", icon: User, label: "Edit Profile" },
-      { href: "/profile/address", icon: MapPin, label: "Shipping Address" },
-      { href: "/profile/settings/payment", icon: CreditCard, label: "Payment Methods" },
-    ]
-  },
-  {
-    title: "Preferences",
-    items: [
-      { href: "/profile/settings/notifications", icon: Bell, label: "Notifications" },
-      { href: "/profile/language", icon: Globe, label: "Language", value: "English" },
-    ]
-  },
-  {
-    title: "Security",
-    items: [
-      { href: "/profile/settings/password", icon: Lock, label: "Change Password" },
-      { href: "/profile/settings/privacy", icon: Shield, label: "Privacy" },
-    ]
-  },
-  {
-    title: "About",
-    items: [
-      { href: "/profile/terms", icon: FileText, label: "Terms & Conditions" },
-      { href: "/privacy-policy", icon: Shield, label: "Privacy Policy" },
-      { href: "/profile/help", icon: HelpCircle, label: "Help Center" },
-    ]
-  },
-]
-
-export default function SettingsPage() {
+export default function AccountSettingsPage() {
   const router = useRouter()
+  const [notifications, setNotifications] = useState({
+    order: true,
+    live: true,
+    activity: true,
+    message: true,
+  })
+
+  const handleLogout = () => {
+    router.push("/login")
+  }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-8">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center gap-3 px-4 pt-12 pb-4">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
-            <ArrowLeft className="size-5" />
+        <div className="flex items-center justify-center relative px-4 pt-12 pb-3">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="size-8 absolute left-4" 
+            onClick={() => router.back()}
+          >
+            <ArrowLeft className="size-4" />
           </Button>
-          <h1 className="text-xl font-bold">Settings</h1>
+          <h1 className="text-sm font-semibold">Account Settings</h1>
         </div>
       </header>
 
-      <main className="px-4 py-4">
-        {/* Profile Summary */}
-        <Link href="/profile/settings/edit">
-          <div className="flex items-center gap-4 p-4 bg-card rounded-2xl border border-border mb-6">
-            <Avatar className="size-16">
-              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop" />
-              <AvatarFallback>AC</AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <h2 className="font-semibold text-lg">Alex Chen</h2>
-              <p className="text-muted-foreground">@alexchen</p>
+      <main className="px-4 py-4 space-y-3">
+        {/* Notification Settings */}
+        <div className="bg-card rounded-xl border border-border p-3">
+          <h3 className="text-sm font-medium mb-3">Notifications</h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs">Order Updates</span>
+              <Switch
+                checked={notifications.order}
+                onCheckedChange={(checked) => setNotifications({ ...notifications, order: checked })}
+                className="scale-90"
+              />
             </div>
-            <ChevronRight className="size-5 text-muted-foreground" />
+            <div className="flex items-center justify-between">
+              <span className="text-xs">Live Unboxing</span>
+              <Switch
+                checked={notifications.live}
+                onCheckedChange={(checked) => setNotifications({ ...notifications, live: checked })}
+                className="scale-90"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs">Activity</span>
+              <Switch
+                checked={notifications.activity}
+                onCheckedChange={(checked) => setNotifications({ ...notifications, activity: checked })}
+                className="scale-90"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs">Messages</span>
+              <Switch
+                checked={notifications.message}
+                onCheckedChange={(checked) => setNotifications({ ...notifications, message: checked })}
+                className="scale-90"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Change Password */}
+        <Link href="/profile/settings/password">
+          <div className="bg-card rounded-xl border border-border p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Lock className="size-4 text-muted-foreground" />
+              <span className="text-xs font-medium">Change Password</span>
+            </div>
+            <ChevronRight className="size-4 text-muted-foreground" />
           </div>
         </Link>
 
-        {/* Settings Sections */}
-        {settingsSections.map((section) => (
-          <div key={section.title} className="mb-6">
-            <h3 className="text-sm font-medium text-muted-foreground mb-2 px-1">
-              {section.title}
-            </h3>
-            <div className="bg-card rounded-2xl border border-border overflow-hidden">
-              {section.items.map((item, index) => {
-                const Icon = item.icon
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center gap-3 p-4 hover:bg-muted transition-colors ${
-                      index > 0 ? "border-t border-border" : ""
-                    }`}
-                  >
-                    <div className="size-10 rounded-full bg-muted flex items-center justify-center">
-                      <Icon className="size-5" />
-                    </div>
-                    <span className="flex-1 font-medium">{item.label}</span>
-                    {item.value && (
-                      <span className="text-muted-foreground">{item.value}</span>
-                    )}
-                    <ChevronRight className="size-5 text-muted-foreground" />
-                  </Link>
-                )
-              })}
+        {/* Phone Number */}
+        <div className="bg-card rounded-xl border border-border p-3">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-2.5">
+              <Phone className="size-4 text-muted-foreground mt-0.5" />
+              <div>
+                <span className="text-xs font-medium">Phone Number</span>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Required for auction features.</p>
+                <p className="text-[10px] text-primary mt-0.5">Each account can only bind one phone number.</p>
+              </div>
+            </div>
+            <Button variant="ghost" size="icon" className="size-7">
+              <Pencil className="size-3.5 text-muted-foreground" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Account Verification */}
+        <Link href="/profile/settings/verify">
+          <div className="bg-card rounded-xl border border-border p-3">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-2.5">
+                <Shield className="size-4 text-muted-foreground mt-0.5" />
+                <div>
+                  <span className="text-xs font-medium">Account Verification</span>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                    Your account is not verified. Complete verification to unlock all features.
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="size-4 text-muted-foreground shrink-0" />
             </div>
           </div>
-        ))}
+        </Link>
 
-        {/* App Version */}
-        <div className="text-center text-sm text-muted-foreground mt-8">
-          <p>CardHub v1.0.0</p>
-          <p>Made with love</p>
+        {/* Delete Account */}
+        <Link href="/profile/settings/delete-account">
+          <div className="bg-card rounded-xl border border-border p-3 flex items-center justify-between">
+            <span className="text-xs font-medium text-red-500">Delete Account</span>
+            <ChevronRight className="size-4 text-red-500" />
+          </div>
+        </Link>
+
+        {/* Version */}
+        <div className="bg-card rounded-xl border border-border p-3 flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">Version</span>
+          <span className="text-xs font-medium">V1.4.6</span>
         </div>
+
+        {/* Logout Button */}
+        <Button
+          variant="outline"
+          onClick={handleLogout}
+          className="w-full h-10 rounded-xl text-sm font-medium mt-4"
+        >
+          <LogOut className="size-4 mr-2" />
+          Log Out
+        </Button>
       </main>
     </div>
   )

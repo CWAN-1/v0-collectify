@@ -30,11 +30,11 @@ export default function PublishPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center justify-between px-4 pt-12 pb-4">
+        <div className="flex items-center justify-between px-4 h-14">
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold text-lg">Create</span>
+          <span className="font-semibold text-base">Create</span>
           <div className="size-10" />
         </div>
       </header>

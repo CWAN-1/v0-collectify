@@ -152,29 +152,29 @@ export default function ShopManagementPage() {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center justify-between px-4 pt-12 pb-4">
+        <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => router.back()}>
+            <Button variant="ghost" size="icon" className="size-9" onClick={() => router.back()}>
               <ArrowLeft className="size-5" />
             </Button>
-            <h1 className="text-xl font-bold">My Shop</h1>
+            <h1 className="text-base font-semibold">My Shop</h1>
           </div>
           <Link href="/publish">
-            <Button size="sm" className="rounded-full gap-1 bg-gradient-to-r from-primary to-accent">
-              <Plus className="size-4" />
-              List Item
+            <Button size="sm" className="h-8 rounded-full gap-1 text-xs bg-gradient-to-r from-primary to-accent">
+              <Plus className="size-3.5" />
+              List
             </Button>
           </Link>
         </div>
 
         {/* Tabs */}
-        <div className="px-4 pb-3">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+        <div className="px-4 pb-2">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
                   activeTab === tab.id
                     ? "bg-primary text-primary-foreground"
                     : "bg-card text-foreground border border-border"

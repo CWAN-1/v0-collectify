@@ -144,21 +144,21 @@ export default function OrdersPage() {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center gap-3 px-4 pt-12 pb-4">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+        <div className="flex items-center gap-3 px-4 h-14">
+          <Button variant="ghost" size="icon" className="size-9" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <h1 className="text-xl font-bold">My Orders</h1>
+          <h1 className="text-base font-semibold">My Orders</h1>
         </div>
 
         {/* Tabs */}
-        <div className="px-4 pb-3">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+        <div className="px-4 pb-2">
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
                   activeTab === tab.id
                     ? "bg-foreground text-background"
                     : "bg-muted text-foreground"
