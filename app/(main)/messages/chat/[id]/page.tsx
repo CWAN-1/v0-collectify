@@ -109,7 +109,7 @@ export default function ChatPage() {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center gap-3 px-4 pt-12 pb-4">
+        <div className="flex items-center gap-3 px-4 h-14">
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>

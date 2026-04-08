@@ -85,12 +85,12 @@ export default function PostDetailPage() {
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="flex items-center justify-between px-4 pt-12 pb-4">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+        <div className="flex items-center justify-center relative px-4 h-14">
+          <Button variant="ghost" size="icon" className="size-9 absolute left-4" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold">Post</span>
-          <Button variant="ghost" size="icon">
+          <span className="font-semibold text-sm">Post</span>
+          <Button variant="ghost" size="icon" className="size-9 absolute right-4">
             <MoreHorizontal className="size-5" />
           </Button>
         </div>
@@ -100,7 +100,7 @@ export default function PostDetailPage() {
       <main className="px-4 py-4">
         {/* User Info */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
+          <Link href="/user/1" className="flex items-center gap-3">
             <Avatar className="size-12">
               <AvatarImage src={post.user.avatar} />
               <AvatarFallback>{post.user.name[0]}</AvatarFallback>
@@ -118,7 +118,7 @@ export default function PostDetailPage() {
               </div>
               <span className="text-sm text-muted-foreground">{post.createdAt}</span>
             </div>
-          </div>
+          </Link>
           <Button variant="outline" size="sm" className="rounded-full">
             Follow
           </Button>

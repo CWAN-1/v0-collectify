@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Search, SlidersHorizontal, ArrowUpDown, Heart, Star, X, Check, Clock, TrendingUp, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Slider } from "@/components/ui/slider"
 import Link from "next/link"
 import Image from "next/image"
@@ -531,9 +531,10 @@ export default function ShopPage() {
 
       {/* Filter Sheet */}
       <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
-        <SheetContent side="bottom" className="h-[85vh] rounded-t-3xl px-0" aria-describedby={undefined}>
-          <SheetHeader className="border-b border-border pb-4 px-4">
-            <SheetTitle className="text-center">Filter</SheetTitle>
+        <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl px-0">
+          <SheetHeader className="border-b border-border pb-3 px-4">
+            <SheetTitle className="text-center text-base">Filter</SheetTitle>
+            <SheetDescription className="sr-only">Filter products by category, status and condition</SheetDescription>
           </SheetHeader>
           <div className="overflow-y-auto h-[calc(100%-140px)] py-4 px-4">
             {/* Category */}
@@ -641,10 +642,10 @@ export default function ShopPage() {
 
           {/* Filter Actions */}
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t border-border flex gap-3">
-            <Button variant="outline" className="flex-1 h-12 rounded-xl" onClick={resetFilters}>
+            <Button variant="outline" className="flex-1 h-10 rounded-xl text-sm" onClick={resetFilters}>
               Reset
             </Button>
-            <Button className="flex-1 h-12 rounded-xl bg-primary" onClick={applyFilters}>
+            <Button className="flex-1 h-10 rounded-xl bg-primary text-sm" onClick={applyFilters}>
               Apply
             </Button>
           </div>
@@ -653,11 +654,12 @@ export default function ShopPage() {
 
       {/* Sort Sheet */}
       <Sheet open={showSortSheet} onOpenChange={setShowSortSheet}>
-        <SheetContent side="bottom" className="rounded-t-3xl" aria-describedby={undefined}>
-          <SheetHeader className="border-b border-border pb-4">
-            <SheetTitle className="text-center">Sort</SheetTitle>
+        <SheetContent side="bottom" className="rounded-t-3xl pb-8">
+          <SheetHeader className="border-b border-border pb-3">
+            <SheetTitle className="text-center text-base">Sort</SheetTitle>
+            <SheetDescription className="sr-only">Sort products by different criteria</SheetDescription>
           </SheetHeader>
-          <div className="py-4 space-y-2">
+          <div className="py-3 space-y-2">
             {sortOptions.map((option) => {
               const Icon = option.icon
               return (

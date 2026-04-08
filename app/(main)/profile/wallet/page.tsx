@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowUpRight, ArrowDownLeft, Plus, ChevronRight, Eye, EyeOff, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 
 const transactions = [
@@ -66,17 +66,17 @@ export default function WalletPage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
-      <header className="bg-foreground text-background px-4 pt-12 pb-8 rounded-b-[2rem]">
-        <div className="flex items-center gap-3 mb-6">
+      <header className="bg-foreground text-background px-4 pt-4 pb-6 rounded-b-[2rem]">
+        <div className="flex items-center gap-3 mb-4">
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={() => router.back()}
-            className="text-background hover:bg-background/10"
+            className="text-background hover:bg-background/10 size-9"
           >
             <ArrowLeft className="size-5" />
           </Button>
-          <h1 className="text-xl font-bold">My Balance</h1>
+          <h1 className="text-base font-semibold">My Balance</h1>
         </div>
 
         {/* Balance Card */}
@@ -106,9 +106,10 @@ export default function WalletPage() {
                   Withdraw
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl">
-                <SheetHeader className="pb-4">
-                  <SheetTitle>Withdraw Funds</SheetTitle>
+              <SheetContent side="bottom" className="h-[60vh] rounded-t-3xl">
+                <SheetHeader className="pb-3">
+                  <SheetTitle className="text-base">Withdraw Funds</SheetTitle>
+                  <SheetDescription className="sr-only">Enter amount to withdraw</SheetDescription>
                 </SheetHeader>
                 <div className="space-y-6">
                   {/* Amount Input */}

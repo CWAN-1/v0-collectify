@@ -114,69 +114,69 @@ export default function CreateProductPage() {
     <div className="min-h-screen bg-background pb-32">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center justify-between px-4 pt-12 pb-4">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+        <div className="flex items-center justify-between px-4 h-14">
+          <Button variant="ghost" size="icon" className="size-9" onClick={() => router.back()}>
             <ArrowLeft className="size-5" />
           </Button>
-          <span className="font-semibold text-base">Sell Something</span>
+          <span className="font-semibold text-sm">Sell Something</span>
           <Button
             onClick={handlePublish}
             disabled={!isFormValid}
-            className="rounded-full px-5 text-sm"
+            className="h-8 rounded-full px-4 text-xs"
           >
             Publish
           </Button>
         </div>
       </header>
 
-      <main className="px-4 py-5">
+      <main className="px-4 py-4">
         {/* Image Upload */}
-        <div className="mb-5">
-          <div className="flex items-center justify-between mb-2.5">
-            <label className="text-xs font-medium text-muted-foreground">Card Photos (up to 10)</label>
-            <span className="text-xs text-muted-foreground">0/10</span>
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-[10px] font-medium text-muted-foreground">Card Photos (up to 10)</label>
+            <span className="text-[10px] text-muted-foreground">0/10</span>
           </div>
-          <div className="flex gap-2.5 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-2">
             {/* Main Photo */}
-            <label className="size-24 shrink-0 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-0.5 cursor-pointer hover:border-foreground/50 transition-colors">
-              <Plus className="size-5 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground text-center px-1">Main</span>
+            <label className="size-16 shrink-0 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-0.5 cursor-pointer hover:border-foreground/50 transition-colors">
+              <Plus className="size-4 text-muted-foreground" />
+              <span className="text-[10px] text-muted-foreground text-center">Main</span>
               <input type="file" accept="image/*" className="hidden" />
             </label>
             
             {/* Additional Photos */}
             {[1, 2, 3, 4].map((i) => (
-              <label key={i} className="size-24 shrink-0 border-2 border-dashed border-border rounded-xl flex items-center justify-center cursor-pointer hover:border-foreground/50 transition-colors">
-                <Plus className="size-5 text-muted-foreground" />
+              <label key={i} className="size-16 shrink-0 border-2 border-dashed border-border rounded-lg flex items-center justify-center cursor-pointer hover:border-foreground/50 transition-colors">
+                <Plus className="size-4 text-muted-foreground" />
                 <input type="file" accept="image/*" className="hidden" />
               </label>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground mt-1.5 flex items-start gap-1">
-            <Info className="size-3 shrink-0 mt-0.5" />
+          <p className="text-[10px] text-muted-foreground mt-1 flex items-start gap-1">
+            <Info className="size-2.5 shrink-0 mt-0.5" />
             Upload front, back, and detail shots for best results
           </p>
         </div>
 
         {/* Product Name */}
-        <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Card Name *</label>
+        <div className="mb-3">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Card Name *</label>
           <Input
             placeholder="e.g., Pikachu VMAX Rainbow Rare"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="h-12 rounded-xl bg-muted border-0 text-sm"
+            className="h-10 rounded-lg bg-muted border-0 text-xs"
           />
         </div>
 
         {/* Category */}
-        <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Category *</label>
+        <div className="mb-3">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Category *</label>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" className="w-full justify-between h-12 rounded-xl">
+              <Button variant="outline" className="w-full justify-between h-10 rounded-lg text-xs">
                 <span className="text-muted-foreground">{category ? categories.find(c => c.id === category)?.label : "Select category"}</span>
-                <ChevronRight className="size-4" />
+                <ChevronRight className="size-3.5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="bottom">
@@ -205,13 +205,13 @@ export default function CreateProductPage() {
         </div>
 
         {/* Product Type */}
-        <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Card Type *</label>
+        <div className="mb-3">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Card Type *</label>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" className="w-full justify-between h-12 rounded-xl">
+              <Button variant="outline" className="w-full justify-between h-10 rounded-lg text-xs">
                 <span className="text-muted-foreground">{productType ? productTypes.find(p => p.id === productType)?.label : "Select type"}</span>
-                <ChevronRight className="size-4" />
+                <ChevronRight className="size-3.5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="bottom">
@@ -241,13 +241,13 @@ export default function CreateProductPage() {
         </div>
 
         {/* Condition */}
-        <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Card Condition</label>
+        <div className="mb-3">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Card Condition</label>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" className="w-full justify-between h-12 rounded-xl">
+              <Button variant="outline" className="w-full justify-between h-10 rounded-lg text-xs">
                 <span className="text-muted-foreground">{condition ? conditions.find(c => c.id === condition)?.label : "Select condition"}</span>
-                <ChevronRight className="size-4" />
+                <ChevronRight className="size-3.5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="bottom">
@@ -277,8 +277,8 @@ export default function CreateProductPage() {
         </div>
 
         {/* Grading Section */}
-        <div className="bg-card rounded-xl border border-border p-3 mb-4">
-          <label className="flex items-center gap-2 cursor-pointer mb-3">
+        <div className="bg-card rounded-lg border border-border p-2.5 mb-3">
+          <label className="flex items-center gap-2 cursor-pointer mb-2">
             <input
               type="checkbox"
               checked={isGraded}
@@ -290,9 +290,9 @@ export default function CreateProductPage() {
                   setCertNumber("")
                 }
               }}
-              className="size-4 rounded"
+              className="size-3.5 rounded"
             />
-            <span className="text-sm font-medium">Graded Card</span>
+            <span className="text-xs font-medium">Graded Card</span>
           </label>
 
           {isGraded && (
@@ -386,115 +386,115 @@ export default function CreateProductPage() {
         </div>
 
         {/* Set & Number */}
-        <div className="grid grid-cols-2 gap-2.5 mb-4">
+        <div className="grid grid-cols-2 gap-2 mb-3">
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Set Name</label>
+            <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Set Name</label>
             <Input
               placeholder="e.g., Base Set"
               value={formData.set}
               onChange={(e) => setFormData({ ...formData, set: e.target.value })}
-              className="h-12 rounded-xl bg-muted border-0 text-sm"
+              className="h-10 rounded-lg bg-muted border-0 text-xs"
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Card Number</label>
+            <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Card Number</label>
             <Input
               placeholder="e.g., 4/102"
               value={formData.number}
               onChange={(e) => setFormData({ ...formData, number: e.target.value })}
-              className="h-12 rounded-xl bg-muted border-0 text-sm"
+              className="h-10 rounded-lg bg-muted border-0 text-xs"
             />
           </div>
         </div>
 
         {/* Rarity & Language */}
-        <div className="grid grid-cols-2 gap-2.5 mb-4">
+        <div className="grid grid-cols-2 gap-2 mb-3">
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Rarity</label>
+            <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Rarity</label>
             <Input
               placeholder="e.g., Holo Rare"
               value={formData.rarity}
               onChange={(e) => setFormData({ ...formData, rarity: e.target.value })}
-              className="h-12 rounded-xl bg-muted border-0 text-sm"
+              className="h-10 rounded-lg bg-muted border-0 text-xs"
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Language</label>
+            <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Language</label>
             <Input
               placeholder={formData.language}
               disabled
-              className="h-12 rounded-xl bg-muted border-0 text-sm opacity-60"
+              className="h-10 rounded-lg bg-muted border-0 text-xs opacity-60"
             />
           </div>
         </div>
 
         {/* Sale Type Selection */}
-        <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-2 block">Sale Type *</label>
-          <div className="grid grid-cols-2 gap-2.5">
+        <div className="mb-3">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1.5 block">Sale Type *</label>
+          <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setSaleType("fixed")}
               className={cn(
-                "p-3 rounded-xl border-2 transition-colors",
+                "p-2.5 rounded-lg border-2 transition-colors",
                 saleType === "fixed"
                   ? "border-primary bg-primary/5"
                   : "border-border bg-background"
               )}
             >
-              <DollarSign className="size-4 mb-1 mx-auto" />
-              <div className="text-xs font-medium">Fixed Price</div>
+              <DollarSign className="size-3.5 mb-0.5 mx-auto" />
+              <div className="text-[10px] font-medium">Fixed Price</div>
             </button>
             <button
               onClick={() => setSaleType("auction")}
               className={cn(
-                "p-3 rounded-xl border-2 transition-colors",
+                "p-2.5 rounded-lg border-2 transition-colors",
                 saleType === "auction"
                   ? "border-primary bg-primary/5"
                   : "border-border bg-background"
               )}
             >
-              <Gavel className="size-4 mb-1 mx-auto" />
-              <div className="text-xs font-medium">Auction</div>
+              <Gavel className="size-3.5 mb-0.5 mx-auto" />
+              <div className="text-[10px] font-medium">Auction</div>
             </button>
           </div>
         </div>
 
         {/* Pricing */}
         {saleType === "fixed" ? (
-          <div className="mb-4">
-            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Price (USD) *</label>
+          <div className="mb-3">
+            <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Price (USD) *</label>
             <Input
               type="number"
               placeholder="0.00"
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              className="h-12 rounded-xl bg-muted border-0 text-sm"
+              className="h-10 rounded-lg bg-muted border-0 text-xs"
             />
           </div>
         ) : (
-          <div className="space-y-4 mb-4">
+          <div className="space-y-3 mb-3">
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Starting Price (USD) *</label>
+              <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Starting Price (USD) *</label>
               <Input
                 type="number"
                 placeholder="0.00"
                 value={formData.startingPrice}
                 onChange={(e) => setFormData({ ...formData, startingPrice: e.target.value })}
-                className="h-12 rounded-xl bg-muted border-0 text-sm"
+                className="h-10 rounded-lg bg-muted border-0 text-xs"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Auction Duration *</label>
+              <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Auction Duration *</label>
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between h-12 rounded-xl">
+                  <Button variant="outline" className="w-full justify-between h-10 rounded-lg text-xs">
                     <span className="text-muted-foreground">{auctionDurations.find(d => d.id === auctionDuration)?.label}</span>
-                    <ChevronRight className="size-4" />
+                    <ChevronRight className="size-3.5" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="bottom">
                   <SheetHeader className="text-left mb-4">
-                    <SheetTitle className="text-base">Select Duration</SheetTitle>
+                    <SheetTitle className="text-sm">Select Duration</SheetTitle>
                     <SheetDescription className="sr-only">Choose the auction duration</SheetDescription>
                   </SheetHeader>
                   <div className="space-y-2">
@@ -505,12 +505,12 @@ export default function CreateProductPage() {
                           setAuctionDuration(duration.id)
                         }}
                         className={cn(
-                          "w-full p-3 rounded-lg text-left text-sm transition-colors",
+                          "w-full p-2.5 rounded-lg text-left text-xs transition-colors",
                           auctionDuration === duration.id ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
                         )}
                       >
                         <div className="flex items-center gap-2">
-                          <Clock className="size-4" />
+                          <Clock className="size-3.5" />
                           {duration.label}
                         </div>
                       </button>
@@ -523,53 +523,53 @@ export default function CreateProductPage() {
         )}
 
         {/* Stock */}
-        <div className="mb-5">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Quantity</label>
+        <div className="mb-4">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Quantity</label>
           <Input
             type="number"
             placeholder="1"
             value={formData.stock}
             onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-            className="h-12 rounded-xl bg-muted border-0 text-sm"
+            className="h-10 rounded-lg bg-muted border-0 text-xs"
             min="1"
           />
         </div>
 
         {/* Description */}
-        <div className="mb-5">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Description</label>
+        <div className="mb-4">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Description</label>
           <Textarea
             placeholder="Describe the card condition, any flaws, or additional details..."
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="min-h-20 rounded-xl bg-muted border-0 resize-none text-sm"
+            className="min-h-16 rounded-lg bg-muted border-0 resize-none text-xs"
           />
         </div>
       </main>
 
       {/* Success Dialog */}
       <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className="mx-4 rounded-2xl max-w-sm">
+        <DialogContent className="mx-4 rounded-xl max-w-sm">
           <DialogHeader className="text-center">
-            <div className="mx-auto mb-4 size-16 rounded-full bg-green-500/10 flex items-center justify-center">
-              <Check className="size-8 text-green-500" />
+            <div className="mx-auto mb-3 size-12 rounded-full bg-green-500/10 flex items-center justify-center">
+              <Check className="size-6 text-green-500" />
             </div>
-            <DialogTitle className="text-lg">Listed Successfully!</DialogTitle>
-            <DialogDescription className="text-sm text-muted-foreground">
+            <DialogTitle className="text-sm">Listed Successfully!</DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
               Your item is now live. Share it with a post to get more visibility!
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 mt-4">
+          <div className="space-y-2 mt-3">
             <Button 
-              className="w-full h-12 rounded-xl gap-2"
+              className="w-full h-10 rounded-lg gap-2 text-xs"
               onClick={handleCreatePost}
             >
-              <ImageIcon className="size-4" />
+              <ImageIcon className="size-3.5" />
               Write a Post
             </Button>
             <Button 
               variant="outline"
-              className="w-full h-12 rounded-xl"
+              className="w-full h-10 rounded-lg text-xs"
               onClick={handleViewShop}
             >
               View My Shop

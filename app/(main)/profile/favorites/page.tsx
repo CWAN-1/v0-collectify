@@ -55,20 +55,20 @@ export default function FavoritesPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
-        <div className="flex items-center gap-3 px-4 py-3">
-          <Link href="/profile">
+        <div className="flex items-center justify-center relative px-4 h-14">
+          <Link href="/profile" className="absolute left-4">
             <Button variant="ghost" size="icon" className="size-9">
               <ArrowLeft className="size-5" />
             </Button>
           </Link>
-          <h1 className="text-lg font-semibold">Favorites</h1>
+          <h1 className="text-sm font-semibold">Favorites</h1>
         </div>
         
         {/* Tabs */}
         <div className="flex border-b border-border">
           <button
             onClick={() => setActiveTab("products")}
-            className={`flex-1 py-3 text-sm font-medium relative ${
+            className={`flex-1 py-2.5 text-xs font-medium relative ${
               activeTab === "products" ? "text-foreground" : "text-muted-foreground"
             }`}
           >
@@ -79,7 +79,7 @@ export default function FavoritesPage() {
           </button>
           <button
             onClick={() => setActiveTab("posts")}
-            className={`flex-1 py-3 text-sm font-medium relative ${
+            className={`flex-1 py-2.5 text-xs font-medium relative ${
               activeTab === "posts" ? "text-foreground" : "text-muted-foreground"
             }`}
           >

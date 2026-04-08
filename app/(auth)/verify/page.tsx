@@ -18,12 +18,10 @@ function VerifyContent() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
-    // Focus first input on mount
     inputRefs.current[0]?.focus()
   }, [])
 
   useEffect(() => {
-    // Countdown timer for resend
     if (resendTimer > 0) {
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000)
       return () => clearTimeout(timer)
@@ -31,17 +29,13 @@ function VerifyContent() {
   }, [resendTimer])
 
   const handleChange = (index: number, value: string) => {
-    if (value.length > 1) {
-      value = value.slice(-1)
-    }
-    
+    if (value.length > 1) value = value.slice(-1)
     if (!/^\d*$/.test(value)) return
 
     const newCode = [...code]
     newCode[index] = value
     setCode(newCode)
 
-    // Auto-focus next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus()
     }
@@ -63,8 +57,6 @@ function VerifyContent() {
       if (index < 6) newCode[index] = char
     })
     setCode(newCode)
-    
-    // Focus last filled input or next empty
     const lastFilledIndex = Math.min(pastedData.length - 1, 5)
     inputRefs.current[lastFilledIndex]?.focus()
   }
@@ -74,57 +66,46 @@ function VerifyContent() {
     if (fullCode.length !== 6) return
 
     setIsLoading(true)
-    
-    // Simulate verification
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Redirect to profile setup
     router.push(`/setup?email=${encodeURIComponent(email)}`)
   }
 
   const handleResend = async () => {
     if (resendTimer > 0) return
-    
-    // Simulate resending
     setResendTimer(60)
   }
 
   const isCodeComplete = code.every(digit => digit !== "")
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-screen bg-background overflow-hidden flex flex-col">
       {/* Header */}
-      <header className="flex items-center px-4 py-4">
+      <header className="flex items-center px-4 pt-4 pb-2 shrink-0">
         <Link href="/register" className="p-2 -ml-2">
-          <ArrowLeft className="size-6 text-foreground" />
+          <ArrowLeft className="size-5 text-foreground" />
         </Link>
       </header>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-8">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
+      <div className="flex-1 flex flex-col px-5">
+        {/* Logo + Title */}
+        <div className="flex flex-col items-center pt-4 pb-5">
           <Image
             src="/logo.png"
             alt="Collectify"
-            width={160}
-            height={48}
-            className="h-12"
-            style={{ width: 'auto' }}
+            width={100}
+            height={30}
+            className="h-7 mb-4"
+            style={{ width: "auto" }}
+            priority
           />
-        </div>
-
-        {/* Text */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Verify Your Email</h1>
-          <p className="text-muted-foreground">
-            {"We've sent a 6-digit code to"}
-          </p>
-          <p className="text-foreground font-medium">{email}</p>
+          <h1 className="text-lg font-bold text-foreground mb-0.5">Verify Your Email</h1>
+          <p className="text-xs text-muted-foreground">{"We've sent a 6-digit code to"}</p>
+          <p className="text-xs text-foreground font-medium">{email || "your email"}</p>
         </div>
 
         {/* Code Input */}
-        <div className="flex justify-center gap-2 mb-8">
+        <div className="flex justify-center gap-2 mb-5">
           {code.map((digit, index) => (
             <input
               key={index}
@@ -136,23 +117,23 @@ function VerifyContent() {
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className="w-12 h-14 text-center text-xl font-bold bg-card border border-border rounded-xl text-foreground focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+              className="w-10 h-11 text-center text-lg font-bold bg-card border border-border rounded-xl text-foreground focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
             />
           ))}
         </div>
 
         {/* Resend */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-5">
           {resendTimer > 0 ? (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Resend code in <span className="text-foreground font-medium">{resendTimer}s</span>
             </p>
           ) : (
             <button
               onClick={handleResend}
-              className="text-sm text-primary font-medium flex items-center gap-1 mx-auto hover:underline"
+              className="text-xs text-primary font-medium flex items-center gap-1 mx-auto hover:underline"
             >
-              <RefreshCw className="size-4" />
+              <RefreshCw className="size-3" />
               Resend Code
             </button>
           )}
@@ -162,17 +143,17 @@ function VerifyContent() {
         <Button
           onClick={handleVerify}
           disabled={isLoading || !isCodeComplete}
-          className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-semibold text-base"
+          className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-semibold text-sm"
         >
           {isLoading ? (
             <span className="flex items-center gap-2">
-              <span className="size-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+              <span className="size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
               Verifying...
             </span>
           ) : (
             <span className="flex items-center gap-2">
               Verify
-              <ArrowRight className="size-5" />
+              <ArrowRight className="size-4" />
             </span>
           )}
         </Button>
@@ -184,8 +165,8 @@ function VerifyContent() {
 export default function VerifyPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <span className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+      <div className="h-screen bg-background flex items-center justify-center">
+        <span className="size-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
       </div>
     }>
       <VerifyContent />

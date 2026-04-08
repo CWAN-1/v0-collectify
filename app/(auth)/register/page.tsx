@@ -25,51 +25,51 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-screen bg-background overflow-hidden flex flex-col">
       {/* Header */}
-      <header className="flex items-center px-4 py-4">
-        <Link href="/login" className="p-2 -ml-2">
-          <ArrowLeft className="size-6 text-foreground" />
+      <header className="flex items-center px-4 pt-4 pb-3">
+        <Link href="/login" className="p-1.5 -ml-1.5">
+          <ArrowLeft className="size-5 text-foreground" />
         </Link>
       </header>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-8">
+      <div className="flex-1 flex flex-col justify-center px-5 pb-6">
         {/* Logo */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-6">
           <Image
             src="/logo.png"
             alt="Collectify"
-            width={160}
-            height={48}
-            className="h-12"
+            width={120}
+            height={36}
+            className="h-8"
             style={{ width: 'auto' }}
           />
         </div>
 
         {/* Welcome Text */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Create Account</h1>
-          <p className="text-muted-foreground">Enter your email to get started</p>
+        <div className="text-center mb-6">
+          <h1 className="text-xl font-bold text-foreground mb-1">Create Account</h1>
+          <p className="text-sm text-muted-foreground">Enter your email to get started</p>
         </div>
 
         {/* Register Form */}
-        <form onSubmit={handleSendCode} className="space-y-4">
+        <form onSubmit={handleSendCode} className="space-y-3">
           {/* Email */}
           <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
             <Input
               type="email"
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-14 pl-12 pr-4 rounded-xl bg-card border-border text-foreground"
+              className="h-11 pl-10 pr-4 rounded-xl bg-card border-border text-sm"
               required
             />
           </div>
 
           {/* Info Text */}
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="text-xs text-muted-foreground text-center py-1">
             We will send a verification code to your email
           </p>
 
@@ -77,34 +77,34 @@ export default function RegisterPage() {
           <Button
             type="submit"
             disabled={isLoading || !email}
-            className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-semibold text-base"
+            className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-semibold text-sm"
           >
             {isLoading ? (
               <span className="flex items-center gap-2">
-                <span className="size-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                <span className="size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                 Sending...
               </span>
             ) : (
               <span className="flex items-center gap-2">
                 Continue
-                <ArrowRight className="size-5" />
+                <ArrowRight className="size-4" />
               </span>
             )}
           </Button>
         </form>
 
         {/* Terms */}
-        <p className="text-xs text-muted-foreground text-center mt-6">
+        <p className="text-xs text-muted-foreground text-center mt-4">
           By continuing, you agree to our{" "}
-          <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>
+          <Link href="/terms" className="text-primary hover:underline">Terms</Link>
           {" "}and{" "}
           <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
         </p>
       </div>
 
       {/* Bottom Section */}
-      <div className="px-6 py-8 text-center safe-area-bottom">
-        <p className="text-muted-foreground">
+      <div className="px-5 pb-6 text-center">
+        <p className="text-xs text-muted-foreground">
           Already have an account?{" "}
           <Link href="/login" className="text-primary font-semibold hover:underline">
             Sign In

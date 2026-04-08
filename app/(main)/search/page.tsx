@@ -137,7 +137,7 @@ function SearchPageContent() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Search Header */}
-      <header className="sticky top-0 z-50 bg-background px-4 py-3 border-b border-border">
+      <header className="sticky top-0 z-50 bg-background px-4 h-14 flex items-center border-b border-border">
         <div className="flex items-center gap-3">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />

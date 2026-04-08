@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, MapPin, ChevronRight, CreditCard, Wallet, Building2, Shield } from "lucide-react"
+import { ArrowLeft, MapPin, ChevronRight, CreditCard, Wallet, Building2, Shield, Plus } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
@@ -226,7 +227,7 @@ export default function CheckoutPage() {
             <SheetTitle className="text-base">Select Address</SheetTitle>
             <SheetDescription className="sr-only">Choose a shipping address</SheetDescription>
           </SheetHeader>
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-y-auto" style={{ maxHeight: "calc(50vh - 80px)" }}>
             {addresses.map((address) => (
               <button
                 key={address.id}
@@ -251,6 +252,16 @@ export default function CheckoutPage() {
                 <p className="text-[10px] text-muted-foreground mt-0.5">{address.address}</p>
               </button>
             ))}
+            
+            {/* Add New Address */}
+            <Link href="/profile/address/new" onClick={() => setShowAddressSheet(false)}>
+              <div className="w-full p-3 rounded-xl border-2 border-dashed border-border hover:border-primary/50 transition-colors flex items-center gap-2">
+                <div className="size-8 rounded-full bg-muted flex items-center justify-center">
+                  <Plus className="size-4 text-muted-foreground" />
+                </div>
+                <span className="text-xs font-medium">Add New Address</span>
+              </div>
+            </Link>
           </div>
         </SheetContent>
       </Sheet>

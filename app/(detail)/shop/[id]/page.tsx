@@ -210,7 +210,7 @@ export default function ProductDetailPage() {
       {/* Seller Info */}
       <div className="bg-card px-4 py-4 border-b border-border">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link href="/user/1" className="flex items-center gap-3">
             <Avatar className="size-11 border-2 border-border">
               <AvatarImage src={product.seller.avatar} />
               <AvatarFallback>{product.seller.name[0]}</AvatarFallback>
@@ -228,14 +228,16 @@ export default function ProductDetailPage() {
                 {product.seller.location} | {product.seller.followers} followers
               </p>
             </div>
-          </div>
+          </Link>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" className="h-8 rounded-full text-xs border-primary text-primary">
               Follow
             </Button>
-            <Button variant="outline" size="icon" className="size-8 rounded-full border-border">
-              <MessageCircle className="size-4" />
-            </Button>
+            <Link href="/chat/1">
+              <Button variant="outline" size="icon" className="size-8 rounded-full border-border">
+                <MessageCircle className="size-4" />
+              </Button>
+            </Link>
           </div>
         </div>
         {/* Seller Stats */}

@@ -147,21 +147,21 @@ export default function AuctionPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
-        <div className="flex items-center gap-3 px-4 pt-12 pb-3">
-          <Link href="/profile">
+        <div className="flex items-center justify-center relative px-4 h-14">
+          <Link href="/profile" className="absolute left-4">
             <Button variant="ghost" size="icon" className="size-9">
               <ArrowLeft className="size-5" />
             </Button>
           </Link>
-          <h1 className="font-semibold">Auction</h1>
+          <h1 className="text-sm font-semibold">Auction</h1>
         </div>
 
         {/* Tabs */}
-        <div className="px-4 pb-3">
+        <div className="px-4 pb-2">
           <div className="flex gap-2">
             <button
               onClick={() => setActiveTab("bidding")}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all border ${
+              className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all border ${
                 activeTab === "bidding"
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-card text-foreground border-border"
@@ -171,7 +171,7 @@ export default function AuctionPage() {
             </button>
             <button
               onClick={() => setActiveTab("history")}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all border ${
+              className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all border ${
                 activeTab === "history"
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-card text-foreground border-border"

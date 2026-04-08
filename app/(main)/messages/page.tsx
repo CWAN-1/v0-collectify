@@ -122,8 +122,8 @@ export default function MessagesPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
-        <div className="px-4 pt-12 pb-4">
-          <h1 className="text-xl font-bold text-foreground">Messages</h1>
+        <div className="px-4 pt-4 pb-4">
+          <h1 className="text-lg font-bold text-foreground">Messages</h1>
 
           {/* Tabs */}
           <div className="flex gap-2 mt-4">
