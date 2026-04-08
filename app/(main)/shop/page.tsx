@@ -21,7 +21,7 @@ const categories = [
 
 const filterOptions = {
   category: ["All", "Single Card", "Set/Bundle", "Booster Pack", "Box", "Case"],
-  saleStatus: ["All", "For Sale", "Auction"],
+  saleStatus: ["All", "Fixed Price", "Auction"],
   saleType: ["All", "Fixed Price", "Negotiable"],
   graded: ["All", "Graded", "Ungraded"],
   gradingCompany: ["All", "PSA", "BGS", "CGC", "ACE Grading", "Beckett", "SGC"],

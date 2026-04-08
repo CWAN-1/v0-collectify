@@ -24,6 +24,7 @@ const auctionProduct = {
   subtitle: "Scarlet & Violet - Temporal Forces",
   currentBid: 225,
   startPrice: 100,
+  buyNowPrice: 350,
   shippingFee: 33,
   images: [
     "/cards/pokemon-1.jpg",
@@ -132,6 +133,10 @@ export default function AuctionDetailPage() {
     })
   }
 
+  const handleBuyNow = () => {
+    router.push(`/checkout?product=${auctionProduct.id}&price=${auctionProduct.buyNowPrice}&type=buynow`)
+  }
+
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
@@ -206,6 +211,16 @@ export default function AuctionDetailPage() {
             {auctionProduct.bidCount} bids
           </div>
         </div>
+        
+        {/* Buy Now Price */}
+        {auctionProduct.buyNowPrice && (
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-sm font-semibold text-foreground">Buy It Now:</span>
+            <span className="text-lg font-bold text-green-500">
+              {formatPrice(auctionProduct.buyNowPrice)}
+            </span>
+          </div>
+        )}
         
         {/* Shipping Fee */}
         <p className="text-sm text-muted-foreground mt-1">
@@ -341,6 +356,14 @@ export default function AuctionDetailPage() {
               <ShoppingCart className="size-5" />
             </Button>
           </Link>
+          {auctionProduct.buyNowPrice && (
+            <Button 
+              className="flex-1 h-11 rounded-xl bg-green-500 hover:bg-green-600 text-white text-sm font-semibold"
+              onClick={handleBuyNow}
+            >
+              Buy It Now
+            </Button>
+          )}
           <Button 
             className="flex-1 h-11 rounded-xl bg-gradient-to-r from-primary to-accent text-sm font-semibold gap-2"
             onClick={() => setBidSheetOpen(true)}

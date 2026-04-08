@@ -73,6 +73,7 @@ export default function CreateProductPage() {
   const [certNumber, setCertNumber] = useState("")
   const [saleType, setSaleType] = useState<SaleType>("fixed")
   const [auctionDuration, setAuctionDuration] = useState("24h")
+  const [enableBuyNow, setEnableBuyNow] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     set: "",
@@ -81,6 +82,7 @@ export default function CreateProductPage() {
     language: "English",
     price: "",
     startingPrice: "",
+    buyNowPrice: "",
     stock: "1",
     description: "",
   })
@@ -104,8 +106,9 @@ export default function CreateProductPage() {
     ? gradingScores[gradingCompany as keyof typeof gradingScores] || gradingScores.other 
     : []
 
-  const isFormValid = formData.name && category && productType && formData.price && (
-    saleType === "fixed" || (saleType === "auction" && formData.startingPrice)
+  const isFormValid = formData.name && category && productType && (
+    (saleType === "fixed" && formData.price) ||
+    (saleType === "auction" && formData.startingPrice && (!enableBuyNow || formData.buyNowPrice))
   ) && (
     !isGraded || (gradingCompany && gradingScore)
   )
@@ -518,6 +521,40 @@ export default function CreateProductPage() {
                   </div>
                 </SheetContent>
               </Sheet>
+            </div>
+
+            {/* Buy It Now Option */}
+            <div className="bg-muted/50 rounded-lg p-3">
+              <label className="flex items-center gap-2 cursor-pointer mb-2">
+                <input
+                  type="checkbox"
+                  checked={enableBuyNow}
+                  onChange={(e) => {
+                    setEnableBuyNow(e.target.checked)
+                    if (!e.target.checked) {
+                      setFormData({ ...formData, buyNowPrice: "" })
+                    }
+                  }}
+                  className="size-3.5 rounded"
+                />
+                <span className="text-xs font-medium">Enable Buy It Now</span>
+              </label>
+              <p className="text-[9px] text-muted-foreground mb-2">
+                Allow buyers to purchase immediately at a fixed price
+              </p>
+              
+              {enableBuyNow && (
+                <div>
+                  <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Buy It Now Price (USD) *</label>
+                  <Input
+                    type="number"
+                    placeholder="0.00"
+                    value={formData.buyNowPrice}
+                    onChange={(e) => setFormData({ ...formData, buyNowPrice: e.target.value })}
+                    className="h-10 rounded-lg bg-background border-0 text-xs"
+                  />
+                </div>
+              )}
             </div>
           </div>
         )}
