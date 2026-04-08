@@ -332,45 +332,8 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Featured Collection - 2 Rows */}
-        <div className="mb-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-foreground">Featured Collection</h2>
-            <Link href="/shop" className="flex items-center gap-1 text-sm text-primary">
-              See All <ChevronRight className="size-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            {filteredFeatured.slice(0, 6).map((card) => (
-              <Link key={card.id} href={`/shop/${card.id}`}>
-                <div className="bg-card rounded-xl overflow-hidden border border-border">
-                  <div className="relative aspect-[3/4]">
-                    <Image
-                      src={card.image}
-                      alt={card.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-2">
-                    <p className="text-[10px] font-semibold text-foreground truncate">{card.name}</p>
-                    <p className="text-[9px] text-muted-foreground truncate">{card.set}</p>
-                    <p className="text-xs font-bold text-primary mt-0.5">${card.price}</p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
         {/* Community Feed */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-foreground">Community</h2>
-            <span className="text-xs text-muted-foreground">
-              {selectedCategory === "all" ? "All Categories" : displayedCategories.find(c => c.id === selectedCategory)?.label}
-            </span>
-          </div>
           <div className="flex gap-3 w-full">
             <div className="flex-1 min-w-0">
               {leftColumn.map((post, index) => (
