@@ -143,21 +143,21 @@ export default function CreatePostPage() {
         </div>
       </header>
 
-      <main className="px-4 py-5">
+      <main className="px-4 py-4">
         {/* Image Upload */}
-        <div className="mb-5">
-          <label className="text-xs font-medium text-muted-foreground mb-2.5 block">Photos (up to 9)</label>
-          <div className="flex gap-2.5 overflow-x-auto pb-2">
+        <div className="mb-4">
+          <label className="text-[10px] font-medium text-muted-foreground mb-2 block">Photos (up to 9)</label>
+          <div className="flex gap-2 overflow-x-auto pb-2">
             {/* Add Photo Button */}
-            <label className="size-20 shrink-0 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-0.5 cursor-pointer hover:border-foreground/50 transition-colors">
-              <Plus className="size-5 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Add</span>
+            <label className="size-16 shrink-0 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-0.5 cursor-pointer hover:border-foreground/50 transition-colors">
+              <Plus className="size-4 text-muted-foreground" />
+              <span className="text-[10px] text-muted-foreground">Add</span>
               <input type="file" accept="image/*" multiple className="hidden" />
             </label>
             
             {/* Placeholder Images */}
             {[1, 2, 3].map((i) => (
-              <div key={i} className="size-20 shrink-0 relative rounded-xl overflow-hidden bg-muted">
+              <div key={i} className="size-16 shrink-0 relative rounded-lg overflow-hidden bg-muted">
                 <Image
                   src={`https://images.unsplash.com/photo-161377140478${i}-3a5686aa2be3?w=200&h=200&fit=crop`}
                   alt="placeholder"
@@ -170,44 +170,44 @@ export default function CreatePostPage() {
         </div>
 
         {/* Title */}
-        <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Post Title *</label>
+        <div className="mb-3">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Post Title *</label>
           <Input
             placeholder="What's your post about?"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="h-12 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground"
+            className="h-10 rounded-lg bg-muted border-0 text-xs placeholder:text-muted-foreground"
           />
         </div>
 
         {/* Content */}
-        <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Content</label>
+        <div className="mb-3">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Content</label>
           <Textarea
             placeholder="Share your thoughts, card stories, or collection updates..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="min-h-20 rounded-xl bg-muted border-0 resize-none text-sm placeholder:text-muted-foreground"
+            className="min-h-16 rounded-lg bg-muted border-0 resize-none text-xs placeholder:text-muted-foreground"
           />
         </div>
 
         {/* Tags */}
-        <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Tags (up to 5)</label>
-          <div className="bg-muted rounded-xl p-3 min-h-12 mb-2">
-            <div className="flex flex-wrap gap-1.5">
+        <div className="mb-3">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Tags (up to 5)</label>
+          <div className="bg-muted rounded-lg p-2.5 min-h-10 mb-2">
+            <div className="flex flex-wrap gap-1">
               {tags.map((tag) => (
                 <div
                   key={tag}
-                  className="bg-background rounded-lg px-2.5 py-1 flex items-center gap-1.5"
+                  className="bg-background rounded px-2 py-0.5 flex items-center gap-1"
                 >
-                  <AtSign className="size-3" />
-                  <span className="text-xs font-medium">{tag}</span>
+                  <AtSign className="size-2.5" />
+                  <span className="text-[10px] font-medium">{tag}</span>
                   <button
                     onClick={() => removeTag(tag)}
                     className="hover:opacity-60 transition-opacity"
                   >
-                    <X className="size-3.5" />
+                    <X className="size-3" />
                   </button>
                 </div>
               ))}
@@ -215,7 +215,7 @@ export default function CreatePostPage() {
           </div>
 
           {/* Tag Input */}
-          <div className="flex gap-2 mb-2.5">
+          <div className="flex gap-2 mb-2">
             <Input
               placeholder="Type tag name..."
               value={tagInput}
@@ -226,24 +226,24 @@ export default function CreatePostPage() {
                   addTag(tagInput)
                 }
               }}
-              className="h-10 rounded-lg bg-background border border-border text-xs flex-1"
+              className="h-8 rounded-lg bg-background border border-border text-[10px] flex-1"
             />
             <Button
               onClick={() => addTag(tagInput)}
               size="sm"
-              className="rounded-lg text-xs px-3"
+              className="h-8 rounded-lg text-[10px] px-3"
             >
               Add
             </Button>
           </div>
 
           {/* Suggested Tags */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1">
             {suggestedTags.map((tag) => (
               <button
                 key={tag}
                 onClick={() => addTag(tag)}
-                className="px-2 py-1 bg-secondary text-secondary-foreground rounded-lg text-xs hover:opacity-80 transition-opacity"
+                className="px-2 py-0.5 bg-secondary text-secondary-foreground rounded text-[10px] hover:opacity-80 transition-opacity"
               >
                 {tag}
               </button>
@@ -252,36 +252,36 @@ export default function CreatePostPage() {
         </div>
 
         {/* Location */}
-        <div className="mb-5">
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Location</label>
+        <div className="mb-4">
+          <label className="text-[10px] font-medium text-muted-foreground mb-1 block">Location</label>
           <div className="flex items-center gap-2">
-            <MapPin className="size-4 text-muted-foreground shrink-0" />
+            <MapPin className="size-3.5 text-muted-foreground shrink-0" />
             <Input
               placeholder="Where are you located?"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="h-10 rounded-lg bg-background border border-border text-xs flex-1"
+              className="h-8 rounded-lg bg-background border border-border text-[10px] flex-1"
             />
           </div>
         </div>
 
         {/* Linked Products Section */}
-        <div className="mb-5">
-          <div className="flex items-center justify-between mb-3">
-            <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-              <ShoppingBag className="size-4" />
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
+              <ShoppingBag className="size-3.5" />
               Link Your Cards (up to 6)
             </label>
-            <span className="text-xs text-muted-foreground">{linkedProducts.length}/6</span>
+            <span className="text-[10px] text-muted-foreground">{linkedProducts.length}/6</span>
           </div>
 
           {/* Selected Products */}
           {linkedProducts.length > 0 && (
-            <div className="bg-card rounded-xl border border-border p-3 mb-3">
-              <div className="grid grid-cols-3 gap-2">
+            <div className="bg-card rounded-lg border border-border p-2.5 mb-2">
+              <div className="grid grid-cols-4 gap-1.5">
                 {linkedProducts.map((product) => (
                   <div key={product.id} className="relative group">
-                    <div className="aspect-square rounded-lg overflow-hidden bg-muted relative">
+                    <div className="aspect-square rounded overflow-hidden bg-muted relative">
                       <Image
                         src={product.image}
                         alt={product.name}
@@ -291,18 +291,15 @@ export default function CreatePostPage() {
                     </div>
                     <button
                       onClick={() => removeLinkedProduct(product.id)}
-                      className="absolute -top-1.5 -right-1.5 size-5 bg-destructive rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute -top-1 -right-1 size-4 bg-destructive rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <X className="size-3 text-background" />
+                      <X className="size-2.5 text-background" />
                     </button>
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
-                      <Check className="size-5 text-white" />
-                    </div>
                   </div>
                 ))}
               </div>
-              <div className="mt-2.5 pt-2.5 border-t border-border/50">
-                <div className="text-xs text-muted-foreground space-y-1">
+              <div className="mt-2 pt-2 border-t border-border/50">
+                <div className="text-[10px] text-muted-foreground space-y-0.5">
                   {linkedProducts.map((product) => (
                     <div key={product.id} className="flex justify-between">
                       <span className="truncate flex-1">{product.name}</span>
@@ -319,10 +316,10 @@ export default function CreatePostPage() {
             <SheetTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full h-12 rounded-xl border-dashed"
+                className="w-full h-10 rounded-lg border-dashed text-xs"
                 disabled={linkedProducts.length >= 6}
               >
-                <Plus className="size-4 mr-2" />
+                <Plus className="size-3.5 mr-1.5" />
                 Add Products
               </Button>
             </SheetTrigger>
@@ -392,17 +389,17 @@ export default function CreatePostPage() {
       </main>
 
       {/* Footer Buttons */}
-      <footer className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-4 py-3">
+      <footer className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-4 py-2.5">
         <div className="flex gap-2">
           <Button 
             variant="outline" 
-            className="flex-1 h-12 rounded-xl"
+            className="flex-1 h-10 rounded-lg text-xs"
             onClick={() => router.back()}
           >
             Cancel
           </Button>
           <Button 
-            className="flex-1 h-12 rounded-xl"
+            className="flex-1 h-10 rounded-lg text-xs"
             onClick={handlePublish}
             disabled={!title || images.length === 0}
           >

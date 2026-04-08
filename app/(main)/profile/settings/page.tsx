@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, ChevronRight, Lock, Phone, Shield, LogOut, Pencil } from "lucide-react"
+import { ArrowLeft, ChevronRight, Lock, Phone, Shield, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
@@ -28,10 +28,10 @@ export default function AccountSettingsPage() {
         </div>
       </header>
 
-      <main className="px-4 py-4 space-y-3">
+      <main className="px-4 py-4 space-y-4">
         {/* Notification Settings */}
-        <div className="bg-card rounded-xl border border-border p-3">
-          <h3 className="text-sm font-medium mb-3">Notifications</h3>
+        <div className="bg-card rounded-xl border border-border p-4">
+          <h3 className="text-xs font-medium mb-3 text-muted-foreground">Notifications</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs">Order Updates</span>
@@ -70,8 +70,8 @@ export default function AccountSettingsPage() {
 
         {/* Change Password */}
         <Link href="/profile/settings/password">
-          <div className="bg-card rounded-xl border border-border p-3 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
+          <div className="bg-card rounded-xl border border-border p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
               <Lock className="size-4 text-muted-foreground" />
               <span className="text-xs font-medium">Change Password</span>
             </div>
@@ -80,13 +80,13 @@ export default function AccountSettingsPage() {
         </Link>
 
         {/* Phone Number */}
-        <div className="bg-card rounded-xl border border-border p-3">
+        <div className="bg-card rounded-xl border border-border p-4">
           <div className="flex items-start justify-between">
-            <div className="flex items-start gap-2.5">
+            <div className="flex items-start gap-3">
               <Phone className="size-4 text-muted-foreground mt-0.5" />
               <div>
                 <span className="text-xs font-medium">Phone Number</span>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Required for auction features.</p>
+                <p className="text-[10px] text-muted-foreground mt-1">Required for auction features.</p>
                 <p className="text-[10px] text-primary mt-0.5">Each account can only bind one phone number.</p>
               </div>
             </div>
@@ -98,13 +98,13 @@ export default function AccountSettingsPage() {
 
         {/* Account Verification */}
         <Link href="/profile/settings/verify">
-          <div className="bg-card rounded-xl border border-border p-3">
+          <div className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-start justify-between">
-              <div className="flex items-start gap-2.5">
+              <div className="flex items-start gap-3">
                 <Shield className="size-4 text-muted-foreground mt-0.5" />
                 <div>
                   <span className="text-xs font-medium">Account Verification</span>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                  <p className="text-[10px] text-muted-foreground mt-1">
                     Your account is not verified. Complete verification to unlock all features.
                   </p>
                 </div>
@@ -116,28 +116,17 @@ export default function AccountSettingsPage() {
 
         {/* Delete Account */}
         <Link href="/profile/settings/delete-account">
-          <div className="bg-card rounded-xl border border-border p-3 flex items-center justify-between">
+          <div className="bg-card rounded-xl border border-border p-4 flex items-center justify-between">
             <span className="text-xs font-medium text-red-500">Delete Account</span>
             <ChevronRight className="size-4 text-red-500" />
           </div>
         </Link>
 
         {/* Version */}
-        <div className="bg-card rounded-xl border border-border p-3 flex items-center justify-between">
+        <div className="bg-card rounded-xl border border-border p-4 flex items-center justify-between mt-2">
           <span className="text-xs text-muted-foreground">Version</span>
           <span className="text-xs font-medium">V1.4.6</span>
         </div>
-
-        {/* Logout Button */}
-        <Link href="/login">
-          <Button
-            variant="outline"
-            className="w-full h-10 rounded-xl text-sm font-medium mt-4"
-          >
-            <LogOut className="size-4 mr-2" />
-            Log Out
-          </Button>
-        </Link>
       </main>
     </div>
   )

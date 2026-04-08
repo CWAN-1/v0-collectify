@@ -49,7 +49,7 @@ export default function AddressPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
         <div className="flex items-center gap-3 px-4 h-14">
@@ -63,8 +63,18 @@ export default function AddressPage() {
       </header>
 
       <main className="p-4 overflow-hidden">
+        {/* Add New Address Button at Top */}
+        <Link href="/profile/address/new" className="block mb-3">
+          <div className="flex items-center gap-3 p-3 rounded-xl border-2 border-dashed border-border hover:border-primary/50 transition-colors">
+            <div className="size-10 rounded-full bg-muted flex items-center justify-center">
+              <Plus className="size-5 text-muted-foreground" />
+            </div>
+            <span className="text-sm font-medium">Add New Address</span>
+          </div>
+        </Link>
+
         {addresses.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16">
+          <div className="flex flex-col items-center justify-center py-12">
             <div className="size-14 bg-secondary rounded-full flex items-center justify-center mb-3">
               <MapPin className="size-6 text-muted-foreground" />
             </div>
@@ -127,16 +137,6 @@ export default function AddressPage() {
           </div>
         )}
       </main>
-
-      {/* Fixed Bottom Button */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
-        <Link href="/profile/address/new">
-          <Button className="w-full h-10 rounded-xl gap-2 text-sm">
-            <Plus className="size-4" />
-            Add New Address
-          </Button>
-        </Link>
-      </div>
     </div>
   )
 }
