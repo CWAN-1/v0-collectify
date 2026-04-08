@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { ArrowLeft, Heart, Check, Clock, Gavel, SlidersHorizontal, ArrowUpDown } from "lucide-react"
+import { ArrowLeft, Heart, Check, Clock, Gavel, SlidersHorizontal, ArrowUpDown, X, TrendingUp, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Slider } from "@/components/ui/slider"
@@ -18,11 +18,20 @@ const categories = [
   { id: "sports", label: "Sports" },
 ]
 
+const filterOptions = {
+  category: ["All", "Single Card", "Set/Bundle", "Booster Pack", "Box", "Case"],
+  saleStatus: ["All", "Fixed Price", "Auction"],
+  saleType: ["All", "Fixed Price", "Negotiable"],
+  graded: ["All", "Graded", "Ungraded"],
+  gradingCompany: ["All", "PSA", "BGS", "CGC", "ACE Grading", "Beckett", "SGC"],
+  condition: ["All", "10", "9.5", "9", "8-8.5", "7-7.5", "6-6.5", "A", "B", "C", "D"],
+}
+
 const sortOptions = [
-  { id: "ending", label: "Ending Soon" },
-  { id: "bids-high", label: "Most Bids" },
-  { id: "price-high", label: "Price: High to Low" },
-  { id: "price-low", label: "Price: Low to High" },
+  { id: "ending", label: "Ending Soon", icon: Clock },
+  { id: "latest", label: "Latest", icon: TrendingUp },
+  { id: "price-high", label: "Price: High to Low", icon: DollarSign },
+  { id: "price-low", label: "Price: Low to High", icon: DollarSign },
 ]
 
 const auctionProducts = [
@@ -208,6 +217,11 @@ function AuctionsContent() {
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [showSortSheet, setShowSortSheet] = useState(false)
   const [priceRange, setPriceRange] = useState([0, 20000])
+  const [selectedCardType, setSelectedCardType] = useState("All")
+  const [selectedSaleStatus, setSelectedSaleStatus] = useState("All")
+  const [selectedSaleType, setSelectedSaleType] = useState("All")
+  const [selectedGraded, setSelectedGraded] = useState("All")
+  const [selectedCondition, setSelectedCondition] = useState("All")
 
   const filteredProducts = auctionProducts.filter(product => 
     (selectedCategory === "all" || product.category === selectedCategory) &&
@@ -285,16 +299,22 @@ function AuctionsContent() {
 
       {/* Filter Sheet */}
       <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
-        <SheetContent side="bottom" className="h-[50vh] rounded-t-3xl">
-          <SheetHeader className="pb-4">
-            <SheetTitle className="text-base">Filter</SheetTitle>
-            <SheetDescription className="sr-only">Filter auctions by price</SheetDescription>
+        <SheetContent side="bottom" className="h-[70vh] rounded-t-3xl overflow-y-auto">
+          <SheetHeader className="pb-4 sticky top-0 bg-background z-10">
+            <div className="flex items-center justify-between">
+              <SheetTitle className="text-base">Filter</SheetTitle>
+              <Button variant="ghost" size="icon" onClick={() => setShowFilterSheet(false)}>
+                <X className="size-5" />
+              </Button>
+            </div>
+            <SheetDescription className="sr-only">Filter auctions</SheetDescription>
           </SheetHeader>
           
-          <div className="space-y-6">
-            <div>
+          <div className="space-y-4 pb-6">
+            {/* Bid Range */}
+            <div className="pb-4 border-b border-border">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium">Bid Range</span>
+                <span className="text-sm font-semibold">Bid Range</span>
                 <span className="text-sm text-primary">${priceRange[0]} - ${priceRange[1]}</span>
               </div>
               <Slider
@@ -306,13 +326,127 @@ function AuctionsContent() {
                 className="w-full"
               />
             </div>
+
+            {/* Card Type */}
+            <div className="pb-4 border-b border-border">
+              <p className="text-sm font-semibold mb-2">Card Type</p>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.category.map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setSelectedCardType(type)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                      selectedCardType === type
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-card border-border"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sale Status */}
+            <div className="pb-4 border-b border-border">
+              <p className="text-sm font-semibold mb-2">Sale Status</p>
+              <div className="space-y-1.5">
+                {filterOptions.saleStatus.map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => setSelectedSaleStatus(status)}
+                    className={`w-full px-3 py-2 rounded-lg text-xs text-left transition-colors ${
+                      selectedSaleStatus === status
+                        ? "bg-primary/10 text-primary"
+                        : "bg-card"
+                    }`}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sale Type */}
+            <div className="pb-4 border-b border-border">
+              <p className="text-sm font-semibold mb-2">Sale Type</p>
+              <div className="space-y-1.5">
+                {filterOptions.saleType.map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setSelectedSaleType(type)}
+                    className={`w-full px-3 py-2 rounded-lg text-xs text-left transition-colors ${
+                      selectedSaleType === type
+                        ? "bg-primary/10 text-primary"
+                        : "bg-card"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Graded */}
+            <div className="pb-4 border-b border-border">
+              <p className="text-sm font-semibold mb-2">Graded</p>
+              <div className="space-y-1.5">
+                {filterOptions.graded.map((grade) => (
+                  <button
+                    key={grade}
+                    onClick={() => setSelectedGraded(grade)}
+                    className={`w-full px-3 py-2 rounded-lg text-xs text-left transition-colors ${
+                      selectedGraded === grade
+                        ? "bg-primary/10 text-primary"
+                        : "bg-card"
+                    }`}
+                  >
+                    {grade}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Condition */}
+            <div className="pb-4">
+              <p className="text-sm font-semibold mb-2">Condition</p>
+              <div className="flex flex-wrap gap-1.5">
+                {filterOptions.condition.map((cond) => (
+                  <button
+                    key={cond}
+                    onClick={() => setSelectedCondition(cond)}
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                      selectedCondition === cond
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-card border-border"
+                    }`}
+                  >
+                    {cond}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="flex gap-3 mt-6">
-            <Button variant="outline" className="flex-1 h-10 rounded-xl" onClick={() => setPriceRange([0, 20000])}>
+          <div className="flex gap-3 sticky bottom-0 bg-background pt-4 border-t border-border">
+            <Button 
+              variant="outline" 
+              className="flex-1 h-10 rounded-lg"
+              onClick={() => {
+                setPriceRange([0, 20000])
+                setSelectedCardType("All")
+                setSelectedSaleStatus("All")
+                setSelectedSaleType("All")
+                setSelectedGraded("All")
+                setSelectedCondition("All")
+              }}
+            >
               Reset
             </Button>
-            <Button className="flex-1 h-10 rounded-xl" onClick={() => setShowFilterSheet(false)}>
+            <Button 
+              className="flex-1 h-10 rounded-lg"
+              onClick={() => setShowFilterSheet(false)}
+            >
               Apply
             </Button>
           </div>
