@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { ArrowLeft, MapPin, Plus, MoreHorizontal, Trash2, Edit, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -36,7 +35,6 @@ const initialAddresses = [
 ]
 
 export default function AddressPage() {
-  const router = useRouter()
   const [addresses, setAddresses] = useState(initialAddresses)
 
   const handleDelete = (addressId: string) => {
@@ -54,11 +52,13 @@ export default function AddressPage() {
     <div className="min-h-screen bg-background pb-20 overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border">
-        <div className="flex items-center gap-3 px-4 pt-12 pb-3">
-          <Button variant="ghost" size="icon" className="size-8" onClick={() => router.back()}>
-            <ArrowLeft className="size-4" />
-          </Button>
-          <h1 className="text-sm font-semibold">Address Management</h1>
+        <div className="flex items-center gap-3 px-4 h-14">
+          <Link href="/profile">
+            <Button variant="ghost" size="icon" className="size-9">
+              <ArrowLeft className="size-5" />
+            </Button>
+          </Link>
+          <h1 className="text-base font-semibold">Address Management</h1>
         </div>
       </header>
 
@@ -96,9 +96,11 @@ export default function AddressPage() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-36">
-                      <DropdownMenuItem onClick={() => router.push(`/profile/address/new?edit=${address.id}`)}>
-                        <Edit className="size-3.5 mr-2" />
-                        <span className="text-xs">Edit</span>
+                      <DropdownMenuItem asChild>
+                        <Link href={`/profile/address/new?edit=${address.id}`}>
+                          <Edit className="size-3.5 mr-2" />
+                          <span className="text-xs">Edit</span>
+                        </Link>
                       </DropdownMenuItem>
                       {!address.isDefault && (
                         <DropdownMenuItem onClick={() => handleSetDefault(address.id)}>

@@ -1,16 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Suspense } from "react"
+import Link from "next/link"
 
 function AddressFormContent() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const editId = searchParams.get("edit")
   const isEditing = !!editId
@@ -25,30 +25,29 @@ function AddressFormContent() {
     isDefault: false,
   })
 
-  const handleSubmit = () => {
-    router.back()
-  }
-
   const isFormValid = formData.name && formData.phone && formData.street && formData.city && formData.state && formData.postalCode
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center justify-between px-4 pt-12 pb-3">
+        <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="size-8" onClick={() => router.back()}>
-              <ArrowLeft className="size-4" />
-            </Button>
-            <h1 className="text-sm font-semibold">{isEditing ? "Edit Address" : "New Address"}</h1>
+            <Link href="/profile/address">
+              <Button variant="ghost" size="icon" className="size-9">
+                <ArrowLeft className="size-5" />
+              </Button>
+            </Link>
+            <h1 className="text-base font-semibold">{isEditing ? "Edit Address" : "New Address"}</h1>
           </div>
-          <Button 
-            onClick={handleSubmit}
-            disabled={!isFormValid}
-            className="h-8 px-4 text-xs rounded-full"
-          >
-            Save
-          </Button>
+          <Link href="/profile/address">
+            <Button 
+              disabled={!isFormValid}
+              className="h-8 px-4 text-xs rounded-full"
+            >
+              Save
+            </Button>
+          </Link>
         </div>
       </header>
 

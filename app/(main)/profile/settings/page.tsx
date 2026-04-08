@@ -1,14 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { ArrowLeft, ChevronRight, Lock, Phone, Shield, LogOut, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 
 export default function AccountSettingsPage() {
-  const router = useRouter()
   const [notifications, setNotifications] = useState({
     order: true,
     live: true,
@@ -16,24 +14,17 @@ export default function AccountSettingsPage() {
     message: true,
   })
 
-  const handleLogout = () => {
-    router.push("/login")
-  }
-
   return (
     <div className="min-h-screen bg-background pb-8">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
-        <div className="flex items-center justify-center relative px-4 pt-12 pb-3">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="size-8 absolute left-4" 
-            onClick={() => router.back()}
-          >
-            <ArrowLeft className="size-4" />
-          </Button>
-          <h1 className="text-sm font-semibold">Account Settings</h1>
+        <div className="flex items-center justify-center relative px-4 h-14">
+          <Link href="/profile" className="absolute left-4">
+            <Button variant="ghost" size="icon" className="size-9">
+              <ArrowLeft className="size-5" />
+            </Button>
+          </Link>
+          <h1 className="text-base font-semibold">Account Settings</h1>
         </div>
       </header>
 
@@ -138,14 +129,15 @@ export default function AccountSettingsPage() {
         </div>
 
         {/* Logout Button */}
-        <Button
-          variant="outline"
-          onClick={handleLogout}
-          className="w-full h-10 rounded-xl text-sm font-medium mt-4"
-        >
-          <LogOut className="size-4 mr-2" />
-          Log Out
-        </Button>
+        <Link href="/login">
+          <Button
+            variant="outline"
+            className="w-full h-10 rounded-xl text-sm font-medium mt-4"
+          >
+            <LogOut className="size-4 mr-2" />
+            Log Out
+          </Button>
+        </Link>
       </main>
     </div>
   )
