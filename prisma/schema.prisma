@@ -13,6 +13,7 @@ model User {
   password              String
   name                  String?
   avatar                String?
+  bio                   String?
   listings              Listing[] @relation("UserListings")
   bids                  Bid[]     @relation("UserBids")
   orders                Order[]   @relation("UserOrders")
@@ -20,6 +21,9 @@ model User {
   receivedMessages      Message[] @relation("UserReceivedMessages")
   favorites             Favorite[]
   posts                 Post[]
+  comments              Comment[]
+  following             Follow[]  @relation("UserFollowing")
+  followers             Follow[]  @relation("UserFollowers")
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 }
@@ -28,17 +32,20 @@ model Listing {
   id          String     @id @default(cuid())
   title       String
   description String?
-  price       Decimal    @db.Decimal(10, 2)
   images      String[]
-  category    String
-  condition   String
+  category    String?
+  condition   String?
+  startPrice  Decimal    @db.Decimal(10, 2)
+  currentPrice Decimal   @db.Decimal(10, 2)
+  status      String     @default("active")
+  isAuction   Boolean    @default(false)
+  endTime     DateTime?
   sellerId    String
   seller      User       @relation("UserListings", fields: [sellerId], references: [id])
   bids        Bid[]
   orders      Order[]
   favorites   Favorite[]
-  isAuction   Boolean    @default(false)
-  auctionEnds DateTime?
+  comments    Comment[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -97,6 +104,30 @@ model Post {
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
   likes     Int      @default(0)
+  comments  Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  listingId String?
+  listing   Listing? @relation(fields: [listingId], references: [id])
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  follower    User     @relation("UserFollowers", fields: [followerId], references: [id])
+  followingId String
+  following   User     @relation("UserFollowing", fields: [followingId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
 }

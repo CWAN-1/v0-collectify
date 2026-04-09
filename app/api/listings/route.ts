@@ -2,9 +2,49 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthenticatedUser } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get('search');
+    const category = searchParams.get('category');
+    const condition = searchParams.get('condition');
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortOrder = searchParams.get('sortOrder') || 'desc';
+    const minPrice = searchParams.get('minPrice');
+    const maxPrice = searchParams.get('maxPrice');
+
+    const where: any = {};
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (category) {
+      where.category = category;
+    }
+
+    if (condition) {
+      where.condition = condition;
+    }
+
+    if (minPrice || maxPrice) {
+      where.currentPrice = {};
+      if (minPrice) where.currentPrice.gte = parseFloat(minPrice);
+      if (maxPrice) where.currentPrice.lte = parseFloat(maxPrice);
+    }
+
+    const orderBy: any = {};
+    if (sortBy === 'price') {
+      orderBy.currentPrice = sortOrder;
+    } else {
+      orderBy.createdAt = sortOrder;
+    }
+
     const listings = await prisma.listing.findMany({
+      where,
       include: {
         seller: {
           select: {
@@ -13,10 +53,18 @@ export async function GET() {
             avatar: true,
           },
         },
+        bids: {
+          orderBy: { amount: 'desc' },
+          take: 1,
+          include: {
+            bidder: { select: { id: true, name: true } },
+          },
+        },
+        _count: {
+          select: { bids: true, favorites: true },
+        },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy,
     });
 
     return NextResponse.json(listings);
