@@ -8,37 +8,39 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  avatar    String?
-  listings  Listing[]
-  bids      Bid[]
-  orders    Order[]
-  messages  Message[]
-  favorites Favorite[]
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  password              String
+  name                  String?
+  avatar                String?
+  listings              Listing[] @relation("UserListings")
+  bids                  Bid[]     @relation("UserBids")
+  orders                Order[]   @relation("UserOrders")
+  sentMessages          Message[] @relation("UserSentMessages")
+  receivedMessages      Message[] @relation("UserReceivedMessages")
+  favorites             Favorite[]
+  posts                 Post[]
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 }
 
 model Listing {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String?
-  price       Decimal  @db.Decimal(10, 2)
+  price       Decimal    @db.Decimal(10, 2)
   images      String[]
   category    String
   condition   String
   sellerId    String
-  seller      User     @relation("UserListings", fields: [sellerId], references: [id])
+  seller      User       @relation("UserListings", fields: [sellerId], references: [id])
   bids        Bid[]
   orders      Order[]
-  isAuction   Boolean  @default(false)
+  favorites   Favorite[]
+  isAuction   Boolean    @default(false)
   auctionEnds DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Bid {
@@ -52,17 +54,17 @@ model Bid {
 }
 
 model Order {
-  id          String   @id @default(cuid())
-  listingId   String
-  listing     Listing  @relation(fields: [listingId], references: [id])
-  buyerId     String
-  buyer       User     @relation("UserOrders", fields: [buyerId], references: [id])
-  totalAmount Decimal  @db.Decimal(10, 2)
-  status      String   @default("pending")
-  paymentId   String?
+  id              String   @id @default(cuid())
+  listingId       String
+  listing         Listing  @relation(fields: [listingId], references: [id])
+  buyerId         String
+  buyer           User     @relation("UserOrders", fields: [buyerId], references: [id])
+  totalAmount     Decimal  @db.Decimal(10, 2)
+  status          String   @default("pending")
+  paymentId       String?
   shippingAddress String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Message {
