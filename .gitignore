@@ -14,3 +14,23 @@ next.user-config.*
 node_modules
 .next/
 .DS_Store
+
+# Log files
+logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# gstack (external dependency)
+/gstack/
+
+# Capacitor (native builds)
+/android/
+/ios/
+
+# Prisma
+prisma/migrations/

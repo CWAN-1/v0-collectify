@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  avatar    String?
+  listings  Listing[]
+  bids      Bid[]
+  orders    Order[]
+  messages  Message[]
+  favorites Favorite[]
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Listing {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  images      String[]
+  category    String
+  condition   String
+  sellerId    String
+  seller      User     @relation("UserListings", fields: [sellerId], references: [id])
+  bids        Bid[]
+  orders      Order[]
+  isAuction   Boolean  @default(false)
+  auctionEnds DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Bid {
+  id        String   @id @default(cuid())
+  amount    Decimal  @db.Decimal(10, 2)
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  bidderId  String
+  bidder    User     @relation("UserBids", fields: [bidderId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  listingId   String
+  listing     Listing  @relation(fields: [listingId], references: [id])
+  buyerId     String
+  buyer       User     @relation("UserOrders", fields: [buyerId], references: [id])
+  totalAmount Decimal  @db.Decimal(10, 2)
+  status      String   @default("pending")
+  paymentId   String?
+  shippingAddress String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  senderId  String
+  sender    User     @relation("UserSentMessages", fields: [senderId], references: [id])
+  receiverId String
+  receiver  User     @relation("UserReceivedMessages", fields: [receiverId], references: [id])
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  images    String[]
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  likes     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
