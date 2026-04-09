@@ -43,6 +43,19 @@ export async function POST(request: Request) {
       },
     });
 
+    await prisma.listing.update({
+      where: { id: listingId },
+      data: {
+        currentPrice: amount,
+        priceHistory: {
+          create: {
+            price: amount,
+            eventType: 'bid_placed',
+          },
+        },
+      },
+    });
+
     return NextResponse.json(bid);
   } catch (error) {
     console.error('Error creating bid:', error);

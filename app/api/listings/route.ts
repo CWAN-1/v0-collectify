@@ -108,6 +108,12 @@ export async function POST(request: Request) {
         condition,
         isAuction,
         endTime: endTime ? new Date(endTime) : null,
+        priceHistory: {
+          create: {
+            price: startPrice,
+            eventType: 'listing_created',
+          },
+        },
       },
       include: {
         seller: {

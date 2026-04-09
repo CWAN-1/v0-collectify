@@ -67,7 +67,15 @@ export async function POST(request: Request) {
 
     await prisma.listing.update({
       where: { id: listingId },
-      data: { status: 'sold' },
+      data: { 
+        status: 'sold',
+        priceHistory: {
+          create: {
+            price: totalAmount,
+            eventType: 'listing_sold',
+          },
+        },
+      },
     });
 
     return NextResponse.json(order);
