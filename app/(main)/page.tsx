@@ -244,7 +244,7 @@ export default function HomePage() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <div className="h-9 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
-                  Search cards...
+                  Search
                 </div>
               </div>
             </Link>
