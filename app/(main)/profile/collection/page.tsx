@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { ArrowLeft, ChevronDown, SlidersHorizontal, TrendingUp, TrendingDown } from "lucide-react"
+import { useState, useRef } from "react"
+import { ArrowLeft, ChevronDown, SlidersHorizontal, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Gift, Image as ImageIcon, Ticket, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import Link from "next/link"
@@ -9,10 +9,87 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 const brands = [
-  { id: "pokemon", label: "Pokemon", logo: "https://images.unsplash.com/photo-1628420284898-3b6f78bab7de?w=48&h=48&fit=crop" },
-  { id: "yugioh", label: "Yu-Gi-Oh!", logo: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=48&h=48&fit=crop" },
-  { id: "onepiece", label: "One Piece", logo: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=48&h=48&fit=crop" },
-  { id: "mtg", label: "MTG", logo: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=48&h=48&fit=crop" },
+  { id: "pokemon", label: "Pokemon" },
+  { id: "yugioh", label: "Yu-Gi-Oh!" },
+  { id: "onepiece", label: "One Piece" },
+  { id: "mtg", label: "MTG" },
+  { id: "sports", label: "Sports" },
+]
+
+// Collection levels with crown styles
+const collectionLevels = [
+  { 
+    id: "novice", 
+    name: "Novice Collector", 
+    minCards: 0,
+    crownColor: "from-gray-400 to-gray-500",
+    crownGlow: "shadow-gray-400/30",
+    benefits: [
+      { icon: ImageIcon, label: "Basic Avatar Frame" },
+    ]
+  },
+  { 
+    id: "junior", 
+    name: "Junior Collector", 
+    minCards: 10,
+    crownColor: "from-green-400 to-emerald-500",
+    crownGlow: "shadow-green-400/40",
+    benefits: [
+      { icon: ImageIcon, label: "Green Avatar Frame" },
+      { icon: Ticket, label: "$5 Coupon" },
+    ]
+  },
+  { 
+    id: "collector", 
+    name: "Collector", 
+    minCards: 50,
+    crownColor: "from-blue-400 to-cyan-500",
+    crownGlow: "shadow-blue-400/40",
+    benefits: [
+      { icon: ImageIcon, label: "Blue Avatar Frame" },
+      { icon: Gift, label: "Profile Background" },
+      { icon: Ticket, label: "$10 Coupon" },
+    ]
+  },
+  { 
+    id: "master", 
+    name: "Master Collector", 
+    minCards: 200,
+    crownColor: "from-purple-400 to-violet-500",
+    crownGlow: "shadow-purple-400/50",
+    benefits: [
+      { icon: ImageIcon, label: "Purple Avatar Frame" },
+      { icon: Gift, label: "Exclusive Background" },
+      { icon: Ticket, label: "$25 Coupon" },
+      { icon: Crown, label: "Profile Badge" },
+    ]
+  },
+  { 
+    id: "top", 
+    name: "Top Collector", 
+    minCards: 500,
+    crownColor: "from-amber-400 to-orange-500",
+    crownGlow: "shadow-amber-400/50",
+    benefits: [
+      { icon: ImageIcon, label: "Gold Avatar Frame" },
+      { icon: Gift, label: "Premium Background" },
+      { icon: Ticket, label: "$50 Coupon" },
+      { icon: Crown, label: "Gold Badge" },
+    ]
+  },
+  { 
+    id: "ultimate", 
+    name: "Ultimate Collector", 
+    minCards: 1000,
+    crownColor: "from-rose-400 via-pink-500 to-purple-500",
+    crownGlow: "shadow-pink-500/60",
+    benefits: [
+      { icon: ImageIcon, label: "Diamond Frame" },
+      { icon: Gift, label: "Animated Background" },
+      { icon: Ticket, label: "$100 Coupon" },
+      { icon: Crown, label: "Diamond Badge" },
+    ]
+  },
 ]
 
 const myCards = [
@@ -24,7 +101,7 @@ const myCards = [
     rarity: "SAR",
     grade: "PSA 10",
     gradingCompany: "PSA",
-    image: "https://images.unsplash.com/photo-1542779632-6b1a83a04e22?w=300&h=400&fit=crop",
+    image: "/cards/pokemon-1.jpg",
     currentPrice: 2318.50,
     purchasePrice: 1800,
     priceChange: 8.5,
@@ -32,13 +109,13 @@ const myCards = [
   },
   {
     id: "card-2",
-    name: "Charizard VSTAR Rainbow",
+    name: "Charizard VSTAR",
     set: "Brilliant Stars",
     number: "174/172",
-    rarity: "Rainbow Rare",
+    rarity: "Rainbow",
     grade: null,
     gradingCompany: null,
-    image: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?w=300&h=400&fit=crop",
+    image: "/cards/pokemon-2.jpg",
     currentPrice: 580,
     purchasePrice: 620,
     priceChange: -6.5,
@@ -52,7 +129,7 @@ const myCards = [
     rarity: "Alt Art",
     grade: "BGS 9.5",
     gradingCompany: "BGS",
-    image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=300&h=400&fit=crop",
+    image: "/cards/pokemon-3.jpg",
     currentPrice: 1240,
     purchasePrice: 950,
     priceChange: 30.5,
@@ -66,7 +143,7 @@ const myCards = [
     rarity: "SAR",
     grade: null,
     gradingCompany: null,
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=300&h=400&fit=crop",
+    image: "/cards/pokemon-4.jpg",
     currentPrice: 890,
     purchasePrice: 780,
     priceChange: 14.1,
@@ -74,22 +151,36 @@ const myCards = [
   },
   {
     id: "card-5",
-    name: "Umbreon VMAX Alt Art",
+    name: "Umbreon VMAX",
     set: "Evolving Skies",
     number: "215/203",
     rarity: "Alt Art",
     grade: "PSA 9",
     gradingCompany: "PSA",
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=400&fit=crop",
+    image: "/cards/pokemon-5.jpg",
     currentPrice: 3200,
     purchasePrice: 2100,
     priceChange: 52.4,
     language: "EN",
   },
+  {
+    id: "card-6",
+    name: "Rayquaza VMAX",
+    set: "Evolving Skies",
+    number: "218/203",
+    rarity: "Alt Art",
+    grade: "CGC 9.5",
+    gradingCompany: "CGC",
+    image: "/cards/pokemon-6.jpg",
+    currentPrice: 1850,
+    purchasePrice: 1200,
+    priceChange: 54.2,
+    language: "EN",
+  },
 ]
 
 const sortOptions = [
-  { id: "acquired", label: "Acquired Time" },
+  { id: "acquired", label: "Acquire Time" },
   { id: "price-high", label: "Price: High to Low" },
   { id: "price-low", label: "Price: Low to High" },
   { id: "gain", label: "Gain %" },
@@ -101,11 +192,21 @@ export default function CollectionPage() {
   const [selectedSort, setSelectedSort] = useState("acquired")
   const [showSortSheet, setShowSortSheet] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [currentLevelIndex, setCurrentLevelIndex] = useState(2) // Collector level for demo
+  const levelScrollRef = useRef<HTMLDivElement>(null)
 
   const totalCards = myCards.length
   const totalValue = myCards.reduce((sum, c) => sum + c.currentPrice, 0)
+  const currentLevel = collectionLevels[currentLevelIndex]
 
-  const formatPrice = (p: number) => `$${p.toFixed(2)}`
+  const formatPrice = (p: number) => `$${p.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
+
+  const scrollLevel = (direction: "left" | "right") => {
+    const newIndex = direction === "left" 
+      ? Math.max(0, currentLevelIndex - 1)
+      : Math.min(collectionLevels.length - 1, currentLevelIndex + 1)
+    setCurrentLevelIndex(newIndex)
+  }
 
   return (
     <div className="min-h-screen bg-background pb-8">
@@ -138,6 +239,92 @@ export default function CollectionPage() {
           </div>
         </div>
       </header>
+
+      {/* Collection Level Section */}
+      <div className="px-4 py-4 bg-gradient-to-b from-secondary/50 to-background">
+        {/* Crown Carousel */}
+        <div className="relative flex items-center justify-center mb-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 absolute left-0 z-10"
+            onClick={() => scrollLevel("left")}
+            disabled={currentLevelIndex === 0}
+          >
+            <ChevronLeft className="size-5" />
+          </Button>
+          
+          <div 
+            ref={levelScrollRef}
+            className="flex items-center justify-center overflow-hidden"
+          >
+            <div className="flex flex-col items-center">
+              {/* Animated Crown */}
+              <div className={`relative w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-br ${currentLevel.crownColor} shadow-lg ${currentLevel.crownGlow} animate-pulse`}>
+                <svg className="size-14 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/>
+                  <path d="M5 19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1H5v1z"/>
+                </svg>
+                {/* Sparkles */}
+                <div className="absolute top-1 right-2 w-2 h-2 bg-white rounded-full animate-ping opacity-75" />
+                <div className="absolute bottom-3 left-2 w-1.5 h-1.5 bg-white rounded-full animate-ping opacity-60 animation-delay-200" />
+              </div>
+              
+              {/* Level Name */}
+              <p className="mt-2 text-sm font-bold text-foreground">{currentLevel.name}</p>
+              <p className="text-[10px] text-muted-foreground">
+                {currentLevelIndex < collectionLevels.length - 1 
+                  ? `${collectionLevels[currentLevelIndex + 1].minCards - totalCards} more cards to next level`
+                  : "Maximum level reached!"
+                }
+              </p>
+            </div>
+          </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 absolute right-0 z-10"
+            onClick={() => scrollLevel("right")}
+            disabled={currentLevelIndex === collectionLevels.length - 1}
+          >
+            <ChevronRight className="size-5" />
+          </Button>
+        </div>
+
+        {/* Level Progress Dots */}
+        <div className="flex items-center justify-center gap-1.5 mb-3">
+          {collectionLevels.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentLevelIndex(idx)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                idx === currentLevelIndex 
+                  ? "bg-primary w-4" 
+                  : idx <= currentLevelIndex 
+                    ? "bg-primary/50"
+                    : "bg-muted-foreground/30"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Benefits */}
+        <div className="bg-card rounded-xl border border-border p-3">
+          <p className="text-[10px] text-muted-foreground mb-2">Current Level Benefits</p>
+          <div className="flex flex-wrap gap-2">
+            {currentLevel.benefits.map((benefit, idx) => {
+              const Icon = benefit.icon
+              return (
+                <div key={idx} className="flex items-center gap-1.5 bg-secondary rounded-full px-2.5 py-1">
+                  <Icon className="size-3 text-primary" />
+                  <span className="text-[10px] font-medium">{benefit.label}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
 
       {/* Brand filter */}
       <div className="px-4 py-3 border-b border-border flex items-center gap-2 overflow-x-auto scrollbar-none">
@@ -172,22 +359,19 @@ export default function CollectionPage() {
         </div>
       </div>
 
-      {/* Sort & Filter bar */}
-      <div className="px-4 pt-3 pb-2 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-foreground">My Cards</h2>
-        <div className="flex items-center gap-2">
-          <button
-            className="flex items-center gap-1 text-xs text-muted-foreground"
-            onClick={() => setShowSortSheet(true)}
-          >
-            <span>{sortOptions.find(s => s.id === selectedSort)?.label}</span>
-            <ChevronDown className="size-3.5" />
-          </button>
-          <button className="flex items-center gap-1 text-xs text-muted-foreground ml-2">
-            <SlidersHorizontal className="size-3.5" />
-            <span>Filter</span>
-          </button>
-        </div>
+      {/* Sort & Filter bar - moved to left */}
+      <div className="px-4 pt-3 pb-2 flex items-center gap-3">
+        <button
+          className="flex items-center gap-1 text-xs text-muted-foreground"
+          onClick={() => setShowSortSheet(true)}
+        >
+          <span>{sortOptions.find(s => s.id === selectedSort)?.label}</span>
+          <ChevronDown className="size-3.5" />
+        </button>
+        <button className="flex items-center gap-1 text-xs text-muted-foreground">
+          <SlidersHorizontal className="size-3.5" />
+          <span>Filter</span>
+        </button>
       </div>
 
       {/* Card Grid */}
@@ -196,7 +380,7 @@ export default function CollectionPage() {
           <Link key={card.id} href={`/card/${card.id}`}>
             {viewMode === "grid" ? (
               <div className="rounded-xl overflow-hidden border border-border bg-card">
-                <div className="relative aspect-[3/4]">
+                <div className="relative aspect-[3/4] bg-secondary">
                   <Image src={card.image} alt={card.name} fill className="object-cover" />
                   {/* Rarity badge */}
                   <div className="absolute top-1.5 right-1.5 bg-black/70 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full">
@@ -223,7 +407,7 @@ export default function CollectionPage() {
               </div>
             ) : (
               <div className="flex items-center gap-3 bg-card rounded-xl border border-border p-2.5">
-                <div className="relative w-14 h-20 rounded-lg overflow-hidden shrink-0">
+                <div className="relative w-14 h-20 rounded-lg overflow-hidden shrink-0 bg-secondary">
                   <Image src={card.image} alt={card.name} fill className="object-cover" />
                 </div>
                 <div className="flex-1 min-w-0">
