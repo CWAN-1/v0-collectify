@@ -146,16 +146,23 @@ export default function CollectionPage() {
   const formatPrice = (p: number) => `$${p.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
+    if (e.touches.length === 1) {
+      touchStartX.current = e.touches[0].clientX
+    }
   }
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX
-    if (Math.abs(diff) > 40) {
-      if (diff > 0 && currentLevelIndex < collectionLevels.length - 1) {
-        setCurrentLevelIndex(i => i + 1)
-      } else if (diff < 0 && currentLevelIndex > 0) {
-        setCurrentLevelIndex(i => i - 1)
+    if (e.changedTouches.length === 1) {
+      const diff = touchStartX.current - e.changedTouches[0].clientX
+      console.log("[v0] Touch diff:", diff, "Current index:", currentLevelIndex)
+      if (Math.abs(diff) > 40) {
+        if (diff > 0 && currentLevelIndex < collectionLevels.length - 1) {
+          console.log("[v0] Swiping right, moving to next level")
+          setCurrentLevelIndex(i => i + 1)
+        } else if (diff < 0 && currentLevelIndex > 0) {
+          console.log("[v0] Swiping left, moving to prev level")
+          setCurrentLevelIndex(i => i - 1)
+        }
       }
     }
   }
@@ -189,7 +196,7 @@ export default function CollectionPage() {
       <div className="px-4 py-4 bg-gradient-to-b from-secondary/50 to-background">
         {/* Crown Swipe Area */}
         <div
-          className="flex flex-col items-center mb-3 select-none"
+          className="flex flex-col items-center mb-3 select-none cursor-grab active:cursor-grabbing"
           ref={levelScrollRef}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
