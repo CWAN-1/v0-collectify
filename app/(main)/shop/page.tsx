@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, SlidersHorizontal, ArrowUpDown, Heart, Star, X, Check, Clock, TrendingUp, DollarSign } from "lucide-react"
+import { Search, SlidersHorizontal, ArrowUpDown, Heart, Star, X, Check, Clock, TrendingUp, DollarSign, ChevronDown, Ticket } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
@@ -9,33 +9,32 @@ import { Slider } from "@/components/ui/slider"
 import Link from "next/link"
 import Image from "next/image"
 
-
-const categories = [
-  { id: "all", label: "All", avatar: null, bgColor: "bg-gradient-to-br from-primary to-accent" },
-  { id: "pokemon", label: "Pokemon", avatar: "/brands/pikachu.jpg", bgColor: "bg-yellow-500" },
-  { id: "yugioh", label: "Yu-Gi-Oh!", avatar: "/brands/yugioh.jpg", bgColor: "bg-orange-600" },
-  { id: "onepiece", label: "One Piece", avatar: "/brands/luffy.jpg", bgColor: "bg-red-600" },
-  { id: "mtg", label: "MTG", avatar: "/brands/mtg.jpg", bgColor: "bg-amber-700" },
-  { id: "sports", label: "Sports", avatar: "/brands/sports.jpg", bgColor: "bg-green-600" },
+const ipCategories = [
+  { id: "pokemon", label: "Pokemon", avatar: "/brands/pikachu.jpg" },
+  { id: "yugioh", label: "Yu-Gi-Oh!", avatar: "/brands/yugioh.jpg" },
+  { id: "onepiece", label: "One Piece", avatar: "/brands/luffy.jpg" },
+  { id: "mtg", label: "MTG", avatar: "/brands/mtg.jpg" },
+  { id: "sports", label: "Sports", avatar: "/brands/sports.jpg" },
+  { id: "digimon", label: "Digimon", avatar: null },
+  { id: "dragonball", label: "Dragon Ball", avatar: null },
+  { id: "naruto", label: "Naruto", avatar: null },
 ]
 
 const filterOptions = {
   category: ["All", "Single Card", "Set/Bundle", "Booster Pack", "Box", "Case"],
   saleStatus: ["All", "Fixed Price", "Auction"],
-  saleType: ["All", "Fixed Price", "Negotiable"],
   graded: ["All", "Graded", "Ungraded"],
   gradingCompany: ["All", "PSA", "BGS", "CGC", "ACE Grading", "Beckett", "SGC"],
-  condition: ["All", "10", "9.5", "9", "8-8.5", "7-7.5", "6-6.5", "A", "B", "C", "D"],
 }
 
 const sortOptions = [
-  { id: "ending", label: "Ending Soon", icon: Clock },
   { id: "latest", label: "Latest", icon: TrendingUp },
+  { id: "ending", label: "Ending Soon", icon: Clock },
   { id: "price-high", label: "Price: High to Low", icon: DollarSign },
   { id: "price-low", label: "Price: Low to High", icon: DollarSign },
 ]
 
-const products = [
+const buyNowProducts = [
   {
     id: "1",
     name: "Pikachu VMAX Rainbow Rare",
@@ -49,7 +48,6 @@ const products = [
     isHot: true,
     isVerified: true,
     category: "pokemon",
-    saleType: "buy"
   },
   {
     id: "2",
@@ -63,7 +61,6 @@ const products = [
     isHot: true,
     isVerified: true,
     category: "sports",
-    saleType: "buy"
   },
   {
     id: "3",
@@ -78,7 +75,6 @@ const products = [
     isHot: false,
     isVerified: true,
     category: "yugioh",
-    saleType: "buy"
   },
   {
     id: "4",
@@ -92,7 +88,6 @@ const products = [
     isHot: true,
     isVerified: false,
     category: "onepiece",
-    saleType: "buy"
   },
   {
     id: "5",
@@ -106,7 +101,6 @@ const products = [
     isHot: true,
     isVerified: true,
     category: "pokemon",
-    saleType: "buy"
   },
   {
     id: "6",
@@ -120,7 +114,6 @@ const products = [
     isHot: false,
     isVerified: true,
     category: "mtg",
-    saleType: "buy"
   },
 ]
 
@@ -136,7 +129,6 @@ const auctionProducts = [
     isHot: true,
     isVerified: false,
     category: "pokemon",
-    saleType: "auction",
     endTime: new Date(Date.now() + 2 * 60 * 60 * 1000),
   },
   {
@@ -150,7 +142,6 @@ const auctionProducts = [
     isHot: true,
     isVerified: true,
     category: "yugioh",
-    saleType: "auction",
     endTime: new Date(Date.now() + 45 * 60 * 1000),
   },
   {
@@ -164,7 +155,6 @@ const auctionProducts = [
     isHot: false,
     isVerified: true,
     category: "onepiece",
-    saleType: "auction",
     endTime: new Date(Date.now() + 5 * 60 * 60 * 1000),
   },
   {
@@ -178,10 +168,62 @@ const auctionProducts = [
     isHot: true,
     isVerified: true,
     category: "mtg",
-    saleType: "auction",
     endTime: new Date(Date.now() + 30 * 60 * 1000),
   },
 ]
+
+const ichibanProducts = [
+  {
+    id: "ichiban-1",
+    name: "Pokémon S&V Ichiban Kuji",
+    pricePerDraw: 15,
+    image: "/cards/pokemon-1.jpg",
+    seller: "PokeImport JP",
+    rating: 4.9,
+    totalTickets: 100,
+    remainingTickets: 67,
+    isVerified: true,
+    category: "pokemon",
+  },
+  {
+    id: "ichiban-2",
+    name: "One Piece Vol.4 Ichiban Kuji",
+    pricePerDraw: 12,
+    image: "/cards/onepiece-1.jpg",
+    seller: "AnimeGoods JP",
+    rating: 4.8,
+    totalTickets: 80,
+    remainingTickets: 24,
+    isVerified: true,
+    category: "onepiece",
+  },
+  {
+    id: "ichiban-3",
+    name: "Yu-Gi-Oh! 25th Anniversary Kuji",
+    pricePerDraw: 18,
+    image: "/cards/yugioh-1.jpg",
+    seller: "YugiImport",
+    rating: 4.7,
+    totalTickets: 60,
+    remainingTickets: 55,
+    isVerified: false,
+    category: "yugioh",
+  },
+  {
+    id: "ichiban-4",
+    name: "Pokémon Eevee Friends Kuji",
+    pricePerDraw: 10,
+    image: "/cards/pokemon-2.jpg",
+    seller: "PokeImport JP",
+    rating: 5.0,
+    totalTickets: 120,
+    remainingTickets: 3,
+    isVerified: true,
+    category: "pokemon",
+  },
+]
+
+type ShopTab = "buynow" | "auction" | "ichiban"
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("en-US", {
@@ -195,81 +237,47 @@ function formatTimeLeft(endTime: Date) {
   const now = new Date().getTime()
   const end = endTime.getTime()
   const diff = Math.max(0, end - now)
-  
   const hours = Math.floor(diff / (1000 * 60 * 60))
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-  
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`
-  }
+  if (hours > 0) return `${hours}h ${minutes}m`
   return `${minutes}m`
 }
 
 function AuctionCountdown({ endTime }: { endTime: Date }) {
   const [timeLeft, setTimeLeft] = useState(formatTimeLeft(endTime))
-
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(formatTimeLeft(endTime))
-    }, 1000)
+    const timer = setInterval(() => setTimeLeft(formatTimeLeft(endTime)), 1000)
     return () => clearInterval(timer)
   }, [endTime])
-
   return <span>{timeLeft}</span>
 }
 
-function ProductCard({ product }: { product: typeof products[0] }) {
+function BuyNowCard({ product }: { product: typeof buyNowProducts[0] }) {
   const [liked, setLiked] = useState(false)
-
   return (
     <Link href={`/shop/${product.id}`} className="block">
       <div className="bg-card rounded-2xl overflow-hidden border border-border">
-        {/* Image */}
         <div className="relative aspect-square bg-gradient-to-b from-primary/10 to-transparent">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-          />
-          {/* Hot Badge */}
+          <Image src={product.image} alt={product.name} fill className="object-cover" />
           {product.isHot && (
-            <Badge className="absolute top-2 left-2 bg-gradient-to-r from-primary to-accent text-white text-xs border-0">
-              Hot
-            </Badge>
+            <Badge className="absolute top-2 left-2 bg-gradient-to-r from-primary to-accent text-white text-xs border-0">Hot</Badge>
           )}
-          {/* Wishlist */}
           <button
-            onClick={(e) => {
-              e.preventDefault()
-              setLiked(!liked)
-            }}
+            onClick={(e) => { e.preventDefault(); setLiked(!liked) }}
             className="absolute top-2 right-2 size-8 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-border"
           >
             <Heart className={`size-4 ${liked ? "fill-red-500 text-red-500" : ""}`} />
           </button>
         </div>
-
-        {/* Content */}
         <div className="p-3">
-          <h3 className="font-medium text-sm text-foreground line-clamp-2 mb-1">
-            {product.name}
-          </h3>
-          
-          {/* Condition */}
+          <h3 className="font-medium text-sm text-foreground line-clamp-2 mb-1">{product.name}</h3>
           <span className="text-xs text-green-400">{product.condition}</span>
-
-          {/* Price */}
           <div className="mt-2">
             <span className="font-bold text-primary">{formatPrice(product.price)}</span>
             {product.originalPrice && (
-              <span className="text-xs text-muted-foreground line-through ml-2">
-                {formatPrice(product.originalPrice)}
-              </span>
+              <span className="text-xs text-muted-foreground line-through ml-2">{formatPrice(product.originalPrice)}</span>
             )}
           </div>
-
-          {/* Seller & Rating */}
           <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
             <div className="flex items-center gap-1">
               <span className="text-xs text-muted-foreground">{product.seller}</span>
@@ -292,45 +300,25 @@ function ProductCard({ product }: { product: typeof products[0] }) {
 
 function AuctionCard({ product }: { product: typeof auctionProducts[0] }) {
   const [liked, setLiked] = useState(false)
-
   return (
     <Link href={`/auction/${product.id}`} className="block">
       <div className="bg-card rounded-2xl overflow-hidden border border-border">
-        {/* Image */}
         <div className="relative aspect-square bg-gradient-to-b from-primary/10 to-transparent">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-          />
-          {/* Countdown Badge */}
+          <Image src={product.image} alt={product.name} fill className="object-cover" />
           <div className="absolute top-2 left-2 bg-red-500/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
             <Clock className="size-2.5" />
             <AuctionCountdown endTime={product.endTime} />
           </div>
-          {/* Wishlist */}
           <button
-            onClick={(e) => {
-              e.preventDefault()
-              setLiked(!liked)
-            }}
+            onClick={(e) => { e.preventDefault(); setLiked(!liked) }}
             className="absolute top-2 right-2 size-8 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-border"
           >
             <Heart className={`size-4 ${liked ? "fill-red-500 text-red-500" : ""}`} />
           </button>
         </div>
-
-        {/* Content */}
         <div className="p-3">
-          <h3 className="font-medium text-sm text-foreground line-clamp-2 mb-1">
-            {product.name}
-          </h3>
-          
-          {/* Condition */}
+          <h3 className="font-medium text-sm text-foreground line-clamp-2 mb-1">{product.name}</h3>
           <span className="text-xs text-green-400">{product.condition}</span>
-
-          {/* Current Bid */}
           <div className="mt-2 flex items-center justify-between">
             <div>
               <span className="text-[10px] text-muted-foreground block">Current Bid</span>
@@ -341,8 +329,6 @@ function AuctionCard({ product }: { product: typeof auctionProducts[0] }) {
               <span className="font-semibold text-sm">{product.bidCount}</span>
             </div>
           </div>
-
-          {/* Seller */}
           <div className="flex items-center gap-1 mt-2 pt-2 border-t border-border">
             <span className="text-xs text-muted-foreground">{product.seller}</span>
             {product.isVerified && (
@@ -357,47 +343,99 @@ function AuctionCard({ product }: { product: typeof auctionProducts[0] }) {
   )
 }
 
+function IchibanCard({ product }: { product: typeof ichibanProducts[0] }) {
+  const [liked, setLiked] = useState(false)
+  const soldPct = Math.round(((product.totalTickets - product.remainingTickets) / product.totalTickets) * 100)
+  const isAlmostGone = product.remainingTickets <= 10
+
+  return (
+    <Link href={`/ichiban/${product.id}`} className="block">
+      <div className="bg-card rounded-2xl overflow-hidden border border-border">
+        <div className="relative aspect-square bg-gradient-to-b from-primary/10 to-transparent">
+          <Image src={product.image} alt={product.name} fill className="object-cover" />
+          <div className="absolute top-2 left-2 bg-primary/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+            <Ticket className="size-2.5" />
+            Kuji
+          </div>
+          {isAlmostGone && (
+            <div className="absolute bottom-2 left-2 right-2 bg-red-500/90 text-white text-[10px] font-semibold px-2 py-1 rounded-lg text-center">
+              Almost Gone! {product.remainingTickets} left
+            </div>
+          )}
+          <button
+            onClick={(e) => { e.preventDefault(); setLiked(!liked) }}
+            className="absolute top-2 right-2 size-8 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center border border-border"
+          >
+            <Heart className={`size-4 ${liked ? "fill-red-500 text-red-500" : ""}`} />
+          </button>
+        </div>
+        <div className="p-3">
+          <h3 className="font-medium text-sm text-foreground line-clamp-2 mb-1">{product.name}</h3>
+          <p className="text-xs text-primary font-semibold mb-2">{formatPrice(product.pricePerDraw)} / draw</p>
+
+          {/* Progress bar */}
+          <div className="mb-2">
+            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
+                style={{ width: `${soldPct}%` }}
+              />
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-1">{product.remainingTickets} tickets left</p>
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-border">
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-muted-foreground">{product.seller}</span>
+              {product.isVerified && (
+                <div className="size-3.5 bg-primary rounded-full flex items-center justify-center">
+                  <Check className="size-2 text-white" />
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-1">
+              <Star className="size-3 fill-yellow-500 text-yellow-500" />
+              <span className="text-xs font-medium">{product.rating}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 export default function ShopPage() {
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedIP, setSelectedIP] = useState("pokemon")
+  const [activeTab, setActiveTab] = useState<ShopTab>("buynow")
+  const [showCategoryDrawer, setShowCategoryDrawer] = useState(false)
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [showSortSheet, setShowSortSheet] = useState(false)
   const [selectedSort, setSelectedSort] = useState("latest")
   const [filters, setFilters] = useState({
     category: "All",
     saleStatus: "All",
-    saleType: "All",
     graded: "All",
     gradingCompany: "All",
   })
   const [ratingRange, setRatingRange] = useState([1, 10])
 
-  const filteredProducts = products.filter(product => 
-    (selectedCategory === "all" || product.category === selectedCategory)
-  )
+  const currentIP = ipCategories.find(c => c.id === selectedIP)
 
-  const filteredAuctions = auctionProducts.filter(product =>
-    (selectedCategory === "all" || product.category === selectedCategory)
-  )
+  const filteredBuyNow = buyNowProducts.filter(p => p.category === selectedIP)
+  const filteredAuctions = auctionProducts.filter(p => p.category === selectedIP)
+  const filteredIchiban = ichibanProducts.filter(p => p.category === selectedIP)
 
-  const applyFilters = () => {
-    setShowFilterSheet(false)
-  }
-
+  const applyFilters = () => setShowFilterSheet(false)
   const resetFilters = () => {
-    setFilters({
-      category: "All",
-      saleStatus: "All",
-      saleType: "All",
-      graded: "All",
-      gradingCompany: "All",
-    })
+    setFilters({ category: "All", saleStatus: "All", graded: "All", gradingCompany: "All" })
     setRatingRange([1, 10])
   }
 
-  const applySort = (sortId: string) => {
-    setSelectedSort(sortId)
-    setShowSortSheet(false)
-  }
+  const tabs: { id: ShopTab; label: string }[] = [
+    { id: "buynow", label: "Buy It Now" },
+    { id: "auction", label: "Auction" },
+    { id: "ichiban", label: "Ichiban Kuji" },
+  ]
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -406,10 +444,16 @@ export default function ShopPage() {
         <div className="px-4 pt-12 pb-3">
           {/* Search Row */}
           <div className="flex items-center gap-3">
-            {/* Shop Title */}
-            <span className="text-base font-bold text-foreground shrink-0">Shop</span>
-            
-            {/* Search - Clickable to navigate to search page */}
+            {/* IP Category Button */}
+            <button
+              onClick={() => setShowCategoryDrawer(true)}
+              className="flex items-center gap-1 shrink-0"
+            >
+              <span className="text-base font-bold text-foreground">{currentIP?.label}</span>
+              <ChevronDown className="size-4 text-muted-foreground" />
+            </button>
+
+            {/* Search */}
             <Link href="/search?tab=products" className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -435,44 +479,27 @@ export default function ShopPage() {
           </div>
         </div>
 
-        {/* Brand Categories */}
-        <div className="px-4 pb-2">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide py-1">
-            {categories.map((category) => (
+        {/* Tab Row */}
+        <div className="px-4 pb-0">
+          <div className="flex">
+            {tabs.map((tab) => (
               <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-xl transition-all border ${
-                  selectedCategory === category.id
-                    ? "border-primary bg-primary/10"
-                    : "bg-card border-border"
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 py-2.5 text-xs font-semibold transition-colors border-b-2 ${
+                  activeTab === tab.id
+                    ? "text-primary border-primary"
+                    : "text-muted-foreground border-transparent"
                 }`}
               >
-                <div className="size-6 rounded-lg overflow-hidden shrink-0">
-                  {category.avatar ? (
-                    <Image
-                      src={category.avatar}
-                      alt={category.label}
-                      width={24}
-                      height={24}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className={`w-full h-full ${category.bgColor} flex items-center justify-center`}>
-                      <span className="text-[8px] font-bold text-white">ALL</span>
-                    </div>
-                  )}
-                </div>
-                <span className={`text-xs font-medium whitespace-nowrap ${
-                  selectedCategory === category.id ? "text-primary" : "text-foreground"
-                }`}>{category.label}</span>
+                {tab.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Filter & Sort Buttons */}
-        <div className="px-4 pb-3">
+        {/* Filter & Sort */}
+        <div className="px-4 py-2.5">
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -495,39 +522,111 @@ export default function ShopPage() {
           </div>
         </div>
       </header>
-      
-      {/* Spacer for fixed header */}
-      <div className="h-48" />
 
-      {/* Product Grid */}
+      {/* Spacer */}
+      <div className="h-44" />
+
+      {/* Content */}
       <main className="px-4 pt-2">
-        {/* Results Count */}
-        <p className="text-sm text-muted-foreground mb-4">
-          {filteredProducts.length + filteredAuctions.length} items found
-        </p>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-
-        {/* Auctions */}
-        {filteredAuctions.length > 0 && (
+        {activeTab === "buynow" && (
           <>
-            <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-              <div className="size-2 bg-red-500 rounded-full animate-pulse" />
-              Auctions
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              {filteredAuctions.map((product) => (
-                <AuctionCard key={product.id} product={product} />
-              ))}
-            </div>
+            <p className="text-sm text-muted-foreground mb-4">{filteredBuyNow.length} items found</p>
+            {filteredBuyNow.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3">
+                {filteredBuyNow.map((product) => (
+                  <BuyNowCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="size-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                  <Search className="size-7 text-muted-foreground" />
+                </div>
+                <p className="text-sm font-medium text-foreground mb-1">No listings found</p>
+                <p className="text-xs text-muted-foreground">Try a different category</p>
+              </div>
+            )}
+          </>
+        )}
+
+        {activeTab === "auction" && (
+          <>
+            <p className="text-sm text-muted-foreground mb-4">{filteredAuctions.length} auctions found</p>
+            {filteredAuctions.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3">
+                {filteredAuctions.map((product) => (
+                  <AuctionCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="size-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                  <Clock className="size-7 text-muted-foreground" />
+                </div>
+                <p className="text-sm font-medium text-foreground mb-1">No active auctions</p>
+                <p className="text-xs text-muted-foreground">Check back later</p>
+              </div>
+            )}
+          </>
+        )}
+
+        {activeTab === "ichiban" && (
+          <>
+            <p className="text-sm text-muted-foreground mb-4">{filteredIchiban.length} Kuji found</p>
+            {filteredIchiban.length > 0 ? (
+              <div className="grid grid-cols-2 gap-3">
+                {filteredIchiban.map((product) => (
+                  <IchibanCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="size-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                  <Ticket className="size-7 text-muted-foreground" />
+                </div>
+                <p className="text-sm font-medium text-foreground mb-1">No Ichiban Kuji available</p>
+                <p className="text-xs text-muted-foreground">Try a different category</p>
+              </div>
+            )}
           </>
         )}
       </main>
+
+      {/* Category Drawer (left side) */}
+      <Sheet open={showCategoryDrawer} onOpenChange={setShowCategoryDrawer}>
+        <SheetContent side="left" className="w-64 p-0">
+          <SheetHeader className="px-4 py-4 border-b border-border">
+            <SheetTitle className="text-base text-left">Select Category</SheetTitle>
+            <SheetDescription className="sr-only">Choose an IP category to browse</SheetDescription>
+          </SheetHeader>
+          <div className="py-2">
+            {ipCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => {
+                  setSelectedIP(cat.id)
+                  setShowCategoryDrawer(false)
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 transition-colors ${
+                  selectedIP === cat.id ? "bg-primary/10 text-primary" : "text-foreground"
+                }`}
+              >
+                {cat.avatar ? (
+                  <div className="size-9 rounded-xl overflow-hidden shrink-0 border border-border">
+                    <Image src={cat.avatar} alt={cat.label} width={36} height={36} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="size-9 rounded-xl bg-muted flex items-center justify-center shrink-0 border border-border">
+                    <span className="text-xs font-bold text-muted-foreground">{cat.label.slice(0, 2)}</span>
+                  </div>
+                )}
+                <span className="text-sm font-medium">{cat.label}</span>
+                {selectedIP === cat.id && <Check className="size-4 text-primary ml-auto" />}
+              </button>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {/* Filter Sheet */}
       <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
@@ -640,7 +739,6 @@ export default function ShopPage() {
             </div>
           </div>
 
-          {/* Filter Actions */}
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t border-border flex gap-3">
             <Button variant="outline" className="flex-1 h-10 rounded-xl text-sm" onClick={resetFilters}>
               Reset
@@ -665,7 +763,7 @@ export default function ShopPage() {
               return (
                 <button
                   key={option.id}
-                  onClick={() => applySort(option.id)}
+                  onClick={() => { setSelectedSort(option.id); setShowSortSheet(false) }}
                   className={`w-full flex items-center gap-3 p-4 rounded-xl transition-colors ${
                     selectedSort === option.id
                       ? "bg-primary/10 border border-primary"
@@ -674,9 +772,7 @@ export default function ShopPage() {
                 >
                   <Icon className="size-5 text-muted-foreground" />
                   <span className="flex-1 text-left text-sm font-medium">{option.label}</span>
-                  {selectedSort === option.id && (
-                    <Check className="size-5 text-primary" />
-                  )}
+                  {selectedSort === option.id && <Check className="size-5 text-primary" />}
                 </button>
               )
             })}
