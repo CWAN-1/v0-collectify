@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, BarChart, Bar, ComposedChart } from "recharts"
+import { Line, XAxis, YAxis, Bar, ComposedChart } from "recharts"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 // Mock card data
 const cardData = {
@@ -24,14 +25,24 @@ const cardData = {
 }
 
 // Price history data
-const priceHistoryData = [
-  { date: "Jan", price: 240, volume: 45 },
-  { date: "Feb", price: 255, volume: 52 },
-  { date: "Mar", price: 248, volume: 38 },
-  { date: "Apr", price: 265, volume: 60 },
-  { date: "May", price: 272, volume: 55 },
-  { date: "Jun", price: 285, volume: 48 },
+const allPriceData = [
+  { date: "1/2",  price: 210, volume: 30 },
+  { date: "1/13", price: 225, volume: 48 },
+  { date: "1/20", price: 218, volume: 35 },
+  { date: "1/27", price: 238, volume: 52 },
+  { date: "2/3",  price: 245, volume: 60 },
+  { date: "2/10", price: 240, volume: 42 },
+  { date: "2/17", price: 252, volume: 55 },
+  { date: "2/24", price: 260, volume: 58 },
+  { date: "3/3",  price: 268, volume: 63 },
+  { date: "3/10", price: 275, volume: 70 },
+  { date: "3/17", price: 285, volume: 78 },
 ]
+
+const chartConfig = {
+  price: { label: "Price", color: "#3b82f6" },
+  volume: { label: "Volume", color: "#93b4d4" },
+}
 
 // Auction listings
 const auctionListings = [
@@ -112,6 +123,12 @@ export default function CardInfoPage() {
   const router = useRouter()
   const [isFavorite, setIsFavorite] = useState(false)
   const [timeRange, setTimeRange] = useState<"1W" | "1M" | "3M" | "1Y" | "ALL">("3M")
+
+  const priceHistoryData = timeRange === "1W"
+    ? allPriceData.slice(-3)
+    : timeRange === "1M"
+    ? allPriceData.slice(-5)
+    : allPriceData
 
   return (
     <div className="min-h-screen bg-background pb-6">
@@ -202,55 +219,61 @@ export default function CardInfoPage() {
           </div>
         </div>
 
-        <div className="bg-card rounded-xl border border-border p-3">
-          <ResponsiveContainer width="100%" height={160}>
-            <ComposedChart data={priceHistoryData}>
-              <XAxis 
-                dataKey="date" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+        <div className="bg-[#1a1f2e] rounded-xl p-4">
+          <ChartContainer config={chartConfig} className="h-[180px] w-full">
+            <ComposedChart data={priceHistoryData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <XAxis
+                dataKey="date"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: "#6b7280" }}
               />
-              <YAxis 
+              <YAxis
                 yAxisId="price"
                 orientation="right"
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: "#6b7280" }}
                 tickFormatter={(v) => `$${v}`}
-                domain={['dataMin - 20', 'dataMax + 20']}
+                domain={["dataMin - 30", "dataMax + 20"]}
+                width={40}
               />
-              <YAxis 
+              <YAxis
                 yAxisId="volume"
                 orientation="left"
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
-                hide
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: "#6b7280" }}
+                width={28}
+                domain={[0, 120]}
               />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: "hsl(var(--card))", 
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "8px",
-                  fontSize: "11px"
-                }}
-                formatter={(value: number, name: string) => [
-                  name === "price" ? formatPrice(value) : value,
-                  name === "price" ? "Price" : "Volume"
-                ]}
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    formatter={(value, name) =>
+                      name === "price" ? formatPrice(value as number) : String(value)
+                    }
+                  />
+                }
               />
-              <Bar yAxisId="volume" dataKey="volume" fill="hsl(var(--muted))" radius={[2, 2, 0, 0]} />
-              <Line 
+              <Bar
+                yAxisId="volume"
+                dataKey="volume"
+                fill="#93b4d4"
+                radius={[3, 3, 0, 0]}
+                opacity={0.7}
+              />
+              <Line
                 yAxisId="price"
-                type="monotone" 
-                dataKey="price" 
-                stroke="hsl(var(--primary))" 
-                strokeWidth={2}
+                type="monotone"
+                dataKey="price"
+                stroke="#3b82f6"
+                strokeWidth={2.5}
                 dot={false}
+                activeDot={{ r: 4, fill: "#3b82f6" }}
               />
             </ComposedChart>
-          </ResponsiveContainer>
+          </ChartContainer>
         </div>
       </div>
 
