@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { ArrowLeft, ChevronDown, SlidersHorizontal, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Gift, Image as ImageIcon, Ticket, Crown } from "lucide-react"
+import { ArrowLeft, ChevronDown, SlidersHorizontal, TrendingUp, TrendingDown, Gift, Image as ImageIcon, Ticket, Crown, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import Link from "next/link"
@@ -92,92 +92,34 @@ const collectionLevels = [
   },
 ]
 
-const myCards = [
-  {
-    id: "card-1",
-    name: "Pikachu ex SAR",
-    set: "Cyber Judge",
-    number: "246/184",
-    rarity: "SAR",
-    grade: "PSA 10",
-    gradingCompany: "PSA",
-    image: "/cards/pokemon-1.jpg",
-    currentPrice: 2318.50,
-    purchasePrice: 1800,
-    priceChange: 8.5,
-    language: "JP",
-  },
-  {
-    id: "card-2",
-    name: "Charizard VSTAR",
-    set: "Brilliant Stars",
-    number: "174/172",
-    rarity: "Rainbow",
-    grade: null,
-    gradingCompany: null,
-    image: "/cards/pokemon-2.jpg",
-    currentPrice: 580,
-    purchasePrice: 620,
-    priceChange: -6.5,
-    language: "EN",
-  },
-  {
-    id: "card-3",
-    name: "Lugia V Alt Art",
-    set: "Silver Tempest",
-    number: "211/195",
-    rarity: "Alt Art",
-    grade: "BGS 9.5",
-    gradingCompany: "BGS",
-    image: "/cards/pokemon-3.jpg",
-    currentPrice: 1240,
-    purchasePrice: 950,
-    priceChange: 30.5,
-    language: "EN",
-  },
-  {
-    id: "card-4",
-    name: "Mewtwo ex SAR",
-    set: "151",
-    number: "206/165",
-    rarity: "SAR",
-    grade: null,
-    gradingCompany: null,
-    image: "/cards/pokemon-4.jpg",
-    currentPrice: 890,
-    purchasePrice: 780,
-    priceChange: 14.1,
-    language: "JP",
-  },
-  {
-    id: "card-5",
-    name: "Umbreon VMAX",
-    set: "Evolving Skies",
-    number: "215/203",
-    rarity: "Alt Art",
-    grade: "PSA 9",
-    gradingCompany: "PSA",
-    image: "/cards/pokemon-5.jpg",
-    currentPrice: 3200,
-    purchasePrice: 2100,
-    priceChange: 52.4,
-    language: "EN",
-  },
-  {
-    id: "card-6",
-    name: "Rayquaza VMAX",
-    set: "Evolving Skies",
-    number: "218/203",
-    rarity: "Alt Art",
-    grade: "CGC 9.5",
-    gradingCompany: "CGC",
-    image: "/cards/pokemon-6.jpg",
-    currentPrice: 1850,
-    purchasePrice: 1200,
-    priceChange: 54.2,
-    language: "EN",
-  },
-]
+const allCards: Record<string, typeof pokemonCards> = {
+  pokemon: [
+    { id: "card-1", name: "Pikachu ex SAR", set: "Cyber Judge", number: "246/184", rarity: "SAR", grade: "PSA 10", gradingCompany: "PSA", image: "/cards/pokemon-1.jpg", currentPrice: 2318.50, purchasePrice: 1800, priceChange: 8.5, language: "JP" },
+    { id: "card-2", name: "Charizard VSTAR", set: "Brilliant Stars", number: "174/172", rarity: "Rainbow", grade: null, gradingCompany: null, image: "/cards/pokemon-2.jpg", currentPrice: 580, purchasePrice: 620, priceChange: -6.5, language: "EN" },
+    { id: "card-3", name: "Lugia V Alt Art", set: "Silver Tempest", number: "211/195", rarity: "Alt Art", grade: "BGS 9.5", gradingCompany: "BGS", image: "/cards/pokemon-3.jpg", currentPrice: 1240, purchasePrice: 950, priceChange: 30.5, language: "EN" },
+    { id: "card-4", name: "Mewtwo ex SAR", set: "151", number: "206/165", rarity: "SAR", grade: null, gradingCompany: null, image: "/cards/pokemon-4.jpg", currentPrice: 890, purchasePrice: 780, priceChange: 14.1, language: "JP" },
+    { id: "card-5", name: "Umbreon VMAX", set: "Evolving Skies", number: "215/203", rarity: "Alt Art", grade: "PSA 9", gradingCompany: "PSA", image: "/cards/pokemon-5.jpg", currentPrice: 3200, purchasePrice: 2100, priceChange: 52.4, language: "EN" },
+    { id: "card-6", name: "Rayquaza VMAX", set: "Evolving Skies", number: "218/203", rarity: "Alt Art", grade: "CGC 9.5", gradingCompany: "CGC", image: "/cards/pokemon-6.jpg", currentPrice: 1850, purchasePrice: 1200, priceChange: 54.2, language: "EN" },
+  ],
+  yugioh: [
+    { id: "ygo-1", name: "Blue-Eyes White Dragon", set: "Legend of Blue Eyes", number: "LOB-001", rarity: "Ultra Rare", grade: "PSA 9", gradingCompany: "PSA", image: "/cards/pokemon-1.jpg", currentPrice: 1200, purchasePrice: 900, priceChange: 33.3, language: "JP" },
+    { id: "ygo-2", name: "Dark Magician", set: "Legend of Blue Eyes", number: "LOB-005", rarity: "Ultra Rare", grade: null, gradingCompany: null, image: "/cards/pokemon-2.jpg", currentPrice: 480, purchasePrice: 350, priceChange: 37.1, language: "EN" },
+    { id: "ygo-3", name: "Exodia the Forbidden", set: "Legend of Blue Eyes", number: "LOB-124", rarity: "Ultra Rare", grade: "BGS 8.5", gradingCompany: "BGS", image: "/cards/pokemon-3.jpg", currentPrice: 2200, purchasePrice: 1800, priceChange: 22.2, language: "JP" },
+  ],
+  onepiece: [
+    { id: "op-1", name: "Monkey D. Luffy", set: "Romance Dawn", number: "OP01-060", rarity: "Secret Rare", grade: null, gradingCompany: null, image: "/cards/pokemon-4.jpg", currentPrice: 650, purchasePrice: 400, priceChange: 62.5, language: "JP" },
+    { id: "op-2", name: "Roronoa Zoro", set: "Romance Dawn", number: "OP01-001", rarity: "Leader Rare", grade: "PSA 10", gradingCompany: "PSA", image: "/cards/pokemon-5.jpg", currentPrice: 320, purchasePrice: 200, priceChange: 60.0, language: "EN" },
+  ],
+  mtg: [
+    { id: "mtg-1", name: "Black Lotus", set: "Alpha", number: "232", rarity: "Rare", grade: "PSA 7", gradingCompany: "PSA", image: "/cards/pokemon-6.jpg", currentPrice: 48000, purchasePrice: 35000, priceChange: 37.1, language: "EN" },
+  ],
+  sports: [
+    { id: "sp-1", name: "LeBron James RC", set: "Topps Chrome 2003", number: "111", rarity: "Refractor", grade: "PSA 10", gradingCompany: "PSA", image: "/cards/pokemon-1.jpg", currentPrice: 8500, purchasePrice: 5000, priceChange: 70.0, language: "EN" },
+    { id: "sp-2", name: "Michael Jordan RC", set: "Fleer 1986", number: "57", rarity: "Base", grade: "BGS 9", gradingCompany: "BGS", image: "/cards/pokemon-2.jpg", currentPrice: 4200, purchasePrice: 3000, priceChange: 40.0, language: "EN" },
+  ],
+}
+
+const pokemonCards = allCards.pokemon
 
 const sortOptions = [
   { id: "acquired", label: "Acquire Time" },
@@ -192,20 +134,30 @@ export default function CollectionPage() {
   const [selectedSort, setSelectedSort] = useState("acquired")
   const [showSortSheet, setShowSortSheet] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [currentLevelIndex, setCurrentLevelIndex] = useState(2) // Collector level for demo
+  const [currentLevelIndex, setCurrentLevelIndex] = useState(2)
   const levelScrollRef = useRef<HTMLDivElement>(null)
+  const touchStartX = useRef<number>(0)
 
+  const myCards = allCards[selectedBrand] ?? []
   const totalCards = myCards.length
   const totalValue = myCards.reduce((sum, c) => sum + c.currentPrice, 0)
   const currentLevel = collectionLevels[currentLevelIndex]
 
   const formatPrice = (p: number) => `$${p.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
 
-  const scrollLevel = (direction: "left" | "right") => {
-    const newIndex = direction === "left" 
-      ? Math.max(0, currentLevelIndex - 1)
-      : Math.min(collectionLevels.length - 1, currentLevelIndex + 1)
-    setCurrentLevelIndex(newIndex)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(diff) > 40) {
+      if (diff > 0 && currentLevelIndex < collectionLevels.length - 1) {
+        setCurrentLevelIndex(i => i + 1)
+      } else if (diff < 0 && currentLevelIndex > 0) {
+        setCurrentLevelIndex(i => i - 1)
+      }
+    }
   }
 
   return (
@@ -222,74 +174,47 @@ export default function CollectionPage() {
             <ArrowLeft className="size-5" />
           </Button>
           <h1 className="text-sm font-semibold">My Collection</h1>
-          <div className="absolute right-4 flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8"
-              onClick={() => setViewMode(v => v === "grid" ? "list" : "grid")}
-            >
-              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                {viewMode === "grid"
-                  ? <><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></>
-                  : <><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></>
-                }
-              </svg>
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-9 absolute right-4"
+            onClick={() => {}}
+          >
+            <Share2 className="size-5" />
+          </Button>
         </div>
       </header>
 
       {/* Collection Level Section */}
       <div className="px-4 py-4 bg-gradient-to-b from-secondary/50 to-background">
-        {/* Crown Carousel */}
-        <div className="relative flex items-center justify-center mb-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-8 absolute left-0 z-10"
-            onClick={() => scrollLevel("left")}
-            disabled={currentLevelIndex === 0}
-          >
-            <ChevronLeft className="size-5" />
-          </Button>
-          
-          <div 
-            ref={levelScrollRef}
-            className="flex items-center justify-center overflow-hidden"
-          >
-            <div className="flex flex-col items-center">
-              {/* Animated Crown */}
-              <div className={`relative w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-br ${currentLevel.crownColor} shadow-lg ${currentLevel.crownGlow} animate-pulse`}>
-                <svg className="size-14 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/>
-                  <path d="M5 19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1H5v1z"/>
-                </svg>
-                {/* Sparkles */}
-                <div className="absolute top-1 right-2 w-2 h-2 bg-white rounded-full animate-ping opacity-75" />
-                <div className="absolute bottom-3 left-2 w-1.5 h-1.5 bg-white rounded-full animate-ping opacity-60 animation-delay-200" />
-              </div>
-              
-              {/* Level Name */}
-              <p className="mt-2 text-sm font-bold text-foreground">{currentLevel.name}</p>
-              <p className="text-[10px] text-muted-foreground">
-                {currentLevelIndex < collectionLevels.length - 1 
-                  ? `${collectionLevels[currentLevelIndex + 1].minCards - totalCards} more cards to next level`
-                  : "Maximum level reached!"
-                }
-              </p>
-            </div>
+        {/* Crown Swipe Area */}
+        <div
+          className="flex flex-col items-center mb-3 select-none"
+          ref={levelScrollRef}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Animated Crown */}
+          <div className={`relative w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-br ${currentLevel.crownColor} shadow-xl ${currentLevel.crownGlow} mb-2`}>
+            <svg className="size-14 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/>
+              <path d="M5 19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1H5v1z"/>
+            </svg>
+            {/* Sparkles — more as level increases */}
+            {currentLevelIndex >= 1 && <div className="absolute top-1 right-2 w-2 h-2 bg-white rounded-full animate-ping opacity-75" />}
+            {currentLevelIndex >= 2 && <div className="absolute bottom-3 left-1.5 w-1.5 h-1.5 bg-white rounded-full animate-ping opacity-60" style={{ animationDelay: "0.3s" }} />}
+            {currentLevelIndex >= 3 && <div className="absolute top-3 left-2 w-1 h-1 bg-white rounded-full animate-ping opacity-50" style={{ animationDelay: "0.6s" }} />}
+            {currentLevelIndex >= 4 && <div className="absolute bottom-2 right-2 w-2 h-2 bg-white rounded-full animate-ping opacity-80" style={{ animationDelay: "0.15s" }} />}
+            {currentLevelIndex >= 5 && <div className="absolute top-2 right-5 w-1.5 h-1.5 bg-white rounded-full animate-ping opacity-70" style={{ animationDelay: "0.45s" }} />}
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-8 absolute right-0 z-10"
-            onClick={() => scrollLevel("right")}
-            disabled={currentLevelIndex === collectionLevels.length - 1}
-          >
-            <ChevronRight className="size-5" />
-          </Button>
+          <p className="text-sm font-bold text-foreground">{currentLevel.name}</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">
+            {currentLevelIndex < collectionLevels.length - 1
+              ? `${collectionLevels[currentLevelIndex + 1].minCards - totalCards} more cards to next level`
+              : "Maximum level reached!"
+            }
+          </p>
         </div>
 
         {/* Level Progress Dots */}
