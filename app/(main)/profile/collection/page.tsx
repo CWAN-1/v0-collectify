@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { ArrowLeft, ChevronDown, SlidersHorizontal, TrendingUp, TrendingDown, Gift, Image as ImageIcon, Ticket, Crown, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
@@ -19,76 +19,34 @@ const brands = [
 // Collection levels with crown styles
 const collectionLevels = [
   { 
-    id: "novice", 
-    name: "Novice Collector", 
-    minCards: 0,
-    crownColor: "from-gray-400 to-gray-500",
-    crownGlow: "shadow-gray-400/30",
-    benefits: [
-      { icon: ImageIcon, label: "Basic Avatar Frame" },
-    ]
+    id: "novice", name: "Novice Collector", minCards: 0, minSpend: 0,
+    crownColor: "from-gray-400 to-gray-500", crownGlow: "shadow-gray-400/30",
+    benefits: [{ icon: ImageIcon, label: "Basic Avatar Frame" }]
   },
   { 
-    id: "junior", 
-    name: "Junior Collector", 
-    minCards: 10,
-    crownColor: "from-green-400 to-emerald-500",
-    crownGlow: "shadow-green-400/40",
-    benefits: [
-      { icon: ImageIcon, label: "Green Avatar Frame" },
-      { icon: Ticket, label: "$5 Coupon" },
-    ]
+    id: "junior", name: "Junior Collector", minCards: 10, minSpend: 500,
+    crownColor: "from-green-400 to-emerald-500", crownGlow: "shadow-green-400/40",
+    benefits: [{ icon: ImageIcon, label: "Green Avatar Frame" }, { icon: Ticket, label: "$5 Coupon" }]
   },
   { 
-    id: "collector", 
-    name: "Collector", 
-    minCards: 50,
-    crownColor: "from-blue-400 to-cyan-500",
-    crownGlow: "shadow-blue-400/40",
-    benefits: [
-      { icon: ImageIcon, label: "Blue Avatar Frame" },
-      { icon: Gift, label: "Profile Background" },
-      { icon: Ticket, label: "$10 Coupon" },
-    ]
+    id: "collector", name: "Collector", minCards: 50, minSpend: 2000,
+    crownColor: "from-blue-400 to-cyan-500", crownGlow: "shadow-blue-400/40",
+    benefits: [{ icon: ImageIcon, label: "Blue Avatar Frame" }, { icon: Gift, label: "Profile Background" }, { icon: Ticket, label: "$10 Coupon" }]
   },
   { 
-    id: "master", 
-    name: "Master Collector", 
-    minCards: 200,
-    crownColor: "from-purple-400 to-violet-500",
-    crownGlow: "shadow-purple-400/50",
-    benefits: [
-      { icon: ImageIcon, label: "Purple Avatar Frame" },
-      { icon: Gift, label: "Exclusive Background" },
-      { icon: Ticket, label: "$25 Coupon" },
-      { icon: Crown, label: "Profile Badge" },
-    ]
+    id: "master", name: "Master Collector", minCards: 200, minSpend: 10000,
+    crownColor: "from-purple-400 to-violet-500", crownGlow: "shadow-purple-400/50",
+    benefits: [{ icon: ImageIcon, label: "Purple Avatar Frame" }, { icon: Gift, label: "Exclusive Background" }, { icon: Ticket, label: "$25 Coupon" }, { icon: Crown, label: "Profile Badge" }]
   },
   { 
-    id: "top", 
-    name: "Top Collector", 
-    minCards: 500,
-    crownColor: "from-amber-400 to-orange-500",
-    crownGlow: "shadow-amber-400/50",
-    benefits: [
-      { icon: ImageIcon, label: "Gold Avatar Frame" },
-      { icon: Gift, label: "Premium Background" },
-      { icon: Ticket, label: "$50 Coupon" },
-      { icon: Crown, label: "Gold Badge" },
-    ]
+    id: "top", name: "Top Collector", minCards: 500, minSpend: 50000,
+    crownColor: "from-amber-400 to-orange-500", crownGlow: "shadow-amber-400/50",
+    benefits: [{ icon: ImageIcon, label: "Gold Avatar Frame" }, { icon: Gift, label: "Premium Background" }, { icon: Ticket, label: "$50 Coupon" }, { icon: Crown, label: "Gold Badge" }]
   },
   { 
-    id: "ultimate", 
-    name: "Ultimate Collector", 
-    minCards: 1000,
-    crownColor: "from-rose-400 via-pink-500 to-purple-500",
-    crownGlow: "shadow-pink-500/60",
-    benefits: [
-      { icon: ImageIcon, label: "Diamond Frame" },
-      { icon: Gift, label: "Animated Background" },
-      { icon: Ticket, label: "$100 Coupon" },
-      { icon: Crown, label: "Diamond Badge" },
-    ]
+    id: "ultimate", name: "Ultimate Collector", minCards: 1000, minSpend: 200000,
+    crownColor: "from-rose-400 via-pink-500 to-purple-500", crownGlow: "shadow-pink-500/60",
+    benefits: [{ icon: ImageIcon, label: "Diamond Frame" }, { icon: Gift, label: "Animated Background" }, { icon: Ticket, label: "$100 Coupon" }, { icon: Crown, label: "Diamond Badge" }]
   },
 ]
 
@@ -137,6 +95,8 @@ export default function CollectionPage() {
   const [currentLevelIndex, setCurrentLevelIndex] = useState(2)
   const levelScrollRef = useRef<HTMLDivElement>(null)
   const touchStartX = useRef<number>(0)
+  const currentLevelIndexRef = useRef(currentLevelIndex)
+  currentLevelIndexRef.current = currentLevelIndex
 
   const myCards = allCards[selectedBrand] ?? []
   const totalCards = myCards.length
@@ -145,37 +105,38 @@ export default function CollectionPage() {
 
   const formatPrice = (p: number) => `$${p.toLocaleString("en-US", { minimumFractionDigits: 2 })}`
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      touchStartX.current = e.touches[0].clientX
-      console.log("[v0] Touch start at:", touchStartX.current)
-    }
-  }
+  // Use native event listeners with { passive: false } so we can preventDefault on touchmove
+  useEffect(() => {
+    const el = levelScrollRef.current
+    if (!el) return
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      // Prevent default scroll behavior during swipe
-      e.preventDefault()
+    const onStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) touchStartX.current = e.touches[0].clientX
     }
-  }
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (e.changedTouches.length === 1) {
-      const endX = e.changedTouches[0].clientX
-      const diff = touchStartX.current - endX
-      console.log("[v0] Touch end at:", endX, "Diff:", diff, "Current index:", currentLevelIndex)
-      
+    const onMove = (e: TouchEvent) => {
+      if (e.touches.length === 1) e.preventDefault()
+    }
+    const onEnd = (e: TouchEvent) => {
+      if (e.changedTouches.length !== 1) return
+      const diff = touchStartX.current - e.changedTouches[0].clientX
       if (Math.abs(diff) > 30) {
-        if (diff > 0 && currentLevelIndex < collectionLevels.length - 1) {
-          console.log("[v0] Swiped RIGHT - moving to next level")
+        if (diff > 0 && currentLevelIndexRef.current < collectionLevels.length - 1) {
           setCurrentLevelIndex(i => i + 1)
-        } else if (diff < 0 && currentLevelIndex > 0) {
-          console.log("[v0] Swiped LEFT - moving to prev level")
+        } else if (diff < 0 && currentLevelIndexRef.current > 0) {
           setCurrentLevelIndex(i => i - 1)
         }
       }
     }
-  }
+
+    el.addEventListener("touchstart", onStart, { passive: true })
+    el.addEventListener("touchmove", onMove, { passive: false })
+    el.addEventListener("touchend", onEnd, { passive: true })
+    return () => {
+      el.removeEventListener("touchstart", onStart)
+      el.removeEventListener("touchmove", onMove)
+      el.removeEventListener("touchend", onEnd)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-background pb-8">
@@ -204,13 +165,10 @@ export default function CollectionPage() {
 
       {/* Collection Level Section */}
       <div className="px-4 py-4 bg-gradient-to-b from-secondary/50 to-background">
-        {/* Crown Swipe Area */}
+        {/* Crown Swipe Area — swipe left/right to browse levels */}
         <div
-          className="flex flex-col items-center mb-3 select-none cursor-grab active:cursor-grabbing touch-none"
+          className="flex flex-col items-center mb-3 select-none cursor-grab active:cursor-grabbing w-full"
           ref={levelScrollRef}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
           {/* Animated Crown */}
           <div className={`relative w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-br ${currentLevel.crownColor} shadow-xl ${currentLevel.crownGlow} mb-2`}>
@@ -227,12 +185,22 @@ export default function CollectionPage() {
           </div>
 
           <p className="text-sm font-bold text-foreground">{currentLevel.name}</p>
-          <p className="text-[10px] text-muted-foreground mt-0.5">
-            {currentLevelIndex < collectionLevels.length - 1
-              ? `${collectionLevels[currentLevelIndex + 1].minCards - totalCards} more cards to next level`
-              : "Maximum level reached!"
-            }
-          </p>
+          {currentLevelIndex < collectionLevels.length - 1 ? (
+            <div className="flex flex-col items-center gap-0.5 mt-1">
+              <p className="text-[10px] text-muted-foreground">Next: <span className="font-semibold text-foreground">{collectionLevels[currentLevelIndex + 1].name}</span></p>
+              <div className="flex items-center gap-3 mt-0.5">
+                <span className="text-[10px] text-muted-foreground">
+                  +{Math.max(0, collectionLevels[currentLevelIndex + 1].minCards - totalCards)} cards
+                </span>
+                <span className="text-[10px] text-muted-foreground">·</span>
+                <span className="text-[10px] text-muted-foreground">
+                  ${(collectionLevels[currentLevelIndex + 1].minSpend).toLocaleString()} spend
+                </span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-[10px] text-primary font-medium mt-1">Maximum level reached!</p>
+          )}
         </div>
 
         {/* Level Progress Dots */}
