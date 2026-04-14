@@ -4,7 +4,6 @@ import { Settings, ChevronRight, Clock, Heart, Users, Gavel, Wallet, Package, Cr
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
-import Image from "next/image"
 
 // Action buttons
 const actionButtons = [
@@ -116,31 +115,33 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Seller Invitation Banner */}
-        <div className="bg-gradient-to-r from-primary/90 to-accent/90 rounded-2xl p-3 mb-4 relative overflow-hidden">
-          <div className="flex items-center gap-3">
-            <div className="flex-1">
-              <h3 className="text-white font-bold text-sm mb-0.5">Start Selling Now!</h3>
-              <p className="text-white/80 text-[10px] leading-relaxed">
-                Lowest commission — Join the most active card trading platform!
-              </p>
-            </div>
-            <div className="flex flex-col items-end gap-2">
-              <div className="w-16 h-12 relative shrink-0">
-                <Image
-                  src="/images/seller-banner.jpg"
-                  alt="Seller"
-                  fill
-                  className="object-contain"
-                />
+        {/* My Collection Banner */}
+        <Link href="/profile/collection">
+          <div className="bg-gradient-to-r from-indigo-500/90 to-violet-500/90 rounded-2xl p-3 mb-3 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="size-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                <Star className="size-4 text-white fill-white" />
               </div>
-              <Link href="/seller-onboarding">
-                <Button size="sm" className="h-6 px-3 bg-white text-primary hover:bg-white/90 rounded-md text-[10px] font-semibold">
-                  Join
-                </Button>
-              </Link>
+              <div>
+                <h3 className="text-white font-bold text-sm">My Collection</h3>
+                <p className="text-white/75 text-[10px]">Track your card collection & value</p>
+              </div>
             </div>
+            <ChevronRight className="size-4 text-white/80" />
           </div>
+        </Link>
+
+        {/* Seller Invitation Banner */}
+        <div className="bg-gradient-to-r from-primary/90 to-accent/90 rounded-2xl px-3 py-2.5 mb-4 flex items-center justify-between">
+          <div>
+            <h3 className="text-white font-bold text-sm">Start Selling Now!</h3>
+            <p className="text-white/80 text-[10px]">Lowest commission — most active card platform</p>
+          </div>
+          <Link href="/seller-onboarding">
+            <Button size="sm" className="h-6 px-3 bg-white text-primary hover:bg-white/90 rounded-md text-[10px] font-semibold gap-1 shrink-0">
+              Join <ChevronRight className="size-3" />
+            </Button>
+          </Link>
         </div>
 
         {/* My Orders */}
