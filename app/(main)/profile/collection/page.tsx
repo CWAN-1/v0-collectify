@@ -148,19 +148,29 @@ export default function CollectionPage() {
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       touchStartX.current = e.touches[0].clientX
+      console.log("[v0] Touch start at:", touchStartX.current)
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      // Prevent default scroll behavior during swipe
+      e.preventDefault()
     }
   }
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (e.changedTouches.length === 1) {
-      const diff = touchStartX.current - e.changedTouches[0].clientX
-      console.log("[v0] Touch diff:", diff, "Current index:", currentLevelIndex)
-      if (Math.abs(diff) > 40) {
+      const endX = e.changedTouches[0].clientX
+      const diff = touchStartX.current - endX
+      console.log("[v0] Touch end at:", endX, "Diff:", diff, "Current index:", currentLevelIndex)
+      
+      if (Math.abs(diff) > 30) {
         if (diff > 0 && currentLevelIndex < collectionLevels.length - 1) {
-          console.log("[v0] Swiping right, moving to next level")
+          console.log("[v0] Swiped RIGHT - moving to next level")
           setCurrentLevelIndex(i => i + 1)
         } else if (diff < 0 && currentLevelIndex > 0) {
-          console.log("[v0] Swiping left, moving to prev level")
+          console.log("[v0] Swiped LEFT - moving to prev level")
           setCurrentLevelIndex(i => i - 1)
         }
       }
@@ -196,9 +206,10 @@ export default function CollectionPage() {
       <div className="px-4 py-4 bg-gradient-to-b from-secondary/50 to-background">
         {/* Crown Swipe Area */}
         <div
-          className="flex flex-col items-center mb-3 select-none cursor-grab active:cursor-grabbing"
+          className="flex flex-col items-center mb-3 select-none cursor-grab active:cursor-grabbing touch-none"
           ref={levelScrollRef}
           onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           {/* Animated Crown */}
