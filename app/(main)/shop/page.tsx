@@ -10,13 +10,13 @@ import Link from "next/link"
 import Image from "next/image"
 
 const ipCategories = [
-  { id: "trading-card-games", label: "Trading Card Games", image: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=200&h=200&fit=crop" },
+  { id: "trading-card-games", label: "Trading Card Games", image: "https://images.pokemontcg.io/swsh4/188_hires.png" },
   { id: "books-movies", label: "Books & Movies", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop" },
-  { id: "sports-cards", label: "Sports Cards", image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=200&h=200&fit=crop" },
+  { id: "sports-cards", label: "Sports Cards", image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=200&h=200&fit=crop" },
   { id: "toys-hobbies", label: "Toys & Hobbies", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" },
   { id: "coins-money", label: "Coins & Money", image: "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?w=200&h=200&fit=crop" },
   { id: "memorabilia", label: "Memorabilia", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=200&fit=crop" },
-  { id: "mens-fashion", label: "Men's Fashion", image: "https://images.unsplash.com/photo-1445397096603-c45ed8b14b59?w=200&h=200&fit=crop" },
+  { id: "mens-fashion", label: "Men's Fashion", image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=200&h=200&fit=crop" },
   { id: "sneakers-shoes", label: "Sneakers & Shoes", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop" },
   { id: "womens-fashion", label: "Women's Fashion", image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=200&h=200&fit=crop" },
 ]
@@ -489,13 +489,13 @@ export default function ShopPage() {
             {/* IP Category Button — two-line style */}
             <button
               onClick={() => setShowCategoryDrawer(true)}
-              className="flex items-center gap-1 shrink-0"
+              className="flex items-center gap-1 shrink-0 max-w-[100px]"
             >
-              <div className="flex flex-col items-start leading-tight">
+              <div className="flex flex-col items-start leading-tight min-w-0">
                 <span className="text-[10px] text-muted-foreground font-medium">Categories</span>
-                <span className="text-sm font-bold text-foreground">{currentIP?.label}</span>
+                <span className="text-xs font-bold text-foreground truncate w-full">{currentIP?.label}</span>
               </div>
-              <ChevronDown className="size-4 text-muted-foreground" />
+              <ChevronDown className="size-3.5 text-muted-foreground shrink-0" />
             </button>
 
             {/* Search */}
