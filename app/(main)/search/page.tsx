@@ -4,104 +4,84 @@ import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { Search, X, SlidersHorizontal, ArrowUpDown, Star, Clock, TrendingUp, DollarSign, Check, ChevronDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Search, X, ChevronRight, Heart, Play, SlidersHorizontal, ArrowUpDown, ChevronDown } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, ComposedChart, ReferenceLine, Tooltip } from "recharts"
+import { ComposedChart, Bar, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
 
-// Mock data
+// Suggested keywords
+const suggestedKeywords = ["pokemon", "pikachu", "one piece"]
+
+// Mock Shows data
+const mockShows = [
+  { id: "live-1", title: "PRISMATIC/ASCENDED WALL INSANE 1/5 ODD...", thumbnail: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=500&fit=crop", user: { name: "pokepullzs", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop" }, viewers: 47, isLive: true },
+  { id: "live-2", title: "BIG GIVEAWAYIES WALL OF SEALED BREAK", thumbnail: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=400&h=500&fit=crop", user: { name: "alexcardshop", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=80&h=80&fit=crop" }, viewers: 130, isLive: true },
+  { id: "live-3", title: "Prismatic SPC Giveaways!!! $1 start sl...", thumbnail: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=500&fit=crop", user: { name: "card_lair", avatar: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=80&h=80&fit=crop" }, viewers: 241, isLive: true },
+  { id: "live-4", title: "WoTC - EX era $1 starts Giveaways", thumbnail: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=500&fit=crop", user: { name: "caascollectibles", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop" }, viewers: 101, isLive: true },
+]
+
+// Mock Products data (Buy Now + Auction)
 const mockProducts = [
-  { id: "1", name: "Pikachu VMAX Rainbow Rare", price: 250, image: "/cards/pokemon-1.jpg", seller: { name: "CardMaster", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" }, isGraded: true },
-  { id: "2", name: "Charizard GX Shiny", price: 450, image: "/cards/pokemon-2.jpg", seller: { name: "PokeFan", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" }, isGraded: false },
-  { id: "3", name: "Blue-Eyes White Dragon", price: 850, image: "/cards/yugioh-1.jpg", seller: { name: "YugiCollector", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" }, isGraded: true },
-  { id: "4", name: "Luffy Gear 5 Secret Rare", price: 180, image: "/cards/onepiece-1.jpg", seller: { name: "OnePieceID", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" }, isGraded: false },
-  { id: "5", name: "LeBron James Rookie", price: 1500, image: "/cards/sports-1.jpg", seller: { name: "SportsHub", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" }, isGraded: true },
-  { id: "6", name: "Black Lotus MTG", price: 25000, image: "/cards/mtg-1.jpg", seller: { name: "MTGMaster", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" }, isGraded: true },
+  { id: "1", name: "Pikachu VMAX Rainbow Rare", price: 250, image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=300&h=300&fit=crop", seller: { name: "CardMaster", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" }, type: "buynow" },
+  { id: "2", name: "Charizard GX Shiny", price: 450, image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=300&h=300&fit=crop", seller: { name: "PokeFan", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" }, type: "auction", currentBid: 380, endTime: "2h 15m" },
+  { id: "3", name: "Blue-Eyes White Dragon", price: 850, image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop", seller: { name: "YugiCollector", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" }, type: "buynow" },
+  { id: "4", name: "Luffy Gear 5 Secret Rare", price: 180, image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=300&fit=crop", seller: { name: "OnePieceID", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" }, type: "auction", currentBid: 155, endTime: "45m" },
 ]
 
+// Mock Posts data
 const mockPosts = [
-  { id: "1", title: "Unboxing Pikachu VMAX", image: "/posts/post-pokemon-1.jpg", user: { name: "Alex Chen", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" }, likes: 2431 },
-  { id: "2", title: "NBA Rookie Cards Collection", image: "/posts/post-sports-1.jpg", user: { name: "Sarah Lee", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" }, likes: 1892 },
-  { id: "3", title: "Blue-Eyes White Dragon Review", image: "/posts/post-yugioh-1.jpg", user: { name: "Mike Zhang", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" }, likes: 3210 },
+  { id: "1", title: "Unboxing Pikachu VMAX", image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=400&fit=crop", user: { name: "Alex Chen", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" }, likes: 2431 },
+  { id: "2", title: "NBA Rookie Cards Collection", image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=400&h=400&fit=crop", user: { name: "Sarah Lee", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" }, likes: 1892 },
+  { id: "3", title: "Blue-Eyes White Dragon Review", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=400&fit=crop", user: { name: "Mike Zhang", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" }, likes: 3210 },
+  { id: "4", title: "Rare Pokemon Cards Haul", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=400&fit=crop", user: { name: "CardKing", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" }, likes: 1560 },
 ]
 
+// Mock Users data
 const mockUsers = [
-  { id: "1", name: "dhipokemon", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", followers: 0 },
-  { id: "2", name: "Pokemonban", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", followers: 0 },
-  { id: "3", name: "Aqshal pokemon", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", followers: 6 },
-  { id: "4", name: "NruPokemon", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", followers: 20 },
-  { id: "5", name: "JAYPOKEMON", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", followers: 0 },
-  { id: "6", name: "tcgpokemon", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", followers: 0 },
-  { id: "7", name: "pokemonseller", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", followers: 1 },
-  { id: "8", name: "Pokemon Central", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", followers: 0 },
+  { id: "1", name: "dhipokemon", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", followers: 0, itemsSold: 12 },
+  { id: "2", name: "Pokemonban", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", followers: 0, itemsSold: 5 },
+  { id: "3", name: "Aqshal pokemon", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", followers: 6, itemsSold: 89 },
+  { id: "4", name: "NruPokemon", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", followers: 20, itemsSold: 156 },
+  { id: "5", name: "JAYPOKEMON", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", followers: 0, itemsSold: 3 },
+  { id: "6", name: "tcgpokemon", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", followers: 0, itemsSold: 0 },
 ]
 
-// Market price history mock data
+// Market price history mock data with volume
 const priceHistoryData = [
-  { date: "1/2",  price: 8.5,  volume: 45 },
-  { date: "1/6",  price: 8.8,  volume: 50 },
-  { date: "1/9",  price: 9.2,  volume: 52 },
-  { date: "1/13", price: 9.5,  volume: 60 },
-  { date: "1/16", price: 9.8,  volume: 38 },
-  { date: "1/20", price: 10.1, volume: 55 },
-  { date: "1/23", price: 10.5, volume: 65 },
-  { date: "1/27", price: 10.3, volume: 44 },
-  { date: "1/30", price: 10.2, volume: 48 },
-  { date: "2/3",  price: 10.6, volume: 60 },
-  { date: "2/6",  price: 10.8, volume: 72 },
-  { date: "2/10", price: 9.9,  volume: 40 },
-  { date: "2/13", price: 9.5,  volume: 35 },
-  { date: "2/17", price: 10.0, volume: 42 },
-  { date: "2/20", price: 10.3, volume: 50 },
-  { date: "2/24", price: 10.5, volume: 58 },
-  { date: "2/27", price: 10.8, volume: 54 },
-  { date: "3/3",  price: 11.0, volume: 63 },
-  { date: "3/6",  price: 11.2, volume: 65 },
-  { date: "3/10", price: 11.4, volume: 70 },
-  { date: "3/13", price: 11.5, volume: 78 },
-  { date: "3/17", price: 11.76, volume: 62 },
+  { date: "1/2", price: 8.5, volume: 25 },
+  { date: "1/6", price: 8.8, volume: 38 },
+  { date: "1/9", price: 9.2, volume: 42 },
+  { date: "1/13", price: 9.5, volume: 35 },
+  { date: "1/16", price: 9.8, volume: 48 },
+  { date: "1/20", price: 10.2, volume: 52 },
+  { date: "1/23", price: 10.5, volume: 45 },
+  { date: "1/27", price: 10.8, volume: 58 },
+  { date: "1/30", price: 11.2, volume: 62 },
+  { date: "2/3", price: 11.5, volume: 55 },
+  { date: "2/6", price: 11.9, volume: 68 },
+  { date: "2/10", price: 12.2, volume: 75 },
 ]
 
-// Filter options
-const filterOptions = {
-  category: ["All", "Single Card", "Set/Bundle", "Booster Pack", "Box", "Case"],
-  saleStatus: ["All", "For Sale", "Auction"],
-  saleType: ["All", "Fixed Price", "Negotiable"],
-  graded: ["All", "Graded", "Ungraded"],
-  gradingCompany: ["All", "PSA", "BGS", "CGC", "ACE Grading", "Beckett", "SGC", "TAG", "ARS"],
-  condition: ["All", "10", "9.5", "9", "8-8.5", "7-7.5", "6-6.5", "5-5.5", "4-4.5", "3-3.5", "A", "B", "C", "D"],
+// Featured product for price history
+const featuredProduct = {
+  name: "Pikachu VMAX Rainbow Rare",
+  subtitle: "Vivid Voltage 188/185",
+  avgPrice: 11.76,
+  change: 35.48,
+  listings: 291,
+  image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=120&h=120&fit=crop",
 }
 
-const sortOptions = [
-  { id: "ending", label: "Ending Soon", icon: Clock },
-  { id: "latest", label: "Latest", icon: TrendingUp },
-  { id: "price-high", label: "Price: High to Low", icon: DollarSign },
-  { id: "price-low", label: "Price: Low to High", icon: DollarSign },
-]
+type SearchTab = "all" | "shows" | "products" | "posts" | "users"
 
 function SearchPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get("q") || ""
-  const initialTab = searchParams.get("tab") || "products"
   
   const [searchQuery, setSearchQuery] = useState(initialQuery)
-  const [activeTab, setActiveTab] = useState<"products" | "posts" | "users">(initialTab as "products" | "posts" | "users")
-  const [showFilterSheet, setShowFilterSheet] = useState(false)
-  const [showSortSheet, setShowSortSheet] = useState(false)
-  const [selectedSort, setSelectedSort] = useState("latest")
-  
-  // Filter states
-  const [filters, setFilters] = useState({
-    category: "All",
-    saleStatus: "All",
-    saleType: "All",
-    graded: "All",
-    gradingCompany: "All",
-    condition: "All",
-  })
+  const [activeTab, setActiveTab] = useState<SearchTab>("all")
+  const [hasSearched, setHasSearched] = useState(!!initialQuery)
 
   const handleCancel = () => {
     router.back()
@@ -109,495 +89,465 @@ function SearchPageContent() {
 
   const clearSearch = () => {
     setSearchQuery("")
+    setHasSearched(false)
   }
 
-  const applyFilters = () => {
-    setShowFilterSheet(false)
+  const handleKeywordClick = (keyword: string) => {
+    setSearchQuery(keyword)
+    setHasSearched(true)
   }
 
-  const resetFilters = () => {
-    setFilters({
-      category: "All",
-      saleStatus: "All",
-      saleType: "All",
-      graded: "All",
-      gradingCompany: "All",
-      condition: "All",
-    })
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      setHasSearched(true)
+    }
   }
 
-  const applySort = (sortId: string) => {
-    setSelectedSort(sortId)
-    setShowSortSheet(false)
-  }
+  const tabs: { id: SearchTab; label: string }[] = [
+    { id: "all", label: "All" },
+    { id: "products", label: "Products" },
+    { id: "shows", label: "Shows" },
+    { id: "posts", label: "Posts" },
+    { id: "users", label: "Users" },
+  ]
 
-  // Show market price section when user has searched for a specific card
-  const showMarketPrice = searchQuery.length > 3 && activeTab === "products"
+  // Show Card component
+  const ShowCard = ({ show }: { show: typeof mockShows[0] }) => (
+    <Link href={`/live/${show.id}`} className="block shrink-0 w-[140px]">
+      <div className="flex items-center gap-1.5 mb-1.5">
+        <div className="size-5 rounded-full overflow-hidden bg-muted shrink-0">
+          <Image src={show.user.avatar} alt={show.user.name} width={20} height={20} className="w-full h-full object-cover" unoptimized />
+        </div>
+        <span className="text-[10px] font-medium truncate text-foreground">{show.user.name}</span>
+      </div>
+      <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-muted">
+        <Image src={show.thumbnail} alt={show.title} fill className="object-cover" unoptimized />
+        {show.isLive && (
+          <div className="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+            <span>Live</span>
+            <span className="mx-0.5">-</span>
+            <span>{show.viewers}</span>
+          </div>
+        )}
+      </div>
+      <p className="text-[11px] font-semibold line-clamp-2 leading-tight mt-1.5">{show.title}</p>
+    </Link>
+  )
+
+  // Product Card component
+  const ProductCard = ({ product }: { product: typeof mockProducts[0] }) => (
+    <Link href={`/shop/${product.id}`} className="block shrink-0 w-[140px]">
+      <div className="bg-card rounded-xl overflow-hidden border border-border">
+        <div className="relative aspect-square">
+          <Image src={product.image} alt={product.name} fill className="object-cover" unoptimized />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+            <div className="flex items-center gap-1.5">
+              <Avatar className="size-4 border border-white/30">
+                <AvatarImage src={product.seller.avatar} />
+                <AvatarFallback className="text-[8px]">{product.seller.name[0]}</AvatarFallback>
+              </Avatar>
+              <span className="text-[9px] text-white truncate">{product.seller.name}</span>
+            </div>
+          </div>
+          {product.type === "auction" && (
+            <div className="absolute top-2 right-2 bg-yellow-500 text-black text-[8px] font-bold px-1.5 py-0.5 rounded">
+              Auction
+            </div>
+          )}
+        </div>
+        <div className="p-2">
+          <h3 className="text-[10px] font-medium text-foreground line-clamp-2 leading-tight mb-1">{product.name}</h3>
+          <p className="text-xs font-bold text-primary">${product.price}</p>
+        </div>
+      </div>
+    </Link>
+  )
+
+  // Post Card component
+  const PostCard = ({ post }: { post: typeof mockPosts[0] }) => (
+    <div className="shrink-0 w-[140px]">
+      <div className="relative aspect-square rounded-xl overflow-hidden bg-muted">
+        <Image src={post.image} alt={post.title} fill className="object-cover" unoptimized />
+      </div>
+      <div className="mt-1.5">
+        <div className="flex items-center gap-1.5 mb-1">
+          <Avatar className="size-4">
+            <AvatarImage src={post.user.avatar} />
+            <AvatarFallback className="text-[8px]">{post.user.name[0]}</AvatarFallback>
+          </Avatar>
+          <span className="text-[9px] text-muted-foreground truncate">{post.user.name}</span>
+        </div>
+        <h3 className="text-[10px] font-medium text-foreground line-clamp-2 leading-tight">{post.title}</h3>
+        <div className="flex items-center gap-1 mt-1">
+          <Heart className="size-3 text-red-500 fill-red-500" />
+          <span className="text-[9px] text-muted-foreground">{post.likes.toLocaleString()}</span>
+        </div>
+      </div>
+    </div>
+  )
+
+  // User Card component
+  const UserCard = ({ user }: { user: typeof mockUsers[0] }) => (
+    <Link href={`/user/${user.id}`} className="block shrink-0 w-[100px]">
+      <div className="flex flex-col items-center">
+        <Avatar className="size-16 border-2 border-border mb-2">
+          <AvatarImage src={user.avatar} />
+          <AvatarFallback>{user.name[0]}</AvatarFallback>
+        </Avatar>
+        <h3 className="text-[11px] font-medium text-foreground truncate w-full text-center">{user.name}</h3>
+        <p className="text-[10px] text-muted-foreground">{user.followers} followers</p>
+      </div>
+    </Link>
+  )
+
+  // Section Header component
+  const SectionHeader = ({ title, tabId }: { title: string; tabId: SearchTab }) => (
+    <div className="flex items-center justify-between mb-3">
+      <h3 className="text-sm font-bold text-foreground">{title}</h3>
+      <button
+        onClick={() => setActiveTab(tabId)}
+        className="flex items-center gap-0.5 text-xs text-muted-foreground"
+      >
+        show more
+        <ChevronRight className="size-3" />
+      </button>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Search Header */}
-      <header className="sticky top-0 z-50 bg-background px-4 h-14 flex items-center border-b border-border">
-        <div className="flex items-center gap-3">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-10 h-10 rounded-full bg-secondary border-none"
-              autoFocus
-            />
-            {searchQuery && (
-              <button
-                onClick={clearSearch}
-                className="absolute right-3 top-1/2 -translate-y-1/2 size-5 bg-muted-foreground/20 rounded-full flex items-center justify-center"
-              >
-                <X className="size-3 text-muted-foreground" />
-              </button>
-            )}
-          </div>
-          <button onClick={handleCancel} className="text-sm text-muted-foreground shrink-0">
-            Cancel
-          </button>
+      <header className="sticky top-0 z-50 bg-background px-4 h-14 flex items-center gap-3 border-b border-border">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            className="pl-10 pr-10 h-10 rounded-full bg-secondary border-none"
+            autoFocus
+          />
+          {searchQuery && (
+            <button
+              onClick={clearSearch}
+              className="absolute right-3 top-1/2 -translate-y-1/2 size-5 bg-muted-foreground/20 rounded-full flex items-center justify-center"
+            >
+              <X className="size-3 text-muted-foreground" />
+            </button>
+          )}
         </div>
+        <button onClick={handleCancel} className="text-sm text-muted-foreground shrink-0">
+          Cancel
+        </button>
       </header>
 
-      {/* Tabs */}
-      <div className="flex border-b border-border bg-background">
-        {[
-          { id: "products", label: "Products" },
-          { id: "posts", label: "Posts" },
-          { id: "users", label: "Users" },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-              activeTab === tab.id ? "text-foreground" : "text-muted-foreground"
-            }`}
-          >
-            {tab.label}
-            {activeTab === tab.id && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* Products Tab - Filter/Sort Bar */}
-      {activeTab === "products" && (
-        <div className="px-4 py-2.5 flex items-center gap-2 bg-background border-b border-border">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowFilterSheet(true)}
-            className="h-8 rounded-full text-xs gap-1.5 border-border"
-          >
-            <SlidersHorizontal className="size-3.5" />
-            Filter
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowSortSheet(true)}
-            className="h-8 rounded-full text-xs gap-1.5 border-border"
-          >
-            <ArrowUpDown className="size-3.5" />
-            Sort
-          </Button>
-          <div className="ml-auto">
-            <Button
-              variant="default"
-              size="sm"
-              className="h-8 rounded-full text-xs gap-1.5 bg-primary"
-            >
-              <span>Cards</span>
-              <ChevronDown className="size-3.5" />
-            </Button>
+      {/* Content */}
+      {!hasSearched ? (
+        /* ── SUGGEST STATE ── */
+        <div className="px-4 py-6">
+          <h3 className="text-sm font-bold text-foreground mb-3">Suggest</h3>
+          <div className="flex flex-wrap gap-2">
+            {suggestedKeywords.map((keyword) => (
+              <button
+                key={keyword}
+                onClick={() => handleKeywordClick(keyword)}
+                className="px-4 py-2 rounded-full bg-secondary text-sm text-foreground font-medium hover:bg-secondary/80 transition-colors"
+              >
+                {keyword}
+              </button>
+            ))}
           </div>
         </div>
-      )}
+      ) : (
+        /* ── SEARCH RESULTS STATE ── */
+        <>
+          {/* Tabs */}
+          <div className="flex border-b border-border bg-background overflow-x-auto no-scrollbar">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`shrink-0 py-3 px-4 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                  activeTab === tab.id ? "text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                {tab.label}
+                {activeTab === tab.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                )}
+              </button>
+            ))}
+          </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-auto">
-        {/* Market Price History Section - Products Tab Only */}
-        {showMarketPrice && (
-          <div className="mx-3 mb-4 bg-card rounded-2xl border border-border overflow-hidden">
-            <div className="p-4">
-              {/* Card Info */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="size-14 rounded-lg overflow-hidden bg-secondary shrink-0">
-                  <Image
-                    src="/cards/pokemon-1.jpg"
-                    alt="Card"
-                    width={56}
-                    height={56}
-                    className="w-full h-full object-cover"
-                  />
+          {/* Tab Content */}
+          <div className="flex-1 overflow-auto">
+            {/* ── ALL TAB ── */}
+            {activeTab === "all" && (
+              <div className="py-4">
+                {/* Shows Section */}
+                <div className="mb-6">
+                  <div className="px-4">
+                    <SectionHeader title="Shows" tabId="shows" />
+                  </div>
+                  <div className="flex gap-3 overflow-x-auto no-scrollbar px-4">
+                    {mockShows.slice(0, 4).map((show) => (
+                      <ShowCard key={show.id} show={show} />
+                    ))}
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-sm text-foreground truncate">Pikachu VMAX Rainbow Rare</h4>
-                  <p className="text-xs text-muted-foreground mb-1.5">Vivid Voltage 188/185</p>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-muted-foreground">Avg: <span className="font-bold text-foreground">$11.76</span></span>
-                    <span className="text-xs text-green-500 font-medium">+35.48%</span>
-                    <span className="text-xs text-muted-foreground">291 listings</span>
+
+                {/* Products Section */}
+                <div className="mb-6">
+                  <div className="px-4">
+                    <SectionHeader title="Products" tabId="products" />
+                  </div>
+                  <div className="flex gap-3 overflow-x-auto no-scrollbar px-4">
+                    {mockProducts.slice(0, 4).map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Posts Section */}
+                <div className="mb-6">
+                  <div className="px-4">
+                    <SectionHeader title="Posts" tabId="posts" />
+                  </div>
+                  <div className="flex gap-3 overflow-x-auto no-scrollbar px-4">
+                    {mockPosts.slice(0, 4).map((post) => (
+                      <PostCard key={post.id} post={post} />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Users Section */}
+                <div className="mb-6">
+                  <div className="px-4">
+                    <SectionHeader title="Users" tabId="users" />
+                  </div>
+                  <div className="flex gap-4 overflow-x-auto no-scrollbar px-4">
+                    {mockUsers.slice(0, 6).map((user) => (
+                      <UserCard key={user.id} user={user} />
+                    ))}
                   </div>
                 </div>
               </div>
+            )}
 
-              {/* Title above chart */}
-              <h3 className="font-bold text-sm text-foreground mb-3">Market Price History</h3>
-
-              {/* Price Chart - extend to card edges with negative margin */}
-              <div className="h-44 -mx-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={priceHistoryData} margin={{ top: 5, right: 8, left: -10, bottom: 0 }}>
-                    <XAxis
-                      dataKey="date"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fontSize: 9, fill: '#9ca3af' }}
-                      interval="preserveStartEnd"
-                    />
-                    <YAxis
-                      yAxisId="price"
-                      orientation="left"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fontSize: 9, fill: '#9ca3af' }}
-                      tickFormatter={(v) => `$${v}`}
-                      domain={[7, 13]}
-                      tickCount={4}
-                    />
-                    <YAxis
-                      yAxisId="volume"
-                      orientation="right"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fontSize: 9, fill: '#9ca3af' }}
-                      domain={[0, 100]}
-                      tickCount={5}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: 'rgba(15, 23, 42, 0.92)',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: '11px',
-                        color: '#f8fafc',
-                        boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-                        padding: '8px 12px',
-                      }}
-                      labelStyle={{ color: '#94a3b8', marginBottom: '4px', fontSize: '10px' }}
-                      itemStyle={{ color: '#f8fafc' }}
-                      cursor={{ stroke: 'rgba(148,163,184,0.3)', strokeWidth: 1 }}
-                      formatter={(value: number, name: string) =>
-                        name === "price" ? [`$${value.toFixed(2)}`, "Price"] : [value, "Volume"]
-                      }
-                    />
-                    {/* Light blue volume bars */}
-                    <Bar
-                      yAxisId="volume"
-                      dataKey="volume"
-                      fill="#bfdbfe"
-                      radius={[2, 2, 0, 0]}
-                      opacity={0.8}
-                    />
-                    {/* Bright blue price line */}
-                    <Line
-                      yAxisId="price"
-                      type="monotone"
-                      dataKey="price"
-                      stroke="#1d4ed8"
-                      strokeWidth={2.5}
-                      dot={false}
-                      activeDot={{ r: 4, fill: '#1d4ed8' }}
-                    />
-                  </ComposedChart>
-                </ResponsiveContainer>
+            {/* ── SHOWS TAB ── */}
+            {activeTab === "shows" && (
+              <div className="flex flex-col">
+                {/* Filter Bar */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-border sticky top-0 bg-background z-10">
+                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    <SlidersHorizontal className="size-3" />
+                    Filter
+                  </button>
+                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    <ArrowUpDown className="size-3" />
+                    Sort
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-3 p-4">
+                {mockShows.map((show) => (
+                  <Link href={`/live/${show.id}`} key={show.id} className="block">
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <div className="size-5 rounded-full overflow-hidden bg-muted shrink-0">
+                        <Image src={show.user.avatar} alt={show.user.name} width={20} height={20} className="w-full h-full object-cover" unoptimized />
+                      </div>
+                      <span className="text-[10px] font-medium truncate text-foreground">{show.user.name}</span>
+                    </div>
+                    <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-muted">
+                      <Image src={show.thumbnail} alt={show.title} fill className="object-cover" unoptimized />
+                      {show.isLive && (
+                        <div className="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                          <span>Live</span>
+                          <span className="mx-0.5">-</span>
+                          <span>{show.viewers}</span>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-[11px] font-semibold line-clamp-2 leading-tight mt-1.5">{show.title}</p>
+                  </Link>
+                ))}
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Products Grid */}
-        {activeTab === "products" && (
-          <div className="grid grid-cols-3 gap-2 p-3">
-            {mockProducts.map((product) => (
-              <Link key={product.id} href={`/shop/${product.id}`}>
-                <div className="bg-card rounded-xl overflow-hidden border border-border">
-                  <div className="relative aspect-square">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover"
-                    />
-                    {/* Seller overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                      <div className="flex items-center gap-1.5">
-                        <Avatar className="size-5 border border-white/30">
-                          <AvatarImage src={product.seller.avatar} />
-                          <AvatarFallback className="text-[8px]">{product.seller.name[0]}</AvatarFallback>
+            {/* ── PRODUCTS TAB ── */}
+            {activeTab === "products" && (
+              <div className="flex flex-col max-h-[calc(100vh-110px)] overflow-y-auto">
+                {/* Filter Bar */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-border sticky top-0 bg-background z-10">
+                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    <SlidersHorizontal className="size-3" />
+                    Filter
+                  </button>
+                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    <ArrowUpDown className="size-3" />
+                    Sort
+                  </button>
+                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    Buy Format
+                    <ChevronDown className="size-3" />
+                  </button>
+                </div>
+
+                <div className="p-4 space-y-6">
+                {/* Market Price History Card */}
+                <div className="bg-card rounded-2xl border border-border p-4 shrink-0">
+                  {/* Product Header */}
+                  <div className="flex gap-3 mb-4">
+                    <div className="size-16 rounded-lg overflow-hidden bg-muted shrink-0">
+                      <Image src={featuredProduct.image} alt={featuredProduct.name} width={64} height={64} className="w-full h-full object-cover" unoptimized />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-foreground leading-tight">{featuredProduct.name}</h3>
+                      <p className="text-xs text-muted-foreground mb-1">{featuredProduct.subtitle}</p>
+                      <p className="text-xs">
+                        <span className="text-muted-foreground">Avg: </span>
+                        <span className="font-bold text-foreground">${featuredProduct.avgPrice}</span>
+                        <span className="ml-2 font-bold text-green-500">+{featuredProduct.change}%</span>
+                        <span className="ml-2 text-muted-foreground">{featuredProduct.listings} listings</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Price History Title */}
+                  <h4 className="text-sm font-bold text-foreground mb-2">Market Price History</h4>
+
+                  {/* ComposedChart */}
+                  <div className="h-44 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={priceHistoryData} margin={{ top: 10, right: 10, left: 10, bottom: 5 }}>
+                        <XAxis dataKey="date" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} domain={[7, 13]} width={28} ticks={[7, 9, 11, 13]} />
+                        <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} domain={[0, 100]} width={28} ticks={[0, 25, 50, 75, 100]} />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: "0.375rem", fontSize: 11 }}
+                          formatter={(value: any, name: string) => {
+                            if (name === "price") return [`$${value}`, "Price"];
+                            if (name === "volume") return [value, "Listings"];
+                            return [value, name];
+                          }}
+                        />
+                        <Bar yAxisId="right" dataKey="volume" fill="#64748b" opacity={0.4} radius={[2, 2, 0, 0]} />
+                        <Line yAxisId="left" type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Products Grid */}
+                <div>
+                  <h3 className="text-sm font-bold text-foreground mb-3">More Products</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {mockProducts.map((product) => (
+                      <Link href={`/shop/${product.id}`} key={product.id} className="block">
+                        <div className="bg-card rounded-xl overflow-hidden border border-border">
+                          <div className="relative aspect-square">
+                            <Image src={product.image} alt={product.name} fill className="object-cover" unoptimized />
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+                              <div className="flex items-center gap-1.5">
+                                <Avatar className="size-4 border border-white/30">
+                                  <AvatarImage src={product.seller.avatar} />
+                                  <AvatarFallback className="text-[8px]">{product.seller.name[0]}</AvatarFallback>
+                                </Avatar>
+                                <span className="text-[9px] text-white truncate">{product.seller.name}</span>
+                              </div>
+                            </div>
+                            {product.type === "auction" && (
+                              <div className="absolute top-2 right-2 bg-yellow-500 text-black text-[8px] font-bold px-1.5 py-0.5 rounded">
+                                Auction
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-2">
+                            <h3 className="text-[10px] font-medium text-foreground line-clamp-2 leading-tight mb-1">{product.name}</h3>
+                            {product.type === "auction" ? (
+                              <div className="flex items-center justify-between">
+                                <p className="text-xs font-bold text-primary">${product.currentBid}</p>
+                                <span className="text-[9px] text-red-500">{product.endTime}</span>
+                              </div>
+                            ) : (
+                              <p className="text-xs font-bold text-primary">${product.price}</p>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── POSTS TAB ── */}
+            {activeTab === "posts" && (
+              <div className="grid grid-cols-2 gap-3 p-4">
+                {mockPosts.map((post) => (
+                  <div key={post.id} className="bg-card rounded-xl overflow-hidden border border-border">
+                    <div className="relative aspect-square">
+                      <Image src={post.image} alt={post.title} fill className="object-cover" unoptimized />
+                    </div>
+                    <div className="p-2.5">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <Avatar className="size-5">
+                          <AvatarImage src={post.user.avatar} />
+                          <AvatarFallback className="text-[8px]">{post.user.name[0]}</AvatarFallback>
                         </Avatar>
-                        <span className="text-[10px] text-white truncate">{product.seller.name}</span>
+                        <span className="text-[10px] text-muted-foreground truncate">{post.user.name}</span>
+                      </div>
+                      <h3 className="text-xs font-medium text-foreground line-clamp-2">{post.title}</h3>
+                      <div className="flex items-center gap-1 mt-1.5">
+                        <Heart className="size-3 text-red-500 fill-red-500" />
+                        <span className="text-[10px] text-muted-foreground">{post.likes.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="p-2">
-                    <div className="flex items-center gap-1 mb-1">
-                      {product.isGraded && (
-                        <div className="size-4 bg-primary rounded flex items-center justify-center">
-                          <span className="text-[8px] font-bold text-white">A</span>
-                        </div>
-                      )}
-                      <h3 className="text-[11px] font-medium text-foreground line-clamp-2 leading-tight">
-                        {product.name}
-                      </h3>
-                    </div>
-                    <p className="text-xs font-bold text-primary">
-                      Rp {product.price.toLocaleString()}
-                    </p>
+                ))}
+              </div>
+            )}
+
+            {/* ── USERS TAB ── */}
+            {activeTab === "users" && (
+              <div className="divide-y divide-border">
+                {[...mockUsers].sort((a, b) => b.followers - a.followers).map((user) => (
+                  <div key={user.id} className="flex items-center gap-3 px-4 py-3">
+                    <Link href={`/user/${user.id}`} className="flex items-center gap-3 flex-1 min-w-0">
+                      <Avatar className="size-11 border-2 border-border shrink-0">
+                        <AvatarImage src={user.avatar} />
+                        <AvatarFallback>{user.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-medium text-foreground truncate">{user.name}</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {user.followers} followers · {user.itemsSold} items sold
+                        </p>
+                      </div>
+                    </Link>
+                    <button 
+                      className="shrink-0 px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Follow
+                    </button>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* Posts Grid */}
-        {activeTab === "posts" && (
-          <div className="grid grid-cols-2 gap-3 p-3">
-            {mockPosts.map((post) => (
-              <div key={post.id} className="bg-card rounded-xl overflow-hidden border border-border">
-                <div className="relative aspect-square">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-2.5">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Avatar className="size-5">
-                      <AvatarImage src={post.user.avatar} />
-                      <AvatarFallback className="text-[8px]">{post.user.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <span className="text-[10px] text-muted-foreground truncate">{post.user.name}</span>
-                  </div>
-                  <h3 className="text-xs font-medium text-foreground line-clamp-2">{post.title}</h3>
-                  <div className="flex items-center gap-1 mt-1.5">
-                    <Star className="size-3 text-yellow-500 fill-yellow-500" />
-                    <span className="text-[10px] text-muted-foreground">{post.likes.toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Users List */}
-        {activeTab === "users" && (
-          <div className="divide-y divide-border">
-            {mockUsers.map((user) => (
-              <Link key={user.id} href={`/user/${user.id}`}>
-                <div className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/50 transition-colors">
-                  <Avatar className="size-11 border-2 border-border">
-                    <AvatarImage src={user.avatar} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium text-foreground truncate">{user.name}</h3>
-                    <p className="text-xs text-muted-foreground">{user.followers} followers</p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Filter Sheet */}
-      <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
-        <SheetContent side="bottom" className="h-[85vh] rounded-t-3xl px-0" aria-describedby={undefined}>
-          <SheetHeader className="border-b border-border pb-4 px-4">
-            <SheetTitle className="text-center">Filter</SheetTitle>
-          </SheetHeader>
-          <div className="overflow-y-auto h-[calc(100%-140px)] py-4 px-4">
-            {/* Category */}
-            <div className="mb-6">
-              <h4 className="text-sm font-medium text-foreground mb-3">Category</h4>
-              <div className="flex flex-wrap gap-2">
-                {filterOptions.category.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setFilters({ ...filters, category: option })}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
-                      filters.category === option
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-background text-foreground border-border"
-                    }`}
-                  >
-                    {option}
-                  </button>
                 ))}
               </div>
-            </div>
-
-            {/* Sale Status */}
-            <div className="mb-6">
-              <h4 className="text-sm font-medium text-foreground mb-3">Sale Status</h4>
-              <div className="flex flex-wrap gap-2">
-                {filterOptions.saleStatus.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setFilters({ ...filters, saleStatus: option })}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
-                      filters.saleStatus === option
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-background text-foreground border-border"
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Sale Type */}
-            <div className="mb-6">
-              <h4 className="text-sm font-medium text-foreground mb-3">Sale Type</h4>
-              <div className="flex flex-wrap gap-2">
-                {filterOptions.saleType.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setFilters({ ...filters, saleType: option })}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
-                      filters.saleType === option
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-background text-foreground border-border"
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Graded */}
-            <div className="mb-6">
-              <h4 className="text-sm font-medium text-foreground mb-3">Graded</h4>
-              <div className="flex flex-wrap gap-2">
-                {filterOptions.graded.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setFilters({ ...filters, graded: option })}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
-                      filters.graded === option
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-background text-foreground border-border"
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Grading Company */}
-            <div className="mb-6">
-              <h4 className="text-sm font-medium text-foreground mb-3">Grading Company</h4>
-              <div className="flex flex-wrap gap-2">
-                {filterOptions.gradingCompany.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setFilters({ ...filters, gradingCompany: option })}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
-                      filters.gradingCompany === option
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-background text-foreground border-border"
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Condition */}
-            <div className="mb-6">
-              <h4 className="text-sm font-medium text-foreground mb-3">Rating / Condition</h4>
-              <div className="flex flex-wrap gap-2">
-                {filterOptions.condition.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setFilters({ ...filters, condition: option })}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
-                      filters.condition === option
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-background text-foreground border-border"
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
-
-          {/* Filter Actions */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t border-border flex gap-3">
-            <Button variant="outline" className="flex-1 h-12 rounded-xl" onClick={resetFilters}>
-              Reset
-            </Button>
-            <Button className="flex-1 h-12 rounded-xl bg-primary" onClick={applyFilters}>
-              Apply
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
-
-      {/* Sort Sheet */}
-      <Sheet open={showSortSheet} onOpenChange={setShowSortSheet}>
-        <SheetContent side="bottom" className="rounded-t-3xl" aria-describedby={undefined}>
-          <SheetHeader className="border-b border-border pb-4">
-            <SheetTitle className="text-center">Sort</SheetTitle>
-          </SheetHeader>
-          <div className="py-4 space-y-2">
-            {sortOptions.map((option) => {
-              const Icon = option.icon
-              return (
-                <button
-                  key={option.id}
-                  onClick={() => applySort(option.id)}
-                  className={`w-full flex items-center gap-3 p-4 rounded-xl transition-colors ${
-                    selectedSort === option.id
-                      ? "bg-primary/10 border border-primary"
-                      : "bg-secondary border border-transparent"
-                  }`}
-                >
-                  <Icon className="size-5 text-muted-foreground" />
-                  <span className="flex-1 text-left text-sm font-medium">{option.label}</span>
-                  {selectedSort === option.id && (
-                    <Check className="size-5 text-primary" />
-                  )}
-                </button>
-              )
-            })}
-          </div>
-        </SheetContent>
-      </Sheet>
+        </>
+      )}
     </div>
   )
 }
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <SearchPageContent />
     </Suspense>
   )
