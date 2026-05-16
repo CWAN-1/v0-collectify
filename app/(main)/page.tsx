@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Search, Heart, MessageCircle, ChevronRight, Plus, Flame, Gavel, X, ShoppingCart } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { Search, Heart, MessageCircle, X, ShoppingCart, Plus, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
@@ -10,133 +10,202 @@ import Image from "next/image"
 
 // All available categories/IPs
 const allCategories = [
-  { id: "pokemon", label: "Pokemon", avatar: "/brands/pikachu.jpg", bgColor: "bg-yellow-500" },
-  { id: "yugioh", label: "Yu-Gi-Oh!", avatar: "/brands/yugioh.jpg", bgColor: "bg-orange-600" },
-  { id: "onepiece", label: "One Piece", avatar: "/brands/luffy.jpg", bgColor: "bg-red-600" },
-  { id: "mtg", label: "MTG", avatar: "/brands/mtg.jpg", bgColor: "bg-amber-700" },
-  { id: "sports", label: "Sports", avatar: "/brands/sports.jpg", bgColor: "bg-green-600" },
-  { id: "digimon", label: "Digimon", avatar: "/brands/digimon.jpg", bgColor: "bg-blue-600" },
-  { id: "dbz", label: "Dragon Ball", avatar: "/brands/dbz.jpg", bgColor: "bg-orange-500" },
-  { id: "weiss", label: "Weiss", avatar: "/brands/weiss.jpg", bgColor: "bg-pink-500" },
+  { id: "foryou", label: "For You", image: null, bgColor: "bg-blue-500" },
+  { id: "pokemon", label: "Pokemon", image: "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=200&h=240&fit=crop" },
+  { id: "onepiece", label: "One Piece", image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200&h=240&fit=crop" },
+  { id: "popmart", label: "Popmart", image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=200&h=240&fit=crop" },
+  { id: "yugioh", label: "Yu-Gi-Oh!", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=240&fit=crop" },
+  { id: "sports", label: "Sports", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=240&fit=crop" },
 ]
 
-// User's selected interests (from onboarding)
-const userInterests = ["pokemon", "yugioh", "onepiece"]
+// User's selected interests
+const userInterests = ["foryou", "pokemon", "onepiece", "popmart", "yugioh"]
 
-const featuredCards = [
+// Live stream data
+const liveStreams = [
   {
-    id: "1",
-    image: "/cards/pokemon-1.jpg",
-    name: "Pikachu VMAX",
-    set: "Vivid Voltage",
-    price: 250,
-    category: "pokemon",
+    id: "live-1",
+    user: { name: "pokepullzs", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=500&fit=crop",
+    title: "PRISMATIC/ASCENDED WALL INSANE 1/5 ODD...",
+    viewers: 47,
+    category: "Pokemon Cards",
+    tags: ["Pokemon", "Giveaway"],
+    isLive: true,
   },
   {
-    id: "2",
-    image: "/cards/yugioh-1.jpg",
-    name: "Blue-Eyes Dragon",
-    set: "Legend of Blue Eyes",
-    price: 850,
-    category: "yugioh",
+    id: "live-2",
+    user: { name: "alexcardshop", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=400&h=500&fit=crop",
+    title: "BIG GIVEAWAYIES WALL OF SEALED BREAK",
+    viewers: 130,
+    category: "Pokemon Cards",
+    tags: ["$1 Starts", "Sealed"],
+    isLive: true,
   },
   {
-    id: "3",
-    image: "/cards/onepiece-1.jpg",
-    name: "Luffy Gear 5",
-    set: "Romance Dawn",
-    price: 180,
-    category: "onepiece",
+    id: "live-3",
+    user: { name: "card_lair", avatar: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=500&fit=crop",
+    title: "Prismatic SPC Giveaways!!! $1 start sl...",
+    viewers: 241,
+    category: "Pokemon Cards",
+    tags: ["Graded Cards"],
+    isLive: true,
   },
   {
-    id: "4",
-    image: "/cards/pokemon-2.jpg",
-    name: "Charizard GX",
-    set: "Hidden Fates",
-    price: 450,
-    category: "pokemon",
+    id: "live-4",
+    user: { name: "caascollectibles", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=500&fit=crop",
+    title: "WoTC - EX era $1 starts Giveaways",
+    viewers: 101,
+    category: "Pokemon Cards",
+    tags: ["Vintage", "Sealed"],
+    isLive: true,
   },
   {
-    id: "5",
-    image: "/cards/sports-1.jpg",
-    name: "LeBron Rookie",
-    set: "2003 Topps",
-    price: 1500,
-    category: "sports",
+    id: "live-5",
+    user: { name: "mastersetgames", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=500&fit=crop",
+    title: "PSA 10 Graded Cards Showcase",
+    viewers: 155,
+    category: "Pokemon Cards",
+    tags: ["PSA 10", "Graded"],
+    isLive: true,
   },
   {
-    id: "6",
-    image: "/cards/mtg-1.jpg",
-    name: "Black Lotus",
-    set: "Alpha",
-    price: 25000,
-    category: "mtg",
+    id: "live-6",
+    user: { name: "dungeonswipes", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=400&h=500&fit=crop",
+    title: "$1 STARTS! DEALS DROPS STEALS",
+    viewers: 118,
+    category: "Pokemon Cards",
+    tags: ["$1 Starts", "Limited"],
+    isLive: true,
   },
 ]
 
+// Post data
 const posts = [
   {
     id: "1",
     user: { name: "Alex Chen", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", verified: true },
-    image: "/posts/post-pokemon-1.jpg",
+    image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=500&fit=crop",
     title: "Unboxing Pikachu VMAX Rainbow Rare",
     likes: 2431,
     comments: 89,
-    category: "pokemon"
+    category: "pokemon",
+    isVideo: false,
   },
   {
     id: "2",
     user: { name: "Sarah Lee", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", verified: false },
-    image: "/posts/post-sports-1.jpg",
+    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=500&fit=crop",
     title: "NBA Rookie Cards Collection 2024",
     likes: 1892,
     comments: 45,
-    category: "sports"
+    category: "sports",
+    isVideo: true,
   },
   {
     id: "3",
     user: { name: "Mike Zhang", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", verified: true },
-    image: "/posts/post-yugioh-1.jpg",
+    image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=500&fit=crop",
     title: "Review: Blue-Eyes White Dragon",
     likes: 3210,
     comments: 156,
-    category: "yugioh"
+    category: "yugioh",
+    isVideo: false,
   },
   {
     id: "4",
     user: { name: "Emma Wilson", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", verified: false },
-    image: "/posts/post-storage-1.jpg",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=500&fit=crop",
     title: "Tips for Storing Your Collection",
     likes: 987,
     comments: 34,
-    category: "all"
+    category: "all",
+    isVideo: true,
   },
   {
     id: "5",
     user: { name: "James Park", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", verified: true },
-    image: "/posts/post-onepiece-1.jpg",
+    image: "https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=400&h=500&fit=crop",
     title: "Luffy Gear 5 Secret Rare Pull!",
     likes: 4521,
     comments: 234,
-    category: "onepiece"
+    category: "onepiece",
+    isVideo: false,
   },
   {
     id: "6",
     user: { name: "Lisa Wang", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", verified: false },
-    image: "/posts/post-pokemon-2.jpg",
+    image: "https://images.unsplash.com/photo-1642056446467-83ae30b63e37?w=400&h=500&fit=crop",
     title: "Pokemon Cards from Japan",
     likes: 1567,
     comments: 67,
-    category: "pokemon"
+    category: "pokemon",
+    isVideo: false,
   },
 ]
 
+// Followed users' content
+const followedContent = [
+  ...liveStreams.slice(0, 2),
+  ...posts.slice(0, 4),
+]
+
+// Live stream card component
+function LiveCard({ stream }: { stream: typeof liveStreams[0] }) {
+  return (
+    <Link href={`/live/${stream.id}`} className="block">
+      <div className="mb-3">
+        {/* User info above card */}
+        <div className="flex items-center gap-2 mb-1.5">
+          <Avatar className="size-6 border border-border">
+            <AvatarImage src={stream.user.avatar} />
+            <AvatarFallback>{stream.user.name[0]}</AvatarFallback>
+          </Avatar>
+          <span className="text-xs font-medium truncate">{stream.user.name}</span>
+        </div>
+        
+        {/* Thumbnail */}
+        <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-muted">
+          <Image
+            src={stream.thumbnail}
+            alt={stream.title}
+            fill
+            className="object-cover"
+            unoptimized
+          />
+          
+          {/* Live badge */}
+          <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
+            <span>Live</span>
+            <span>•</span>
+            <span>{stream.viewers}</span>
+          </div>
+        </div>
+        
+        {/* Info */}
+        <div className="mt-2">
+          <h3 className="text-xs font-semibold line-clamp-2 leading-tight">{stream.title}</h3>
+          <p className="text-[10px] text-muted-foreground mt-0.5 truncate">
+            {stream.category} • {stream.tags.join(", ")}
+          </p>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+// Post card component
 function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?: boolean }) {
   const [liked, setLiked] = useState(false)
 
   return (
     <Link href={`/post/${post.id}`} className="block mb-3">
-      <div className="bg-card rounded-2xl overflow-hidden border border-border">
+      <div className="bg-card rounded-xl overflow-hidden border border-border">
         <div className="relative aspect-[4/5]">
           <Image
             src={post.image}
@@ -144,20 +213,28 @@ function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?
             fill
             className="object-cover"
             priority={priority}
+            unoptimized
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           
+          {/* Video indicator */}
+          {post.isVideo && (
+            <div className="absolute top-2 right-2 size-7 rounded-full bg-black/50 flex items-center justify-center">
+              <Play className="size-3.5 text-white fill-white" />
+            </div>
+          )}
+          
           {/* User Avatar */}
-          <div className="absolute top-3 left-3">
-            <Avatar className="size-8 border-2 border-primary">
+          <div className="absolute top-2 left-2">
+            <Avatar className="size-7 border-2 border-white">
               <AvatarImage src={post.user.avatar} />
               <AvatarFallback>{post.user.name[0]}</AvatarFallback>
             </Avatar>
           </div>
 
           {/* Bottom Info */}
-          <div className="absolute bottom-0 left-0 right-0 p-3">
-            <h3 className="font-semibold text-sm text-white line-clamp-2 mb-2">
+          <div className="absolute bottom-0 left-0 right-0 p-2.5">
+            <h3 className="font-semibold text-xs text-white line-clamp-2 mb-1.5">
               {post.title}
             </h3>
             <div className="flex items-center gap-3">
@@ -168,12 +245,12 @@ function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?
                 }}
                 className="flex items-center gap-1 text-white/80"
               >
-                <Heart className={`size-4 ${liked ? "fill-red-500 text-red-500" : ""}`} />
-                <span className="text-xs">{liked ? post.likes + 1 : post.likes}</span>
+                <Heart className={`size-3.5 ${liked ? "fill-red-500 text-red-500" : ""}`} />
+                <span className="text-[10px]">{liked ? post.likes + 1 : post.likes}</span>
               </button>
               <div className="flex items-center gap-1 text-white/80">
-                <MessageCircle className="size-4" />
-                <span className="text-xs">{post.comments}</span>
+                <MessageCircle className="size-3.5" />
+                <span className="text-[10px]">{post.comments}</span>
               </div>
             </div>
           </div>
@@ -184,165 +261,203 @@ function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?
 }
 
 export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedCategory, setSelectedCategory] = useState("foryou")
+  const [selectedFeedTab, setSelectedFeedTab] = useState<"live" | "post" | "followed">("live")
   const [interests, setInterests] = useState(userInterests)
   const [showAddInterestSheet, setShowAddInterestSheet] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
+  const [headerHeight, setHeaderHeight] = useState(260)
+  const headerRef = useRef<HTMLDivElement>(null)
 
-  // Build the tabs: All + user interests
-  const displayedCategories = [
-    { id: "all", label: "All", avatar: null, bgColor: "bg-gradient-to-br from-primary to-accent" },
-    ...allCategories.filter(cat => interests.includes(cat.id))
-  ]
+  // SCROLL_MAX: number of px scrolled until tabs collapse to text-only
+  const SCROLL_MAX = 100
+  // progress: 0 = normal view (88px - already 20% smaller), 1 = text-only pill (32px)
+  const progress = Math.min(scrollY / SCROLL_MAX, 1)
 
+  // Derived values for smooth intermediate transition
+  const cardHeight = Math.round(88 - progress * (88 - 32))
+  const cardBorderRadius = Math.round(12 - progress * (12 - 999)) // 999 = full pill
+  const imageOpacity = 1 - progress
+  const isCompact = progress >= 1
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+      if (headerRef.current) setHeaderHeight(headerRef.current.offsetHeight)
+    }
+    if (headerRef.current) setHeaderHeight(headerRef.current.offsetHeight)
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  const displayedCategories = allCategories.filter(cat => interests.includes(cat.id))
   const availableToAdd = allCategories.filter(cat => !interests.includes(cat.id))
 
   const addInterest = (categoryId: string) => {
-    if (!interests.includes(categoryId)) {
-      setInterests([...interests, categoryId])
-    }
+    if (!interests.includes(categoryId)) setInterests([...interests, categoryId])
   }
 
   const removeInterest = (categoryId: string) => {
     setInterests(interests.filter(id => id !== categoryId))
-    if (selectedCategory === categoryId) {
-      setSelectedCategory("all")
-    }
+    if (selectedCategory === categoryId) setSelectedCategory("foryou")
   }
 
-  const filteredPosts = posts.filter(post => 
-    selectedCategory === "all" || post.category === selectedCategory
-  )
+  const getFeedContent = () => {
+    if (selectedFeedTab === "live") return liveStreams
+    if (selectedFeedTab === "post") return posts
+    return followedContent
+  }
 
-  const filteredFeatured = featuredCards.filter(card =>
-    selectedCategory === "all" || card.category === selectedCategory
-  )
-
-  const leftColumn = filteredPosts.filter((_, i) => i % 2 === 0)
-  const rightColumn = filteredPosts.filter((_, i) => i % 2 === 1)
+  const feedContent = getFeedContent()
+  const leftColumn = feedContent.filter((_, i) => i % 2 === 0)
+  const rightColumn = feedContent.filter((_, i) => i % 2 === 1)
 
   return (
     <div className="min-h-screen bg-background">
       {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
-        <div className="px-4 pt-12 pb-3">
-          {/* Logo + Search + Cart */}
+      <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 bg-background">
+        <div className="px-4 pt-12 pb-2">
+          {/* Search + Cart */}
           <div className="flex items-center gap-3">
-          {/* Logo */}
-            <Link href="/" className="shrink-0">
-              <Image
-                src="/logo.png"
-                alt="Collectify"
-                width={100}
-                height={32}
-                className="h-7"
-                style={{ width: 'auto' }}
-              />
-            </Link>
-            
-            {/* Search - Clickable to navigate to search page */}
             <Link href="/search" className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <div className="h-9 pl-9 pr-4 rounded-xl bg-card border border-border text-sm flex items-center text-muted-foreground">
+                <div className="h-10 pl-10 pr-4 rounded-full bg-muted text-sm flex items-center text-muted-foreground">
                   Search
                 </div>
               </div>
             </Link>
-            
-            {/* Cart */}
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative size-9 bg-card border border-border rounded-xl shrink-0">
-                <ShoppingCart className="size-4" />
-                <span className="absolute -top-1 -right-1 size-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">2</span>
+              <Button variant="ghost" size="icon" className="relative size-10 rounded-full shrink-0">
+                <ShoppingCart className="size-5" />
+                <span className="absolute -top-0.5 -right-0.5 size-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">2</span>
               </Button>
             </Link>
           </div>
         </div>
-      </header>
-      
-      {/* Spacer for fixed header */}
-      <div className="h-24" />
 
-      <main className="px-4">
-        {/* IP Category Tabs - Square Icons */}
-        <div className="mb-4">
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide py-2">
-            {displayedCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className="flex flex-col items-center gap-1.5 shrink-0"
-              >
-                <div className={`size-14 rounded-xl overflow-hidden border-2 transition-all ${
-                  selectedCategory === category.id
-                    ? "border-primary ring-2 ring-primary/20"
-                    : "border-border"
-                }`}>
-                  {category.avatar ? (
-                    <Image
-                      src={category.avatar}
-                      alt={category.label}
-                      width={56}
-                      height={56}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className={`w-full h-full ${category.bgColor} flex items-center justify-center`}>
-                      <span className="text-xs font-bold text-white">ALL</span>
+        {/* Category Tabs — smooth height transition on scroll */}
+        <div className="px-4 pb-1.5 overflow-hidden">
+          <div className="flex gap-2.5 overflow-x-auto scrollbar-hide" style={{ paddingRight: "24%" }}>
+            {displayedCategories.map((category) => {
+              const isSelected = selectedCategory === category.id
+              const isForyou = category.id === "foryou"
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className="shrink-0"
+                  style={{ height: `${cardHeight}px`, width: "88px" }}
+                >
+                  <div
+                    className="relative w-full h-full overflow-hidden border-2 transition-colors duration-200"
+                    style={{
+                      borderRadius: `${Math.min(cardBorderRadius, 20)}px`,
+                      borderColor: isSelected
+                        ? (isForyou ? "#3b82f6" : "hsl(var(--primary))")
+                        : "transparent",
+                      backgroundColor: isCompact
+                        ? isSelected
+                          ? isForyou ? "#3b82f6" : "hsl(var(--primary))"
+                          : "hsl(var(--muted))"
+                        : "transparent",
+                    }}
+                  >
+                    {/* Background image / color - fades out as we scroll */}
+                    {!isCompact && (
+                      <div
+                        className="absolute inset-0"
+                        style={{ opacity: imageOpacity }}
+                      >
+                        {category.image ? (
+                          <Image
+                            src={category.image}
+                            alt={category.label}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className={`w-full h-full ${category.bgColor} flex items-center justify-center`}>
+                            <div className="size-10 rounded-full bg-white/90 flex items-center justify-center">
+                              <div className="size-6 rounded-full bg-black" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {/* Label — top-aligned, horizontally centered */}
+                    <div className="absolute inset-0 flex justify-center px-2" style={{ paddingTop: "6px" }}>
+                      <span
+                        className="font-semibold leading-tight text-center"
+                        style={{
+                          fontSize: "11px",
+                          color: "white",
+                          textShadow: "0 1px 3px rgba(0,0,0,0.7)",
+                          whiteSpace: "normal",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {category.label}
+                      </span>
                     </div>
-                  )}
+                  </div>
+                </button>
+              )
+            })}
+            {/* Add button — same fixed width, only shown when not fully compact */}
+            {!isCompact && (
+              <button onClick={() => setShowAddInterestSheet(true)} className="shrink-0" style={{ height: `${cardHeight}px`, width: "88px" }}>
+                <div className="w-full h-full rounded-xl border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-muted/30">
+                  <Plus className="size-5 text-muted-foreground" />
                 </div>
-                <span className={`text-[10px] font-medium ${
-                  selectedCategory === category.id ? "text-primary" : "text-muted-foreground"
-                }`}>{category.label}</span>
               </button>
-            ))}
-            {/* Add Interest Button */}
-            <button
-              onClick={() => setShowAddInterestSheet(true)}
-              className="flex flex-col items-center gap-1.5 shrink-0"
-            >
-              <div className="size-14 rounded-xl border-2 border-dashed border-border hover:border-primary/50 transition-colors flex items-center justify-center">
-                <Plus className="size-5 text-muted-foreground" />
-              </div>
-              <span className="text-[10px] text-muted-foreground">Add</span>
-            </button>
+            )}
           </div>
         </div>
 
-        {/* Hot & Auction Banners */}
-        <div className="flex gap-2 mb-4">
-          <Link href={`/hot${selectedCategory !== "all" ? `?category=${selectedCategory}` : ""}`} className="flex-1">
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-lg px-3 py-2 flex items-center gap-2">
-              <div className="size-6 rounded-full bg-white/20 flex items-center justify-center">
-                <Flame className="size-3 text-white" />
-              </div>
-              <span className="text-white font-semibold text-xs">Hot</span>
-              <ChevronRight className="size-3.5 text-white/70 ml-auto" />
-            </div>
-          </Link>
-          <Link href={`/auctions${selectedCategory !== "all" ? `?category=${selectedCategory}` : ""}`} className="flex-1">
-            <div className="bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg px-3 py-2 flex items-center gap-2">
-              <div className="size-6 rounded-full bg-white/20 flex items-center justify-center">
-                <Gavel className="size-3 text-white" />
-              </div>
-              <span className="text-white font-semibold text-xs">Auction</span>
-              <ChevronRight className="size-3.5 text-white/70 ml-auto" />
-            </div>
-          </Link>
+        {/* Feed Tab Switcher — always visible in header */}
+        <div className="flex items-center border-b border-border px-4">
+          {(["live", "post", "followed"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setSelectedFeedTab(tab)}
+              className={`flex-1 py-2 text-xs font-medium transition-colors relative ${
+                selectedFeedTab === tab ? "text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              {tab === "live" ? "LIVE" : tab === "post" ? "Post" : "Followed"}
+              {selectedFeedTab === tab && (
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full" />
+              )}
+            </button>
+          ))}
         </div>
+      </header>
 
-        {/* Community Feed */}
+      {/* Spacer: exact header height tracked via ref */}
+      <div style={{ height: `${headerHeight}px` }} />
+
+      <main className="px-4 pt-2">
+        {/* Feed Content */}
         <div className="mb-6">
           <div className="flex gap-3 w-full">
             <div className="flex-1 min-w-0">
-              {leftColumn.map((post, index) => (
-                <PostCard key={post.id} post={post} priority={index === 0} />
+              {leftColumn.map((item, index) => (
+                "viewers" in item ? (
+                  <LiveCard key={item.id} stream={item as typeof liveStreams[0]} />
+                ) : (
+                  <PostCard key={item.id} post={item as typeof posts[0]} priority={index === 0} />
+                )
               ))}
             </div>
             <div className="flex-1 min-w-0">
-              {rightColumn.map((post, index) => (
-                <PostCard key={post.id} post={post} priority={index === 0} />
+              {rightColumn.map((item, index) => (
+                "viewers" in item ? (
+                  <LiveCard key={item.id} stream={item as typeof liveStreams[0]} />
+                ) : (
+                  <PostCard key={item.id} post={item as typeof posts[0]} priority={index === 0} />
+                )
               ))}
             </div>
           </div>
@@ -363,7 +478,7 @@ export default function HomePage() {
               <div className="mb-4">
                 <h4 className="text-xs font-medium text-muted-foreground mb-2">Your Interests</h4>
                 <div className="flex flex-wrap gap-2">
-                  {interests.map(id => {
+                  {interests.filter(id => id !== "foryou").map(id => {
                     const cat = allCategories.find(c => c.id === id)
                     if (!cat) return null
                     return (
@@ -371,9 +486,11 @@ export default function HomePage() {
                         key={id}
                         className="flex items-center gap-2 pl-1.5 pr-1 py-1 rounded-full bg-primary/10 border border-primary/30"
                       >
-                        <div className="size-6 rounded-full overflow-hidden">
-                          <Image src={cat.avatar} alt={cat.label} width={24} height={24} className="w-full h-full object-cover" />
-                        </div>
+                        {cat.image && (
+                          <div className="size-6 rounded-full overflow-hidden">
+                            <Image src={cat.image} alt={cat.label} width={24} height={24} className="w-full h-full object-cover" />
+                          </div>
+                        )}
                         <span className="text-xs font-medium text-primary">{cat.label}</span>
                         <button
                           onClick={() => removeInterest(id)}
@@ -389,23 +506,29 @@ export default function HomePage() {
             )}
             
             {/* Available to Add */}
-            <div>
-              <h4 className="text-xs font-medium text-muted-foreground mb-2">Available</h4>
-              <div className="grid grid-cols-4 gap-2">
-                {availableToAdd.map(cat => (
-                  <button
-                    key={cat.id}
-                    onClick={() => addInterest(cat.id)}
-                    className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-card border border-border hover:border-primary/50 transition-colors"
-                  >
-                    <div className="size-14 rounded-xl overflow-hidden">
-                      <Image src={cat.avatar} alt={cat.label} width={56} height={56} className="w-full h-full object-cover" />
-                    </div>
-                    <span className="text-[10px] font-medium text-center">{cat.label}</span>
-                  </button>
-                ))}
+            {availableToAdd.length > 0 && (
+              <div>
+                <h4 className="text-xs font-medium text-muted-foreground mb-2">Available</h4>
+                <div className="grid grid-cols-4 gap-2">
+                  {availableToAdd.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => addInterest(cat.id)}
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-card border border-border hover:border-primary/50 transition-colors"
+                    >
+                      <div className="size-12 rounded-xl overflow-hidden bg-muted">
+                        {cat.image ? (
+                          <Image src={cat.image} alt={cat.label} width={48} height={48} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className={`w-full h-full ${cat.bgColor}`} />
+                        )}
+                      </div>
+                      <span className="text-[10px] font-medium text-center">{cat.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>
