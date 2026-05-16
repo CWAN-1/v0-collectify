@@ -228,12 +228,25 @@ export default function LiveStreamPage() {
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-1.5">
-            {/* Avatar with optional gold frame for high-level users */}
-            <div className={`size-6 rounded-full shrink-0 overflow-hidden flex items-center justify-center ${msg.hasGoldFrame ? "ring-2 ring-yellow-400" : ""} ${msg.color}`}>
-              {msg.avatar ? (
-                <Image src={msg.avatar} alt={msg.user} width={24} height={24} className="w-full h-full object-cover" unoptimized />
-              ) : (
-                <span className="text-[9px] text-white font-bold">{msg.user[0].toUpperCase()}</span>
+            {/* Avatar wrapper — extra padding on top-left for crown badge */}
+            <div className="relative shrink-0 mt-1" style={{ width: 28, height: 28 }}>
+              {/* Base avatar — no ring/overflow clipping */}
+              <div className={`size-6 rounded-full overflow-hidden flex items-center justify-center absolute bottom-0 right-0 ${msg.color}`}>
+                {msg.avatar ? (
+                  <Image src={msg.avatar} alt={msg.user} width={24} height={24} className="w-full h-full object-cover" unoptimized />
+                ) : (
+                  <span className="text-[9px] text-white font-bold">{msg.user[0].toUpperCase()}</span>
+                )}
+              </div>
+              {/* Gold ring frame — separate element, not clipped */}
+              {msg.hasGoldFrame && (
+                <div className="absolute bottom-0 right-0 size-6 rounded-full ring-2 ring-yellow-400 pointer-events-none" />
+              )}
+              {/* Crown badge — top-left corner, outside avatar bounds */}
+              {msg.hasGoldFrame && (
+                <div className="absolute top-0 left-0 z-10 size-3.5 rounded-full bg-black flex items-center justify-center shadow-sm">
+                  <span className="text-yellow-400 leading-none" style={{ fontSize: 8 }}>&#x1F451;</span>
+                </div>
               )}
             </div>
             <div className="min-w-0">
