@@ -86,6 +86,8 @@ export default function LiveStreamPage() {
 
   // Buy Now stock state
   const [stock, setStock] = useState(buyNowItem.stock)
+  // Break spots state
+  const [spotsFilled, setSpotsFilled] = useState(breakItem.spotsFilled)
 
   // Entry notification auto-dismiss after 3s
   useEffect(() => {
@@ -104,6 +106,9 @@ export default function LiveStreamPage() {
         if (prev <= 1) {
           setIsAuctionActive(false)
           setShowWinner(true)
+          if (isBreak) {
+            setSpotsFilled(s => Math.min(s + 1, breakItem.spotsTotal))
+          }
           setTimeout(() => {
             setShowWinner(false)
             setCurrentPrice(initialAuctionItem.currentPrice)
@@ -247,7 +252,7 @@ export default function LiveStreamPage() {
       {/* ── CHAT MESSAGES ── */}
       <div
         className="absolute left-3 flex flex-col justify-end gap-1.5 overflow-hidden"
-        style={{ right: "60px", top: "50%", bottom: "168px" }}
+        style={{ right: "60px", top: "50%", bottom: isBreak ? "218px" : "168px" }}
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-center gap-2">
@@ -289,7 +294,7 @@ export default function LiveStreamPage() {
       </div>
 
       {/* ── CHAT INPUT ── */}
-      <div className="absolute left-3" style={{ right: "60px", bottom: "128px" }}>
+      <div className="absolute left-3" style={{ right: "60px", bottom: isBreak ? "178px" : "128px" }}>
         <Input
           value={chatInput}
           onChange={(e) => setChatInput(e.target.value)}
@@ -344,7 +349,7 @@ export default function LiveStreamPage() {
                   {breakItem.teamLabel}
                 </span>
                 <span className="text-white/70 text-[9px]">
-                  FOR <span className="text-white font-bold">{breakItem.spotsTotal - breakItem.spotsFilled}</span> MORE SPIN!
+                  FOR <span className="text-white font-bold">{breakItem.spotsTotal - spotsFilled}</span> MORE SPIN!
                 </span>
               </div>
               {/* Title */}
@@ -356,16 +361,16 @@ export default function LiveStreamPage() {
                 <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-yellow-400 rounded-full"
-                    style={{ width: `${(breakItem.spotsFilled / breakItem.spotsTotal) * 100}%` }}
+                    style={{ width: `${(spotsFilled / breakItem.spotsTotal) * 100}%` }}
                   />
                 </div>
                 <span className="text-white/70 text-[9px] shrink-0">
-                  {breakItem.spotsTotal - breakItem.spotsFilled} of {breakItem.spotsTotal} remaining
+                  {breakItem.spotsTotal - spotsFilled} of {breakItem.spotsTotal} remaining
                 </span>
               </div>
               {/* Shipping + price + countdown */}
               <div className="flex items-center justify-between">
-                <span className="text-white/70 text-[9px]">🇺🇸 {breakItem.shipping}</span>
+                <span className="text-white/70 text-[9px]">🇮🇩 {breakItem.shipping}</span>
                 <div className="text-right">
                   <p className="text-white font-bold text-[11px] leading-none">${currentPrice}</p>
                   <p className="text-red-400 text-[10px] font-bold mt-0.5 h-[14px]">
