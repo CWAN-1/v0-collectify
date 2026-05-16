@@ -54,8 +54,8 @@ const navItems = [
   { href: "/", icon: HomeIcon, label: "Home" },
   { href: "/shop", icon: ShopIcon, label: "Shop" },
   { href: "/publish", icon: PlusIcon, label: "", isCenter: true },
-  { href: "/messages", icon: ChatIcon, label: "Chat" },
-  { href: "/profile", icon: ProfileIcon, label: "Profile" },
+  { href: "/messages", icon: ChatIcon, label: "Activity" },
+  { href: "/profile", icon: ProfileIcon, label: "Account" },
 ]
 
 export function BottomNav() {
