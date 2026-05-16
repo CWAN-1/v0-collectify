@@ -1,85 +1,85 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ChevronDown, Star, Zap, Scissors, Share2, Wallet, Store, ChevronRight, MoreHorizontal, Crown } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ChevronDown, Star, Share2, Wallet, Store, MoreHorizontal, Scissors, Zap } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
-const liveStreamData = {
+const liveData = {
   user: {
-    name: "weedil",
+    name: "jirehsales",
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop",
-    rating: 5.0,
+    rating: 4.9,
   },
-  viewers: 8,
-  thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&h=900&fit=crop",
+  viewers: 68,
+  thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=1200&fit=crop",
 }
 
-const currentItem = {
-  image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=200&h=200&fit=crop",
-  title: "Pokemon 151 Japanese pack x 1",
-  condition: "Near Mint",
-  price: 8,
-  left: 21,
-  shipping: "Shipping & Tax",
-  flag: "GB",
+const auctionItem = {
+  image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=160&h=160&fit=crop",
+  title: "Flashlight Gloves 1 pair Right and Left  #20",
+  condition: "Brand New",
+  price: 10,
+  sold: true,
+  shipping: "Free Shipping",
+  hasTax: true,
+  winner: "amyamy96811",
 }
 
 const chatMessages = [
-  { id: "1", user: "joined", isMod: false, message: "joined 👋", avatar: null, isSystem: true },
-  { id: "2", user: "london_calling", isMod: false, message: "Got you so high indeed", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=40&h=40&fit=crop" },
-  { id: "3", user: "ewanmonty", isMod: false, message: "My mams a catholic and da is a proddy", avatar: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=40&h=40&fit=crop" },
-  { id: "4", user: "_thoa_", isMod: true, message: "funkos 🔥 one piece 🔥 pokemon tcg 🔥 check store 🍀", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop", highlighted: true },
+  { id: "1", user: "ilikecards01", isMod: true,  avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=40&h=40&fit=crop", color: "bg-indigo-600", message: "From a mess into a message. Dios es bueno!" },
+  { id: "2", user: "drejo",         isMod: false, avatar: null, color: "bg-orange-500", message: "Make the cactus dance" },
+  { id: "3", user: "ilikecards01", isMod: true,  avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop", color: "bg-indigo-600", message: "Tips are welcomed. Jirehsales has a men's home and all tips go to...", hasMore: true },
 ]
 
 export default function LiveStreamPage() {
   const router = useRouter()
   const [isFollowing, setIsFollowing] = useState(false)
   const [chatInput, setChatInput] = useState("")
-  const [showCelebration, setShowCelebration] = useState(false)
+  const [showWinner, setShowWinner] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowCelebration(true), 2000)
-    const hideTimer = setTimeout(() => setShowCelebration(false), 5000)
-    return () => { clearTimeout(timer); clearTimeout(hideTimer) }
+    const t1 = setTimeout(() => setShowWinner(true), 1500)
+    const t2 = setTimeout(() => setShowWinner(false), 5000)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
   }, [])
 
   return (
-    <div className="fixed inset-0 bg-black">
-      {/* Full-screen video background */}
+    <div className="fixed inset-0 bg-black overflow-hidden">
+
+      {/* Full-screen video BG */}
       <div className="absolute inset-0">
         <Image
-          src={liveStreamData.thumbnail}
-          alt="Live stream"
+          src={liveData.thumbnail}
+          alt="live"
           fill
           className="object-cover"
           unoptimized
           priority
         />
-        {/* Subtle gradient — only at very top and bottom */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent via-40% to-black/30" />
+        {/* gradient: darken top & bottom */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent via-45% to-black/20" />
       </div>
 
       {/* ── TOP BAR ── */}
-      <div className="absolute top-0 left-0 right-0 flex items-start justify-between px-3 pt-12">
-        {/* Left: avatar + name + rating + follow */}
+      <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-11 pb-2">
+        {/* Left: avatar + info */}
         <div className="flex items-center gap-2">
-          <Avatar className="size-10 border-2 border-white/40">
-            <AvatarImage src={liveStreamData.user.avatar} />
-            <AvatarFallback>{liveStreamData.user.name[0]}</AvatarFallback>
+          <Avatar className="size-9 border border-white/50 shrink-0">
+            <AvatarImage src={liveData.user.avatar} />
+            <AvatarFallback>{liveData.user.name[0]}</AvatarFallback>
           </Avatar>
           <div>
-            <span className="text-white text-sm font-semibold drop-shadow">{liveStreamData.user.name}</span>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <Star className="size-3 text-yellow-400 fill-yellow-400" />
-              <span className="text-white text-xs">{liveStreamData.user.rating.toFixed(1)}</span>
+            <span className="text-white text-[13px] font-semibold leading-none drop-shadow">{liveData.user.name}</span>
+            <div className="flex items-center gap-1 mt-0.5">
+              <Star className="size-2.5 text-yellow-400 fill-yellow-400" />
+              <span className="text-white text-[11px] leading-none">{liveData.user.rating}</span>
               <button
                 onClick={() => setIsFollowing(!isFollowing)}
-                className={`px-3 py-0.5 rounded-full text-xs font-semibold ml-1 ${
-                  isFollowing ? "bg-white/20 text-white" : "bg-white text-black"
+                className={`ml-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold leading-none ${
+                  isFollowing ? "bg-white/25 text-white" : "bg-yellow-400 text-black"
                 }`}
               >
                 {isFollowing ? "Following" : "Follow"}
@@ -88,188 +88,170 @@ export default function LiveStreamPage() {
           </div>
         </div>
 
-        {/* Right: crown + viewers + chevron */}
-        <div className="flex items-center gap-2 mt-1">
-          {/* Crown badge */}
-          <div className="size-9 rounded-lg bg-yellow-400 flex items-center justify-center">
-            <Crown className="size-5 text-black fill-black" />
+        {/* Right: viewers pill + close */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-full pl-2 pr-3 py-1.5">
+            {/* waveform icon */}
+            <div className="flex items-end gap-px h-3.5">
+              {[2, 4, 3, 5, 2].map((h, i) => (
+                <div key={i} className="w-0.5 bg-red-500 rounded-full" style={{ height: `${h * 2.5}px` }} />
+              ))}
+            </div>
+            <span className="text-white text-[12px] font-semibold">{liveData.viewers}</span>
           </div>
-          {/* Viewers badge */}
-          <div className="flex items-center gap-1.5 bg-black/50 rounded-full px-2.5 py-1.5">
-            <div className="size-2 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-white text-xs font-semibold">{liveStreamData.viewers}</span>
-          </div>
-          {/* Minimize */}
           <button
             onClick={() => router.back()}
-            className="size-9 rounded-full bg-black/40 flex items-center justify-center"
+            className="size-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center"
           >
-            <ChevronDown className="size-5 text-white" />
+            <ChevronDown className="size-4 text-white" />
           </button>
         </div>
       </div>
 
-      {/* ── RIGHT SIDE TOOLBAR ── */}
-      <div className="absolute right-2 flex flex-col items-center gap-4" style={{ top: "38%" }}>
-        {/* More */}
-        <div className="flex flex-col items-center gap-1">
-          <button className="flex flex-col items-center gap-0.5">
-            <MoreHorizontal className="size-5 text-white drop-shadow" />
-            <span className="text-[10px] text-white/90">More</span>
-          </button>
+      {/* ── RIGHT TOOLBAR ── */}
+      <div className="absolute right-2.5 top-1/3 flex flex-col items-center gap-3.5">
+        {/* More (...) */}
+        <div className="flex flex-col items-center gap-0.5">
+          <MoreHorizontal className="size-5 text-white drop-shadow" />
+          <span className="text-white/80 text-[9px]">More</span>
         </div>
 
-        {/* Boost */}
-        <div className="flex flex-col items-center gap-1">
-          <div className="size-10 rounded-full bg-black/40 flex items-center justify-center">
-            <Zap className="size-5 text-white" />
+        {/* Share */}
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="relative">
+            <div className="size-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
+              <Share2 className="size-[18px] text-white" />
+            </div>
+            <div className="absolute -top-1 -right-1 size-4 bg-white rounded-full flex items-center justify-center">
+              <span className="text-[8px] font-bold text-black">8</span>
+            </div>
           </div>
-          <span className="text-[10px] text-white/90">Boost</span>
-        </div>
-
-        {/* Clip */}
-        <div className="flex flex-col items-center gap-1">
-          <div className="size-10 rounded-full bg-black/40 flex items-center justify-center">
-            <Scissors className="size-5 text-white" />
-          </div>
-          <span className="text-[10px] text-white/90">Clip</span>
-        </div>
-
-        {/* Share with badge */}
-        <div className="flex flex-col items-center gap-1">
-          <div className="relative size-10 rounded-full bg-black/40 flex items-center justify-center">
-            <Share2 className="size-5 text-white" />
-            <span className="absolute -top-1 -right-1 size-4 bg-white rounded-full text-[9px] font-bold text-black flex items-center justify-center">1</span>
-          </div>
-          <span className="text-[10px] text-white/90">Share</span>
+          <span className="text-white/80 text-[9px]">Share</span>
         </div>
 
         {/* Wallet */}
-        <div className="flex flex-col items-center gap-1">
-          <div className="size-10 rounded-full bg-black/40 flex items-center justify-center">
-            <Wallet className="size-5 text-white" />
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="size-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
+            <Wallet className="size-[18px] text-white" />
           </div>
-          <span className="text-[10px] text-white/90">Wallet</span>
+          <span className="text-white/80 text-[9px]">Wallet</span>
         </div>
 
-        {/* Shop — gold border + price + left count */}
+        {/* View Shop */}
         <div className="flex flex-col items-center gap-0.5">
-          <div className="relative size-11 rounded-xl border-2 border-yellow-400 bg-black/40 flex items-center justify-center">
-            <Store className="size-5 text-white" />
-            <span className="absolute -top-1.5 -right-1.5 size-5 bg-white rounded-full text-[9px] font-bold text-black flex items-center justify-center">21</span>
+          <div className="relative">
+            <div className="size-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
+              <Store className="size-[18px] text-white" />
+            </div>
+            <div className="absolute -top-1 -right-1 size-4 bg-white rounded-full flex items-center justify-center">
+              <span className="text-[8px] font-bold text-black">35</span>
+            </div>
           </div>
-          <span className="text-[10px] text-white/90">Shop</span>
-          <span className="text-xs font-bold text-white">£8</span>
-          <span className="text-[10px] text-yellow-400 font-semibold">21 Left</span>
+          <span className="text-white/80 text-[9px]">View Shop</span>
         </div>
       </div>
 
       {/* ── CHAT MESSAGES ── */}
-      <div className="absolute left-3 right-16 flex flex-col gap-2" style={{ bottom: "200px" }}>
+      <div
+        className="absolute left-3 flex flex-col gap-2"
+        style={{ right: "52px", bottom: "192px" }}
+      >
         {chatMessages.map((msg) => (
-          msg.highlighted ? (
-            <div key={msg.id} className="flex items-start gap-2 bg-black/40 rounded-xl px-2.5 py-2 backdrop-blur-sm">
-              <Avatar className="size-7 shrink-0">
-                <AvatarImage src={msg.avatar ?? undefined} />
-                <AvatarFallback className="text-[10px]">{msg.user[0].toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-white text-xs font-semibold">{msg.user}</span>
-                  {msg.isMod && <span className="bg-gray-500 text-white text-[8px] px-1 py-0.5 rounded font-bold">Mod</span>}
-                </div>
-                <p className="text-white text-xs leading-snug mt-0.5">{msg.message}</p>
-              </div>
+          <div key={msg.id} className="flex items-start gap-1.5">
+            {/* Avatar or colored circle */}
+            <div className={`size-6 rounded-full shrink-0 overflow-hidden flex items-center justify-center ${!msg.avatar ? msg.color : ""}`}>
+              {msg.avatar ? (
+                <img src={msg.avatar} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-[9px] text-white font-bold">{msg.user[0].toUpperCase()}</span>
+              )}
             </div>
-          ) : (
-            <div key={msg.id} className="flex items-center gap-1.5">
-              {msg.avatar && (
-                <Avatar className="size-6 shrink-0">
-                  <AvatarImage src={msg.avatar} />
-                  <AvatarFallback className="text-[9px]">{msg.user[0].toUpperCase()}</AvatarFallback>
-                </Avatar>
+            <div className="min-w-0">
+              <span className="text-white text-[11px] font-semibold">{msg.user} </span>
+              {msg.isMod && (
+                <span className="bg-gray-500/80 text-white text-[8px] px-1 py-px rounded font-bold align-middle mr-1">Mod</span>
               )}
-              {!msg.avatar && !msg.isSystem && (
-                <div className="size-6 rounded-full bg-red-500 flex items-center justify-center shrink-0">
-                  <span className="text-[9px] text-white font-bold">{msg.user[0].toUpperCase()}</span>
-                </div>
-              )}
-              <p className="text-white text-xs leading-snug">
-                <span className="font-semibold">{msg.isSystem ? "" : msg.user + " "}</span>
+              <span className="text-white text-[11px] leading-snug">
                 {msg.message}
-              </p>
+                {msg.hasMore && <span className="text-orange-400 font-semibold"> More</span>}
+              </span>
             </div>
-          )
+          </div>
         ))}
 
-        {/* Chat input */}
-        <div className="mt-1">
+        {/* Input */}
+        <div className="mt-0.5">
           <Input
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
             placeholder="Say something..."
-            className="h-9 rounded-full bg-black/30 border-white/20 text-white placeholder:text-white/50 text-sm"
+            className="h-8 rounded-full bg-black/30 backdrop-blur-sm border-white/20 text-white placeholder:text-white/45 text-[12px] px-4"
           />
         </div>
       </div>
 
-      {/* ── BOTTOM PRODUCT AREA (transparent — video shows through) ── */}
-      <div className="absolute bottom-0 left-0 right-0 px-3 pb-8 pt-3">
-        {/* Product card row */}
+      {/* ── BOTTOM PRODUCT AREA (transparent) ── */}
+      <div className="absolute bottom-0 left-0 right-0 px-3 pb-7">
+        {/* Winner row */}
+        <div className="flex items-center gap-1 mb-2">
+          <span className="text-[11px]">🏆</span>
+          <span className="text-white text-[11px] font-semibold">{auctionItem.winner} </span>
+          <span className="text-yellow-400 text-[11px] font-bold">won!</span>
+        </div>
+
+        {/* Product row */}
         <div className="flex items-start gap-3">
-          {/* Product image */}
-          <div className="size-16 rounded-xl overflow-hidden shrink-0 bg-black/20">
+          <div className="size-[60px] rounded-xl overflow-hidden bg-black/20 shrink-0">
             <Image
-              src={currentItem.image}
-              alt={currentItem.title}
-              width={64}
-              height={64}
+              src={auctionItem.image}
+              alt={auctionItem.title}
+              width={60}
+              height={60}
               className="w-full h-full object-cover"
               unoptimized
             />
           </div>
-
-          {/* Product details */}
           <div className="flex-1 min-w-0">
-            <p className="text-white font-bold text-base leading-snug">{currentItem.title}</p>
-            <p className="text-white/70 text-xs mt-0.5">{currentItem.condition}</p>
-            <div className="flex items-center gap-1 mt-1">
-              <span className="text-base">🇬🇧</span>
-              <span className="text-white/70 text-xs">{currentItem.shipping}</span>
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-white font-bold text-[14px] leading-snug flex-1">{auctionItem.title}</p>
+              <div className="shrink-0 text-right">
+                <p className="text-white font-bold text-[14px] leading-none">${auctionItem.price}</p>
+                {auctionItem.sold && <p className="text-red-400 text-[11px] font-semibold mt-0.5">Sold</p>}
+              </div>
+            </div>
+            <p className="text-white/65 text-[11px] mt-0.5">{auctionItem.condition}</p>
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <span className="bg-indigo-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                {auctionItem.shipping}
+              </span>
+              {auctionItem.hasTax && (
+                <span className="text-white/65 text-[10px]">+ Taxes</span>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex items-center gap-2.5 mt-3">
-          <button className="flex-1 h-11 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white font-semibold text-sm">
-            Options
-          </button>
-          <button className="flex-[2] h-11 rounded-full bg-yellow-400 text-black font-bold text-base flex items-center justify-center gap-1">
-            Buy Now
-            <ChevronRight className="size-4 -mr-1" />
-            <ChevronRight className="size-4 -ml-2" />
-          </button>
-        </div>
+        {/* Action button */}
+        <button className="mt-3 w-full h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 text-white font-semibold text-[13px]">
+          Awaiting Next Item
+        </button>
       </div>
 
-      {/* ── CELEBRATION OVERLAY ── */}
-      {showCelebration && (
+      {/* ── AUCTION WIN CELEBRATION ── */}
+      {showWinner && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
           <div className="flex flex-col items-center">
             <div className="relative">
-              <div className="absolute -top-5 -left-5 text-yellow-400 text-2xl animate-ping">✦</div>
-              <div className="absolute -top-3 left-10 text-yellow-400 text-xl animate-ping" style={{ animationDelay: "0.2s" }}>✦</div>
-              <div className="absolute top-10 -left-7 text-yellow-400 text-lg animate-ping" style={{ animationDelay: "0.4s" }}>✦</div>
-              <div className="absolute top-8 left-12 text-yellow-400 text-2xl animate-ping" style={{ animationDelay: "0.1s" }}>✦</div>
-              <div className="absolute -top-7 left-5 text-green-400 text-xl animate-ping" style={{ animationDelay: "0.3s" }}>✦</div>
-              <Avatar className="size-20 border-4 border-yellow-400 shadow-2xl shadow-yellow-400/50">
+              {[[-20,-20,"text-xl",0],[-10,32,"text-lg",200],[28,-14,"text-2xl",100],[24,30,"text-xl",300],[-28,14,"text-lg",150]].map(([t,l,sz,delay], i) => (
+                <span key={i} className={`absolute ${sz} text-yellow-400 animate-ping`} style={{ top: Number(t), left: Number(l), animationDelay: `${delay}ms` }}>✦</span>
+              ))}
+              <Avatar className="size-16 border-4 border-yellow-400 shadow-2xl shadow-yellow-500/60">
                 <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" />
                 <AvatarFallback>a</AvatarFallback>
               </Avatar>
             </div>
-            <p className="text-yellow-400 font-bold text-xl mt-3 drop-shadow-lg">alexsmi45760</p>
-            <p className="text-white/90 text-sm mt-1">Made a first purchase</p>
+            <p className="text-yellow-400 font-bold text-lg mt-3 drop-shadow-lg">{auctionItem.winner}</p>
+            <p className="text-white/90 text-xs mt-0.5">won the auction!</p>
           </div>
         </div>
       )}
