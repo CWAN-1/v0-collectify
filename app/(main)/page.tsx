@@ -269,14 +269,14 @@ export default function HomePage() {
   const [headerHeight, setHeaderHeight] = useState(260)
   const headerRef = useRef<HTMLDivElement>(null)
 
-  // SCROLL_MAX: number of px scrolled until tabs shrink to 80% height
+  // SCROLL_MAX: number of px scrolled until tabs collapse to text-only
   const SCROLL_MAX = 100
-  // progress: 0 = full 110px, 1 = 88px (80% of original)
+  // progress: 0 = normal view (88px - already 20% smaller), 1 = text-only pill (32px)
   const progress = Math.min(scrollY / SCROLL_MAX, 1)
 
   // Derived values for smooth intermediate transition
-  const cardHeight = Math.round(110 - progress * (110 - 88))
-  const cardBorderRadius = 12
+  const cardHeight = Math.round(88 - progress * (88 - 32))
+  const cardBorderRadius = Math.round(12 - progress * (12 - 999)) // 999 = full pill
   const imageOpacity = 1 - progress
   const isCompact = progress >= 1
 
@@ -349,7 +349,6 @@ export default function HomePage() {
                   className="shrink-0"
                   style={{ height: `${cardHeight}px`, width: "88px" }}
                 >
-                  {/* Morphing card: full image → pill */}
                   <div
                     className="relative w-full h-full overflow-hidden border-2 transition-colors duration-200"
                     style={{
