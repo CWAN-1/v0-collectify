@@ -36,9 +36,8 @@ const shopProducts = [
 ]
 
 const chatMessages = [
-  { id: "1", user: "ilikecards01", isMod: true, avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=40&h=40&fit=crop", color: "bg-indigo-600", message: "From a mess into a message. Dios es bueno!" },
-  { id: "2", user: "drejo", isMod: false, avatar: null, color: "bg-orange-500", message: "Make the cactus dance" },
-  { id: "3", user: "ilikecards01", isMod: true, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop", color: "bg-indigo-600", message: "Tips are welcomed. Jirehsales has a men's home and all tips go to...", hasMore: true },
+  { id: "1", user: "drejo", level: 5, avatar: null, color: "bg-orange-500", message: "Make the cactus dance" },
+  { id: "2", user: "ilikecards01", level: 12, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop", color: "bg-indigo-600", message: "Tips are welcomed. Jirehsales has a men's home and all tips go to...", hasMore: true },
 ]
 
 export default function LiveStreamPage() {
@@ -59,7 +58,16 @@ export default function LiveStreamPage() {
   const [customBidAmount, setCustomBidAmount] = useState(currentPrice + 1)
   const [maxBidEnabled, setMaxBidEnabled] = useState(true)
   const [showWinner, setShowWinner] = useState(false)
-  const [winner, setWinner] = useState({ name: "amyamy96811", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" })
+  const [winner] = useState({ name: "amyamy96811", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" })
+  const [entryNotification, setEntryNotification] = useState<{ name: string; level: number } | null>({ name: "collector_jane", level: 10 })
+
+  // Entry notification auto-dismiss after 3s
+  useEffect(() => {
+    if (entryNotification) {
+      const timer = setTimeout(() => setEntryNotification(null), 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [entryNotification])
 
   // Countdown timer
   useEffect(() => {
@@ -198,6 +206,21 @@ export default function LiveStreamPage() {
         </button>
       </div>
 
+      {/* ── ENTRY NOTIFICATION (above chat) ── */}
+      {entryNotification && (
+        <div
+          className="absolute left-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-left-4 duration-300"
+          style={{ right: "60px", bottom: "220px" }}
+        >
+          <span className="text-yellow-400 text-[11px]">&#x1F451;</span>
+          <span className="text-white/90 text-[11px]">
+            <span className="font-semibold text-white">{entryNotification.name}</span>
+            <span className="text-yellow-400 font-bold ml-1">LV{entryNotification.level}</span>
+            <span className="text-white/70 ml-1">entered the live room</span>
+          </span>
+        </div>
+      )}
+
       {/* ── CHAT MESSAGES ── */}
       <div
         className="absolute left-3 flex flex-col justify-end gap-1.5 overflow-hidden"
@@ -214,9 +237,7 @@ export default function LiveStreamPage() {
             </div>
             <div className="min-w-0">
               <span className="text-white text-[11px] font-semibold">{msg.user} </span>
-              {msg.isMod && (
-                <span className="bg-gray-500/80 text-white text-[8px] px-1 py-px rounded font-bold align-middle mr-1">Mod</span>
-              )}
+              <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-[8px] px-1 py-px rounded font-bold align-middle mr-1">LV{msg.level}</span>
               <span className="text-white text-[11px] leading-snug">
                 {msg.message}
                 {msg.hasMore && <span className="text-orange-400 font-semibold"> More</span>}
@@ -277,21 +298,29 @@ export default function LiveStreamPage() {
         </div>
       </div>
 
-      {/* ── AUCTION WIN CELEBRATION ── */}
+      {/* ── AUCTION WIN CELEBRATION (positioned above chat area) ── */}
       {showWinner && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+        <div
+          className="absolute left-0 right-0 flex justify-center pointer-events-none z-20"
+          style={{ bottom: "280px" }}
+        >
           <div className="flex flex-col items-center">
             <div className="relative">
-              {[[-20,-20,"text-xl",0],[-10,32,"text-lg",200],[28,-14,"text-2xl",100],[24,30,"text-xl",300],[-28,14,"text-lg",150]].map(([t,l,sz,delay], i) => (
-                <span key={i} className={`absolute ${sz} text-yellow-400 animate-ping`} style={{ top: Number(t), left: Number(l), animationDelay: `${delay}ms` }}>✦</span>
+              {/* Sparkle effects */}
+              {[[-16,-16,"text-sm",0],[-8,28,"text-xs",200],[24,-10,"text-base",100],[20,26,"text-sm",300],[-24,12,"text-xs",150]].map(([t,l,sz,delay], i) => (
+                <span key={i} className={`absolute ${sz} text-yellow-400 animate-ping`} style={{ top: Number(t), left: Number(l), animationDelay: `${delay}ms` }}>&#10022;</span>
               ))}
-              <Avatar className="size-16 border-4 border-yellow-400 shadow-2xl shadow-yellow-500/60">
-                <AvatarImage src={winner.avatar} />
-                <AvatarFallback>{winner.name[0]}</AvatarFallback>
-              </Avatar>
+              {/* Crown frame on avatar */}
+              <div className="relative">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xl z-10">&#x1F451;</span>
+                <Avatar className="size-12 border-2 border-yellow-400 shadow-xl shadow-yellow-500/50">
+                  <AvatarImage src={winner.avatar} />
+                  <AvatarFallback>{winner.name[0]}</AvatarFallback>
+                </Avatar>
+              </div>
             </div>
-            <p className="text-yellow-400 font-bold text-lg mt-3 drop-shadow-lg">{winner.name}</p>
-            <p className="text-white/90 text-xs mt-0.5">won the last auction!</p>
+            <p className="text-yellow-400 font-bold text-sm mt-2 drop-shadow-lg">{winner.name}</p>
+            <p className="text-white/80 text-[10px] mt-0.5">won the last auction!</p>
           </div>
         </div>
       )}
