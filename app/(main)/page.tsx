@@ -269,14 +269,14 @@ export default function HomePage() {
   const [headerHeight, setHeaderHeight] = useState(260)
   const headerRef = useRef<HTMLDivElement>(null)
 
-  // SCROLL_MAX: number of px scrolled until tabs are fully collapsed to text-only
+  // SCROLL_MAX: number of px scrolled until tabs shrink to 80% height
   const SCROLL_MAX = 100
-  // progress: 0 = full card view, 1 = text-only pill view
+  // progress: 0 = full 110px, 1 = 88px (80% of original)
   const progress = Math.min(scrollY / SCROLL_MAX, 1)
 
   // Derived values for smooth intermediate transition
-  const cardHeight = Math.round(110 - progress * (110 - 32))
-  const cardBorderRadius = Math.round(12 - progress * (12 - 999)) // 999 = full pill
+  const cardHeight = Math.round(110 - progress * (110 - 88))
+  const cardBorderRadius = 12
   const imageOpacity = 1 - progress
   const isCompact = progress >= 1
 
@@ -387,16 +387,14 @@ export default function HomePage() {
                         )}
                       </div>
                     )}
-                    {/* Label — always centered */}
-                    <div className="absolute inset-0 flex items-center justify-center px-2">
+                    {/* Label — top-aligned, horizontally centered */}
+                    <div className="absolute inset-0 flex justify-center px-2" style={{ paddingTop: "6px" }}>
                       <span
                         className="font-semibold leading-tight text-center"
                         style={{
                           fontSize: "11px",
-                          color: isCompact
-                            ? isSelected ? "white" : "hsl(var(--foreground))"
-                            : "white",
-                          textShadow: isCompact ? "none" : "0 1px 3px rgba(0,0,0,0.7)",
+                          color: "white",
+                          textShadow: "0 1px 3px rgba(0,0,0,0.7)",
                           whiteSpace: "normal",
                           wordBreak: "break-word",
                         }}
