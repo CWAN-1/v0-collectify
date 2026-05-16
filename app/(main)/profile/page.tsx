@@ -70,7 +70,6 @@ const rewardCards = [
 
 // Account menu items
 const accountMenu = [
-  { id: "affiliate", label: "Affiliate Program: Earn Cash", icon: Percent, href: "/account/affiliate" },
   { id: "payments", label: "Payments & Shipping", icon: CreditCard, href: "/account/payments" },
   { id: "addresses", label: "Addresses", icon: MapPin, href: "/account/addresses" },
   { id: "verified", label: "Verified Buyer", icon: ShieldCheck, href: "/account/verified" },
