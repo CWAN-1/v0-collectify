@@ -139,14 +139,13 @@ export default function LiveStreamPage() {
         </div>
       </div>
 
-      {/* ── CHAT MESSAGES ── positioned between screen midline and product area */}
+      {/* ── CHAT MESSAGES ── messages only, above the input bar */}
       <div
-        className="absolute left-3 flex flex-col gap-1.5"
-        style={{ right: "52px", top: "48%", bottom: "200px" }}
+        className="absolute left-3 flex flex-col justify-end gap-1.5"
+        style={{ right: "52px", top: "52%", bottom: "148px" }}
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-1.5">
-            {/* Avatar circle with image or fallback letter */}
             <div className={`size-6 rounded-full shrink-0 overflow-hidden flex items-center justify-center ${msg.color}`}>
               {msg.avatar ? (
                 <Image src={msg.avatar} alt={msg.user} width={24} height={24} className="w-full h-full object-cover" unoptimized />
@@ -166,16 +165,16 @@ export default function LiveStreamPage() {
             </div>
           </div>
         ))}
+      </div>
 
-        {/* Input */}
-        <div className="mt-0.5">
-          <Input
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            placeholder="Say something..."
-            className="h-8 rounded-full bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/45 text-[12px] px-4"
-          />
-        </div>
+      {/* ── CHAT INPUT — sits just above the product area ── */}
+      <div className="absolute left-3 right-3" style={{ bottom: "112px" }}>
+        <Input
+          value={chatInput}
+          onChange={(e) => setChatInput(e.target.value)}
+          placeholder="Say something..."
+          className="h-8 rounded-full bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/45 text-[12px] px-4"
+        />
       </div>
 
       {/* ── BOTTOM PRODUCT AREA — auction mode ── */}
