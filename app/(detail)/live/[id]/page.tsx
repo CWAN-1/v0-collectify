@@ -227,37 +227,36 @@ export default function LiveStreamPage() {
         style={{ right: "60px", top: "50%", bottom: "168px" }}
       >
         {chatMessages.map((msg) => (
-          <div key={msg.id} className="flex items-start gap-1.5">
-            {/* Avatar wrapper — extra padding on top-left for crown badge */}
-            <div className="relative shrink-0 mt-1" style={{ width: 28, height: 28 }}>
-              {/* Base avatar — no ring/overflow clipping */}
-              <div className={`size-6 rounded-full overflow-hidden flex items-center justify-center absolute bottom-0 right-0 ${msg.color}`}>
+          <div key={msg.id} className="flex items-center gap-2">
+            {/* Avatar wrapper — 28x28 to allow crown badge overflow top-left */}
+            <div className="relative shrink-0" style={{ width: 32, height: 32 }}>
+              <div className={`size-7 rounded-full overflow-hidden flex items-center justify-center absolute bottom-0 right-0 ${msg.color}`}>
                 {msg.avatar ? (
-                  <Image src={msg.avatar} alt={msg.user} width={24} height={24} className="w-full h-full object-cover" unoptimized />
+                  <Image src={msg.avatar} alt={msg.user} width={28} height={28} className="w-full h-full object-cover" unoptimized />
                 ) : (
-                  <span className="text-[9px] text-white font-bold">{msg.user[0].toUpperCase()}</span>
+                  <span className="text-[10px] text-white font-bold">{msg.user[0].toUpperCase()}</span>
                 )}
               </div>
-              {/* Gold ring frame — separate element, not clipped */}
               {msg.hasGoldFrame && (
-                <div className="absolute bottom-0 right-0 size-6 rounded-full ring-2 ring-yellow-400 pointer-events-none" />
+                <div className="absolute bottom-0 right-0 size-7 rounded-full ring-2 ring-yellow-400 pointer-events-none" />
               )}
-              {/* Crown badge — top-left corner, outside avatar bounds */}
               {msg.hasGoldFrame && (
                 <div className="absolute top-0 left-0 z-10 size-3.5 rounded-full bg-black flex items-center justify-center shadow-sm">
                   <span className="text-yellow-400 leading-none" style={{ fontSize: 8 }}>&#x1F451;</span>
                 </div>
               )}
             </div>
-            <div className="min-w-0">
-              <span className="text-white text-[11px] font-semibold">{msg.user} </span>
-              {/* Level badge: LV1 = gray, LV10+ = red gradient */}
-              <span className={`text-[8px] px-1 py-px rounded font-bold align-middle mr-1 ${
-                msg.level >= 10 
-                  ? "bg-gradient-to-r from-red-500 to-red-600 text-white" 
-                  : "bg-gray-400/60 text-white/80"
-              }`}>LV{msg.level}</span>
-              <span className="text-white text-[11px] leading-snug">
+            {/* Text: username on top, message below */}
+            <div className="min-w-0 flex flex-col justify-center">
+              <div className="flex items-center gap-1">
+                <span className="text-white text-[11px] font-semibold leading-none">{msg.user}</span>
+                <span className={`text-[8px] px-1 py-px rounded font-bold leading-none ${
+                  msg.level >= 10
+                    ? "bg-gradient-to-r from-red-500 to-red-600 text-white"
+                    : "bg-gray-400/60 text-white/80"
+                }`}>LV{msg.level}</span>
+              </div>
+              <span className="text-white text-[11px] leading-snug mt-0.5">
                 {msg.message}
                 {msg.hasMore && <span className="text-orange-400 font-semibold"> More</span>}
               </span>
