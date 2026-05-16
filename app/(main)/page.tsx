@@ -10,7 +10,7 @@ import Image from "next/image"
 
 // All available categories/IPs
 const allCategories = [
-  { id: "foryou", label: "For You", image: null, bgColor: "bg-yellow-400" },
+  { id: "foryou", label: "For You", image: null, bgColor: "bg-blue-500" },
   { id: "pokemon", label: "Pokemon Cards", image: "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=200&h=240&fit=crop" },
   { id: "onepiece", label: "One Piece Card", image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200&h=240&fit=crop" },
   { id: "popmart", label: "Popmart Toys", image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=200&h=240&fit=crop" },
@@ -36,7 +36,7 @@ const liveStreams = [
   {
     id: "live-2",
     user: { name: "alexcardshop", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=80&h=80&fit=crop" },
-    thumbnail: "https://images.unsplash.com/photo-1642056446467-83ae30b63e37?w=400&h=500&fit=crop",
+    thumbnail: "https://images.unsplash.com/photo-1627856013091-fed6dc16c00b?w=400&h=500&fit=crop",
     title: "BIG GIVEAWAYIES WALL OF SEALED BREAK",
     viewers: 130,
     category: "Pokemon Cards",
@@ -265,14 +265,22 @@ export default function HomePage() {
   const [selectedFeedTab, setSelectedFeedTab] = useState<"live" | "post" | "followed">("live")
   const [interests, setInterests] = useState(userInterests)
   const [showAddInterestSheet, setShowAddInterestSheet] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
   const headerRef = useRef<HTMLDivElement>(null)
 
-  // Track scroll to toggle compact category view
+  // SCROLL_MAX: number of px scrolled until tabs are fully collapsed to text-only
+  const SCROLL_MAX = 100
+  // progress: 0 = full card view, 1 = text-only pill view
+  const progress = Math.min(scrollY / SCROLL_MAX, 1)
+
+  // Derived values for smooth intermediate transition
+  const cardHeight = Math.round(110 - progress * (110 - 32))
+  const cardBorderRadius = Math.round(12 - progress * (12 - 999)) // 999 = full pill
+  const imageOpacity = 1 - progress
+  const isCompact = progress >= 1
+
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100)
-    }
+    const handleScroll = () => setScrollY(window.scrollY)
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -281,27 +289,18 @@ export default function HomePage() {
   const availableToAdd = allCategories.filter(cat => !interests.includes(cat.id))
 
   const addInterest = (categoryId: string) => {
-    if (!interests.includes(categoryId)) {
-      setInterests([...interests, categoryId])
-    }
+    if (!interests.includes(categoryId)) setInterests([...interests, categoryId])
   }
 
   const removeInterest = (categoryId: string) => {
     setInterests(interests.filter(id => id !== categoryId))
-    if (selectedCategory === categoryId) {
-      setSelectedCategory("foryou")
-    }
+    if (selectedCategory === categoryId) setSelectedCategory("foryou")
   }
 
-  // Get content based on selected feed tab
   const getFeedContent = () => {
-    if (selectedFeedTab === "live") {
-      return liveStreams
-    } else if (selectedFeedTab === "post") {
-      return posts
-    } else {
-      return followedContent
-    }
+    if (selectedFeedTab === "live") return liveStreams
+    if (selectedFeedTab === "post") return posts
+    return followedContent
   }
 
   const feedContent = getFeedContent()
@@ -312,10 +311,9 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       {/* Fixed Header */}
       <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50 bg-background">
-        <div className="px-4 pt-12 pb-3">
+        <div className="px-4 pt-12 pb-2">
           {/* Search + Cart */}
           <div className="flex items-center gap-3">
-            {/* Search - Left aligned, takes most space */}
             <Link href="/search" className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -324,8 +322,6 @@ export default function HomePage() {
                 </div>
               </div>
             </Link>
-            
-            {/* Cart */}
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative size-10 rounded-full shrink-0">
                 <ShoppingCart className="size-5" />
@@ -335,83 +331,109 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Category Tabs - Shrinks on scroll */}
-        <div className={`px-4 pb-2 transition-all duration-300 ${isScrolled ? "py-1" : ""}`}>
-          <div className="flex gap-2.5 overflow-x-auto scrollbar-hide" style={{ paddingRight: "30%" }}>
-            {displayedCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`shrink-0 transition-all duration-300 ${
-                  isScrolled
-                    ? `px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
-                        selectedCategory === category.id
-                          ? category.id === "foryou" ? "bg-yellow-400 text-black" : "bg-primary text-primary-foreground"
-                          : "bg-muted text-foreground"
-                      }`
-                    : ""
-                }`}
-              >
-                {isScrolled ? (
-                  <span>{category.label}</span>
-                ) : (
-                  <div className={`relative w-[88px] h-[110px] rounded-xl overflow-hidden border-2 transition-all ${
-                    selectedCategory === category.id
-                      ? category.id === "foryou" ? "border-yellow-400 ring-2 ring-yellow-400/30" : "border-primary ring-2 ring-primary/20"
-                      : "border-transparent"
-                  }`}>
-                    {category.image ? (
-                      <Image
-                        src={category.image}
-                        alt={category.label}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <div className={`w-full h-full ${category.bgColor} flex flex-col items-center justify-center`}>
-                        <div className="size-12 rounded-full bg-white/90 flex items-center justify-center">
-                          <div className="size-7 rounded-full bg-black" />
-                        </div>
+        {/* Category Tabs — smooth height transition on scroll */}
+        <div className="px-4 pb-1.5 overflow-hidden">
+          <div className="flex gap-2.5 overflow-x-auto scrollbar-hide" style={{ paddingRight: "24%" }}>
+            {displayedCategories.map((category) => {
+              const isSelected = selectedCategory === category.id
+              const isForyou = category.id === "foryou"
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className="shrink-0"
+                  style={{
+                    height: `${cardHeight}px`,
+                    width: isCompact ? "auto" : "88px",
+                  }}
+                >
+                  {/* Morphing card: full image → pill */}
+                  <div
+                    className="relative w-full h-full overflow-hidden border-2 transition-colors duration-200"
+                    style={{
+                      borderRadius: `${Math.min(cardBorderRadius, 20)}px`,
+                      width: isCompact ? "auto" : "88px",
+                      minWidth: isCompact ? "60px" : undefined,
+                      paddingLeft: isCompact ? "12px" : undefined,
+                      paddingRight: isCompact ? "12px" : undefined,
+                      borderColor: isSelected
+                        ? (isForyou ? "#3b82f6" : "hsl(var(--primary))")
+                        : "transparent",
+                      backgroundColor: isCompact
+                        ? isSelected
+                          ? isForyou ? "#3b82f6" : "hsl(var(--primary))"
+                          : "hsl(var(--muted))"
+                        : "transparent",
+                    }}
+                  >
+                    {/* Background image / color - fades out as we scroll */}
+                    {!isCompact && (
+                      <div
+                        className="absolute inset-0"
+                        style={{ opacity: imageOpacity }}
+                      >
+                        {category.image ? (
+                          <Image
+                            src={category.image}
+                            alt={category.label}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className={`w-full h-full ${category.bgColor} flex items-center justify-center`}>
+                            <div className="size-10 rounded-full bg-white/90 flex items-center justify-center">
+                              <div className="size-6 rounded-full bg-black" />
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
-                    {/* Label overlay */}
-                    <div className="absolute inset-x-0 top-0 p-1.5">
-                      <span className="text-[11px] font-semibold text-white drop-shadow-md">{category.label}</span>
+                    {/* Label */}
+                    <div
+                      className="absolute inset-0 flex items-center justify-center px-1.5"
+                      style={{
+                        alignItems: isCompact ? "center" : "flex-start",
+                        paddingTop: isCompact ? 0 : "6px",
+                      }}
+                    >
+                      <span
+                        className="font-semibold leading-tight text-center"
+                        style={{
+                          fontSize: isCompact ? "12px" : "11px",
+                          color: isCompact
+                            ? isSelected ? "white" : "hsl(var(--foreground))"
+                            : "white",
+                          textShadow: isCompact ? "none" : "0 1px 3px rgba(0,0,0,0.6)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {category.label}
+                      </span>
                     </div>
                   </div>
-                )}
-              </button>
-            ))}
-            {/* Add button - only when not scrolled */}
-            {!isScrolled && (
-              <button
-                onClick={() => setShowAddInterestSheet(true)}
-                className="shrink-0"
-              >
-                <div className="w-[88px] h-[110px] rounded-xl border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-muted/30">
-                  <Plus className="size-6 text-muted-foreground" />
+                </button>
+              )
+            })}
+            {/* Add button */}
+            {!isCompact && (
+              <button onClick={() => setShowAddInterestSheet(true)} className="shrink-0" style={{ height: `${cardHeight}px`, width: "88px" }}>
+                <div className="w-full h-full rounded-xl border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-muted/30">
+                  <Plus className="size-5 text-muted-foreground" />
                 </div>
               </button>
             )}
           </div>
         </div>
-      </header>
-      
-      {/* Spacer for fixed header - adjusts based on scroll state */}
-      <div className={`transition-all duration-300 ${isScrolled ? "h-28" : "h-52"}`} />
 
-      <main className="px-4">
-        {/* Feed Tab Switcher: LIVE / Post / Followed */}
-        <div className="flex items-center gap-1 mb-4 border-b border-border">
+        {/* Feed Tab Switcher — always visible in header */}
+        <div className="flex items-center border-b border-border px-4">
           {(["live", "post", "followed"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setSelectedFeedTab(tab)}
-              className={`flex-1 py-2.5 text-sm font-medium transition-colors relative ${
-                selectedFeedTab === tab
-                  ? "text-foreground"
-                  : "text-muted-foreground"
+              className={`flex-1 py-2 text-sm font-medium transition-colors relative ${
+                selectedFeedTab === tab ? "text-foreground" : "text-muted-foreground"
               }`}
             >
               {tab === "live" ? "LIVE" : tab === "post" ? "Post" : "Followed"}
@@ -421,7 +443,12 @@ export default function HomePage() {
             </button>
           ))}
         </div>
+      </header>
 
+      {/* Spacer: full header height when scrollY=0 is ~200px, collapses to ~120px */}
+      <div style={{ height: `${Math.round(200 - progress * 80)}px` }} />
+
+      <main className="px-4">
         {/* Feed Content */}
         <div className="mb-6">
           <div className="flex gap-3 w-full">
