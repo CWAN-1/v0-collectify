@@ -64,21 +64,21 @@ export default function LiveStreamPage() {
       </div>
 
       {/* ── TOP BAR ── */}
-      <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-11 pb-2">
-        {/* Left: avatar + info */}
-        <div className="flex items-center gap-2">
-          <Avatar className="size-9 border border-white/50 shrink-0">
+      <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-10 pb-2">
+        {/* Left: avatar + info — 20% smaller */}
+        <div className="flex items-center gap-1.5">
+          <Avatar className="size-7 border border-white/50 shrink-0">
             <AvatarImage src={liveData.user.avatar} />
             <AvatarFallback>{liveData.user.name[0]}</AvatarFallback>
           </Avatar>
           <div>
-            <span className="text-white text-[13px] font-semibold leading-none drop-shadow">{liveData.user.name}</span>
+            <span className="text-white text-[11px] font-semibold leading-none drop-shadow">{liveData.user.name}</span>
             <div className="flex items-center gap-1 mt-0.5">
-              <Star className="size-2.5 text-yellow-400 fill-yellow-400" />
-              <span className="text-white text-[11px] leading-none">{liveData.user.rating}</span>
+              <Star className="size-2 text-yellow-400 fill-yellow-400" />
+              <span className="text-white text-[10px] leading-none">{liveData.user.rating}</span>
               <button
                 onClick={() => setIsFollowing(!isFollowing)}
-                className={`ml-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold leading-none ${
+                className={`ml-1 px-2 py-0.5 rounded-full text-[10px] font-bold leading-none ${
                   isFollowing ? "bg-white/25 text-white" : "bg-yellow-400 text-black"
                 }`}
               >
@@ -88,22 +88,21 @@ export default function LiveStreamPage() {
           </div>
         </div>
 
-        {/* Right: viewers pill + close */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-full pl-2 pr-3 py-1.5">
-            {/* waveform icon */}
-            <div className="flex items-end gap-px h-3.5">
+        {/* Right: viewers pill + close — 20% smaller */}
+        <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full pl-1.5 pr-2.5 py-1">
+            <div className="flex items-end gap-px h-3">
               {[2, 4, 3, 5, 2].map((h, i) => (
-                <div key={i} className="w-0.5 bg-red-500 rounded-full" style={{ height: `${h * 2.5}px` }} />
+                <div key={i} className="w-0.5 bg-red-500 rounded-full" style={{ height: `${h * 2}px` }} />
               ))}
             </div>
-            <span className="text-white text-[12px] font-semibold">{liveData.viewers}</span>
+            <span className="text-white text-[11px] font-semibold">{liveData.viewers}</span>
           </div>
           <button
             onClick={() => router.back()}
-            className="size-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center"
+            className="size-6 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center"
           >
-            <ChevronDown className="size-4 text-white" />
+            <ChevronDown className="size-3.5 text-white" />
           </button>
         </div>
       </div>
@@ -151,10 +150,10 @@ export default function LiveStreamPage() {
         </div>
       </div>
 
-      {/* ── CHAT MESSAGES ── */}
+      {/* ── CHAT MESSAGES ── pinned so top message sits just below screen midpoint */}
       <div
-        className="absolute left-3 flex flex-col gap-2"
-        style={{ right: "52px", bottom: "192px" }}
+        className="absolute left-3 flex flex-col gap-1.5"
+        style={{ right: "52px", bottom: "172px" }}
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-1.5">
@@ -190,49 +189,58 @@ export default function LiveStreamPage() {
         </div>
       </div>
 
-      {/* ── BOTTOM PRODUCT AREA (transparent) ── */}
-      <div className="absolute bottom-0 left-0 right-0 px-3 pb-7">
-        {/* Winner row */}
-        <div className="flex items-center gap-1 mb-2">
-          <span className="text-[11px]">🏆</span>
-          <span className="text-white text-[11px] font-semibold">{auctionItem.winner} </span>
-          <span className="text-yellow-400 text-[11px] font-bold">won!</span>
+      {/* ── BOTTOM PRODUCT AREA — transparent, 20% smaller overall ── */}
+      <div className="absolute bottom-0 left-0 right-0 px-3 pb-5">
+        {/* Live auction status badge */}
+        <div className="flex items-center gap-1.5 mb-1.5">
+          <div className="flex items-center gap-1 bg-red-500/90 rounded-full px-2 py-0.5">
+            <div className="size-1.5 bg-white rounded-full animate-pulse" />
+            <span className="text-white text-[9px] font-bold tracking-wide">LIVE AUCTION</span>
+          </div>
+          <span className="text-white/70 text-[9px]">Bid to win</span>
         </div>
 
-        {/* Product row */}
-        <div className="flex items-start gap-3">
-          <div className="size-[60px] rounded-xl overflow-hidden bg-black/20 shrink-0">
+        {/* Winner row */}
+        <div className="flex items-center gap-1 mb-1.5">
+          <span className="text-[9px]">🏆</span>
+          <span className="text-white text-[9px] font-semibold">{auctionItem.winner} </span>
+          <span className="text-yellow-400 text-[9px] font-bold">won!</span>
+        </div>
+
+        {/* Product row — 20% smaller */}
+        <div className="flex items-start gap-2.5">
+          <div className="size-[48px] rounded-lg overflow-hidden bg-black/20 shrink-0">
             <Image
               src={auctionItem.image}
               alt={auctionItem.title}
-              width={60}
-              height={60}
+              width={48}
+              height={48}
               className="w-full h-full object-cover"
               unoptimized
             />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
-              <p className="text-white font-bold text-[14px] leading-snug flex-1">{auctionItem.title}</p>
+              <p className="text-white font-bold text-[11px] leading-snug flex-1">{auctionItem.title}</p>
               <div className="shrink-0 text-right">
-                <p className="text-white font-bold text-[14px] leading-none">${auctionItem.price}</p>
-                {auctionItem.sold && <p className="text-red-400 text-[11px] font-semibold mt-0.5">Sold</p>}
+                <p className="text-white font-bold text-[11px] leading-none">${auctionItem.price}</p>
+                {auctionItem.sold && <p className="text-red-400 text-[9px] font-semibold mt-0.5">Sold</p>}
               </div>
             </div>
-            <p className="text-white/65 text-[11px] mt-0.5">{auctionItem.condition}</p>
-            <div className="flex items-center gap-1.5 mt-1.5">
-              <span className="bg-indigo-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+            <p className="text-white/65 text-[9px] mt-0.5">{auctionItem.condition}</p>
+            <div className="flex items-center gap-1.5 mt-1">
+              <span className="bg-indigo-500 text-white text-[8px] font-semibold px-1.5 py-0.5 rounded-full">
                 {auctionItem.shipping}
               </span>
               {auctionItem.hasTax && (
-                <span className="text-white/65 text-[10px]">+ Taxes</span>
+                <span className="text-white/65 text-[8px]">+ Taxes</span>
               )}
             </div>
           </div>
         </div>
 
         {/* Action button */}
-        <button className="mt-3 w-full h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 text-white font-semibold text-[13px]">
+        <button className="mt-2.5 w-full h-8 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 text-white font-semibold text-[11px]">
           Awaiting Next Item
         </button>
       </div>
