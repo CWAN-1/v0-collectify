@@ -372,6 +372,7 @@ function SearchPageContent() {
                     <p className="text-[11px] font-semibold line-clamp-2 leading-tight mt-1.5">{show.title}</p>
                   </Link>
                 ))}
+                </div>
               </div>
             )}
 
