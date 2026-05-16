@@ -38,12 +38,12 @@ const mockPosts = [
 
 // Mock Users data
 const mockUsers = [
-  { id: "1", name: "dhipokemon", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", followers: 0 },
-  { id: "2", name: "Pokemonban", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", followers: 0 },
-  { id: "3", name: "Aqshal pokemon", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", followers: 6 },
-  { id: "4", name: "NruPokemon", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", followers: 20 },
-  { id: "5", name: "JAYPOKEMON", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", followers: 0 },
-  { id: "6", name: "tcgpokemon", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", followers: 0 },
+  { id: "1", name: "dhipokemon", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", followers: 0, itemsSold: 12 },
+  { id: "2", name: "Pokemonban", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", followers: 0, itemsSold: 5 },
+  { id: "3", name: "Aqshal pokemon", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", followers: 6, itemsSold: 89 },
+  { id: "4", name: "NruPokemon", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", followers: 20, itemsSold: 156 },
+  { id: "5", name: "JAYPOKEMON", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", followers: 0, itemsSold: 3 },
+  { id: "6", name: "tcgpokemon", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", followers: 0, itemsSold: 0 },
 ]
 
 // Market price history mock data with volume
@@ -514,19 +514,27 @@ function SearchPageContent() {
             {/* ── USERS TAB ── */}
             {activeTab === "users" && (
               <div className="divide-y divide-border">
-                {mockUsers.map((user) => (
-                  <Link key={user.id} href={`/user/${user.id}`}>
-                    <div className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/50 transition-colors">
-                      <Avatar className="size-11 border-2 border-border">
+                {[...mockUsers].sort((a, b) => b.followers - a.followers).map((user) => (
+                  <div key={user.id} className="flex items-center gap-3 px-4 py-3">
+                    <Link href={`/user/${user.id}`} className="flex items-center gap-3 flex-1 min-w-0">
+                      <Avatar className="size-11 border-2 border-border shrink-0">
                         <AvatarImage src={user.avatar} />
                         <AvatarFallback>{user.name[0]}</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-sm font-medium text-foreground truncate">{user.name}</h3>
-                        <p className="text-xs text-muted-foreground">{user.followers} followers</p>
+                        <p className="text-xs text-muted-foreground">
+                          {user.followers} followers · {user.itemsSold} items sold
+                        </p>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                    <button 
+                      className="shrink-0 px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Follow
+                    </button>
+                  </div>
                 ))}
               </div>
             )}
