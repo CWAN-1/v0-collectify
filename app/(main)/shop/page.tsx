@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, SlidersHorizontal, ArrowUpDown, Heart, Star, X, Check, Clock, TrendingUp, DollarSign, ChevronDown, Ticket } from "lucide-react"
+import { Search, SlidersHorizontal, ArrowUpDown, Heart, Star, X, Check, Clock, TrendingUp, DollarSign, ChevronDown, Ticket, ShoppingCart, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
@@ -223,7 +223,7 @@ const ichibanProducts = [
   },
 ]
 
-type ShopTab = "buynow" | "auction" | "ichiban"
+type ShopTab = "live" | "buynow" | "auction" | "ichiban"
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("en-US", {
@@ -406,7 +406,7 @@ function IchibanCard({ product }: { product: typeof ichibanProducts[0] }) {
 
 export default function ShopPage() {
   const [selectedIP, setSelectedIP] = useState("pokemon")
-  const [activeTab, setActiveTab] = useState<ShopTab>("buynow")
+  const [activeTab, setActiveTab] = useState<ShopTab>("live")
   const [showCategoryDrawer, setShowCategoryDrawer] = useState(false)
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [showSortSheet, setShowSortSheet] = useState(false)
@@ -432,7 +432,8 @@ export default function ShopPage() {
   }
 
   const tabs: { id: ShopTab; label: string }[] = [
-    { id: "buynow", label: "Buy It Now" },
+    { id: "live", label: "Live" },
+    { id: "buynow", label: "Buy Now" },
     { id: "auction", label: "Auction" },
     { id: "ichiban", label: "Ichiban Kuji" },
   ]
@@ -444,12 +445,15 @@ export default function ShopPage() {
         <div className="px-4 pt-12 pb-3">
           {/* Search Row */}
           <div className="flex items-center gap-3">
-            {/* IP Category Button */}
+            {/* IP Category Button — two-line style */}
             <button
               onClick={() => setShowCategoryDrawer(true)}
               className="flex items-center gap-1 shrink-0"
             >
-              <span className="text-base font-bold text-foreground">{currentIP?.label}</span>
+              <div className="flex flex-col items-start leading-tight">
+                <span className="text-[10px] text-muted-foreground font-medium">Categories</span>
+                <span className="text-sm font-bold text-foreground">{currentIP?.label}</span>
+              </div>
               <ChevronDown className="size-4 text-muted-foreground" />
             </button>
 
@@ -466,11 +470,7 @@ export default function ShopPage() {
             {/* Cart */}
             <Link href="/cart" className="relative shrink-0">
               <Button variant="ghost" size="icon" className="size-9 bg-card border border-border rounded-xl">
-                <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                  <line x1="3" y1="6" x2="21" y2="6"/>
-                  <path d="M16 10a4 4 0 0 1-8 0"/>
-                </svg>
+                <ShoppingCart className="size-4" />
                 <span className="absolute -top-1 -right-1 size-4 bg-gradient-to-r from-primary to-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                   2
                 </span>
@@ -528,9 +528,18 @@ export default function ShopPage() {
 
       {/* Content */}
       <main className="px-4 pt-2">
+        {activeTab === "live" && (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="size-16 bg-muted rounded-full flex items-center justify-center mb-4">
+              <Play className="size-7 text-muted-foreground" />
+            </div>
+            <p className="text-sm font-medium text-foreground mb-1">No live streams right now</p>
+            <p className="text-xs text-muted-foreground">Check back soon</p>
+          </div>
+        )}
+
         {activeTab === "buynow" && (
           <>
-            <p className="text-sm text-muted-foreground mb-4">{filteredBuyNow.length} items found</p>
             {filteredBuyNow.length > 0 ? (
               <div className="grid grid-cols-2 gap-3">
                 {filteredBuyNow.map((product) => (
@@ -551,7 +560,6 @@ export default function ShopPage() {
 
         {activeTab === "auction" && (
           <>
-            <p className="text-sm text-muted-foreground mb-4">{filteredAuctions.length} auctions found</p>
             {filteredAuctions.length > 0 ? (
               <div className="grid grid-cols-2 gap-3">
                 {filteredAuctions.map((product) => (
@@ -572,7 +580,6 @@ export default function ShopPage() {
 
         {activeTab === "ichiban" && (
           <>
-            <p className="text-sm text-muted-foreground mb-4">{filteredIchiban.length} Kuji found</p>
             {filteredIchiban.length > 0 ? (
               <div className="grid grid-cols-2 gap-3">
                 {filteredIchiban.map((product) => (
