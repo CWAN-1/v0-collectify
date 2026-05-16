@@ -10,14 +10,15 @@ import Link from "next/link"
 import Image from "next/image"
 
 const ipCategories = [
-  { id: "pokemon", label: "Pokemon", avatar: "/brands/pikachu.jpg" },
-  { id: "yugioh", label: "Yu-Gi-Oh!", avatar: "/brands/yugioh.jpg" },
-  { id: "onepiece", label: "One Piece", avatar: "/brands/luffy.jpg" },
-  { id: "mtg", label: "MTG", avatar: "/brands/mtg.jpg" },
-  { id: "sports", label: "Sports", avatar: "/brands/sports.jpg" },
-  { id: "digimon", label: "Digimon", avatar: null },
-  { id: "dragonball", label: "Dragon Ball", avatar: null },
-  { id: "naruto", label: "Naruto", avatar: null },
+  { id: "trading-card-games", label: "Trading Card Games", image: "https://images.pokemontcg.io/swsh4/188_hires.png" },
+  { id: "books-movies", label: "Books & Movies", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop" },
+  { id: "sports-cards", label: "Sports Cards", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=300&h=300&fit=crop&crop=faces" },
+  { id: "toys-hobbies", label: "Toys & Hobbies", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" },
+  { id: "coins-money", label: "Coins & Money", image: "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?w=200&h=200&fit=crop" },
+  { id: "memorabilia", label: "Memorabilia", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=200&fit=crop" },
+  { id: "mens-fashion", label: "Men's Fashion", image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=200&h=200&fit=crop" },
+  { id: "sneakers-shoes", label: "Sneakers & Shoes", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop" },
+  { id: "womens-fashion", label: "Women's Fashion", image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=200&h=200&fit=crop" },
 ]
 
 const filterOptions = {
@@ -488,13 +489,13 @@ export default function ShopPage() {
             {/* IP Category Button — two-line style */}
             <button
               onClick={() => setShowCategoryDrawer(true)}
-              className="flex items-center gap-1 shrink-0"
+              className="flex items-center gap-1 shrink-0 max-w-[100px]"
             >
-              <div className="flex flex-col items-start leading-tight">
+              <div className="flex flex-col items-start leading-tight min-w-0">
                 <span className="text-[10px] text-muted-foreground font-medium">Categories</span>
-                <span className="text-sm font-bold text-foreground">{currentIP?.label}</span>
+                <span className="text-xs font-bold text-foreground truncate w-full">{currentIP?.label}</span>
               </div>
-              <ChevronDown className="size-4 text-muted-foreground" />
+              <ChevronDown className="size-3.5 text-muted-foreground shrink-0" />
             </button>
 
             {/* Search */}
@@ -653,36 +654,31 @@ export default function ShopPage() {
 
       {/* Category Drawer (left side) */}
       <Sheet open={showCategoryDrawer} onOpenChange={setShowCategoryDrawer}>
-        <SheetContent side="left" className="w-64 p-0">
-          <SheetHeader className="px-4 py-4 border-b border-border">
-            <SheetTitle className="text-base text-left">Select Category</SheetTitle>
-            <SheetDescription className="sr-only">Choose an IP category to browse</SheetDescription>
+        <SheetContent side="left" className="w-full p-0 flex flex-col">
+          <SheetHeader className="px-4 py-4 border-b border-border shrink-0">
+            <SheetTitle className="text-base text-left">Categories</SheetTitle>
+            <SheetDescription className="sr-only">Browse all categories</SheetDescription>
           </SheetHeader>
-          <div className="py-2">
-            {ipCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => {
-                  setSelectedIP(cat.id)
-                  setShowCategoryDrawer(false)
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 transition-colors ${
-                  selectedIP === cat.id ? "bg-primary/10 text-primary" : "text-foreground"
-                }`}
-              >
-                {cat.avatar ? (
-                  <div className="size-9 rounded-xl overflow-hidden shrink-0 border border-border">
-                    <Image src={cat.avatar} alt={cat.label} width={36} height={36} className="w-full h-full object-cover" />
+          <div className="flex-1 overflow-y-auto">
+            <div className="grid grid-cols-3">
+              {ipCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    setSelectedIP(cat.id)
+                    setShowCategoryDrawer(false)
+                  }}
+                  className={`flex flex-col p-3 border-r border-b border-border transition-colors text-left ${
+                    selectedIP === cat.id ? "bg-primary/10" : "bg-background hover:bg-muted/50"
+                  }`}
+                >
+                  <span className="text-[11px] font-semibold text-foreground leading-tight mb-2 min-h-[28px]">{cat.label}</span>
+                  <div className="w-full aspect-square rounded-xl overflow-hidden bg-muted">
+                    <Image src={cat.image} alt={cat.label} width={120} height={120} className="w-full h-full object-cover" unoptimized />
                   </div>
-                ) : (
-                  <div className="size-9 rounded-xl bg-muted flex items-center justify-center shrink-0 border border-border">
-                    <span className="text-xs font-bold text-muted-foreground">{cat.label.slice(0, 2)}</span>
-                  </div>
-                )}
-                <span className="text-sm font-medium">{cat.label}</span>
-                {selectedIP === cat.id && <Check className="size-4 text-primary ml-auto" />}
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
           </div>
         </SheetContent>
       </Sheet>
