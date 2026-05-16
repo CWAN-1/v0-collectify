@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Search, SlidersHorizontal, Heart, Star, X, Check, Clock, TrendingUp, DollarSign, ChevronDown, Ticket, ShoppingCart, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -450,6 +450,7 @@ export default function ShopPage() {
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [showSortSheet, setShowSortSheet] = useState(false)
   const [selectedSort, setSelectedSort] = useState("latest")
+  const tabPointerStartX = useRef(0)
   const [filters, setFilters] = useState({
     category: "All",
     saleStatus: "All",
@@ -528,12 +529,20 @@ export default function ShopPage() {
             <SlidersHorizontal className="size-3.5" />
             <span className="text-xs font-semibold">Filter</span>
           </button>
-          {/* Tabs */}
-          <div className="flex flex-1 overflow-x-auto no-scrollbar">
+          {/* Tabs — pointer delegation avoids scroll-vs-click conflict on mobile */}
+          <div
+            className="flex flex-1 overflow-x-auto no-scrollbar"
+            onPointerDown={(e) => { tabPointerStartX.current = e.clientX }}
+            onPointerUp={(e) => {
+              if (Math.abs(e.clientX - tabPointerStartX.current) >= 8) return
+              const btn = (e.target as HTMLElement).closest("[data-tabid]")
+              if (btn) setActiveTab(btn.getAttribute("data-tabid") as ShopTab)
+            }}
+          >
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                data-tabid={tab.id}
                 className={`shrink-0 py-2.5 px-3 text-xs font-semibold transition-colors border-b-2 whitespace-nowrap ${
                   activeTab === tab.id
                     ? "text-primary border-primary"
