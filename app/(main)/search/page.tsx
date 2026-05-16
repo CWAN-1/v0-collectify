@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Search, X, ChevronRight, Heart, Play } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ComposedChart, Bar, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts"
+import { ComposedChart, Bar, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
 
 // Suggested keywords
 const suggestedKeywords = ["pokemon", "pikachu", "one piece"]
@@ -367,53 +367,44 @@ function SearchPageContent() {
             {activeTab === "products" && (
               <div className="p-4 space-y-6 max-h-[calc(100vh-180px)] overflow-y-auto">
                 {/* Market Price History Card */}
-                <div className="bg-card rounded-2xl border border-border p-6 shrink-0">
+                <div className="bg-card rounded-2xl border border-border p-4 shrink-0">
                   {/* Product Header */}
-                  <div className="flex gap-4 mb-6 pb-6 border-b border-border/50">
-                    <div className="size-20 rounded-lg overflow-hidden bg-muted shrink-0">
-                      <Image src={featuredProduct.image} alt={featuredProduct.name} width={80} height={80} className="w-full h-full object-cover" unoptimized />
+                  <div className="flex gap-3 mb-4">
+                    <div className="size-16 rounded-lg overflow-hidden bg-muted shrink-0">
+                      <Image src={featuredProduct.image} alt={featuredProduct.name} width={64} height={64} className="w-full h-full object-cover" unoptimized />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-bold text-foreground mb-0.5 truncate">{featuredProduct.name}</h3>
-                      <p className="text-xs text-muted-foreground mb-2">{featuredProduct.subtitle}</p>
-                      <div className="flex items-center gap-3 text-xs">
-                        <div>
-                          <p className="text-muted-foreground">Avg:</p>
-                          <p className="font-bold text-foreground">${featuredProduct.avgPrice}</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Change:</p>
-                          <p className="font-bold text-green-500">+{featuredProduct.change}%</p>
-                        </div>
-                        <div>
-                          <p className="text-muted-foreground">Listings:</p>
-                          <p className="font-bold text-foreground">{featuredProduct.listings}</p>
-                        </div>
-                      </div>
+                      <h3 className="text-sm font-bold text-foreground leading-tight">{featuredProduct.name}</h3>
+                      <p className="text-xs text-muted-foreground mb-1">{featuredProduct.subtitle}</p>
+                      <p className="text-xs">
+                        <span className="text-muted-foreground">Avg: </span>
+                        <span className="font-bold text-foreground">${featuredProduct.avgPrice}</span>
+                        <span className="ml-2 font-bold text-green-500">+{featuredProduct.change}%</span>
+                        <span className="ml-2 text-muted-foreground">{featuredProduct.listings} listings</span>
+                      </p>
                     </div>
                   </div>
 
                   {/* Price History Title */}
-                  <h4 className="text-sm font-bold text-foreground mb-3">Market Price History</h4>
+                  <h4 className="text-sm font-bold text-foreground mb-2">Market Price History</h4>
 
                   {/* ComposedChart */}
-                  <div className="h-40 w-full">
+                  <div className="h-44 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={priceHistoryData} margin={{ top: 15, right: 30, left: 0, bottom: 15 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                        <YAxis yAxisId="left" label={{ value: "$", angle: -90, position: "insideLeft", offset: 10 }} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" width={35} />
-                        <YAxis yAxisId="right" orientation="right" label={{ value: "Listings", angle: 90, position: "insideRight" }} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" width={45} />
+                      <ComposedChart data={priceHistoryData} margin={{ top: 10, right: 35, left: -5, bottom: 5 }}>
+                        <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} domain={[7, 13]} width={30} />
+                        <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} domain={[0, 100]} width={30} />
                         <Tooltip 
-                          contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: "0.375rem", fontSize: 12 }}
+                          contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: "0.375rem", fontSize: 11 }}
                           formatter={(value: any, name: string) => {
                             if (name === "price") return [`$${value}`, "Price"];
                             if (name === "volume") return [value, "Listings"];
                             return [value, name];
                           }}
                         />
-                        <Bar yAxisId="right" dataKey="volume" fill="hsl(var(--muted-foreground))" opacity={0.2} radius={[2, 2, 0, 0]} />
-                        <Line yAxisId="left" type="monotone" dataKey="price" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                        <Bar yAxisId="right" dataKey="volume" fill="#64748b" opacity={0.4} radius={[2, 2, 0, 0]} />
+                        <Line yAxisId="left" type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={2} dot={false} />
                       </ComposedChart>
                     </ResponsiveContainer>
                   </div>
