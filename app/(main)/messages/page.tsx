@@ -53,30 +53,39 @@ const mockPurchases = [
 
 const bidFilters = ["All", "Outbid", "Winning", "Recently Ended"]
 
-const auctionsEndingSoon = [
+const userBids = [
   {
-    id: "a1",
+    id: "b1",
     title: "2019 Panini Playbook Football Patrick Maho...",
-    price: 57,
+    currentBid: 57,
+    myBid: 55,
     image: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=200&h=200&fit=crop",
     seller: { name: "sportscards1", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop", rating: 5.0 },
-    saves: 164,
+    status: "Winning",
+    timeLeft: "2h 45m",
+    bids: 12,
   },
   {
-    id: "a2",
+    id: "b2",
     title: "Jalen Carter Superbowl RC Dye Cut Silver holo...",
-    price: 4,
+    currentBid: 4,
+    myBid: 3.50,
     image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=200&h=200&fit=crop",
     seller: { name: "davecrack", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&fit=crop", rating: 5.0 },
-    saves: 32,
+    status: "Outbid",
+    timeLeft: "5h 20m",
+    bids: 8,
   },
   {
-    id: "a3",
+    id: "b3",
     title: "2024 Topps Chrome Update Series Refractor",
-    price: 7,
+    currentBid: 7,
+    myBid: 6.50,
     image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=200&h=200&fit=crop",
     seller: { name: "sportshub", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop", rating: 4.8 },
-    saves: 22,
+    status: "Winning",
+    timeLeft: "1d 3h",
+    bids: 5,
   },
 ]
 
@@ -346,55 +355,87 @@ export default function ActivityPage() {
 
         {/* ── BIDS ── */}
         {activeTab === "bids" && (
-          <div className="px-4 py-4 space-y-5">
-            {/* No active bids banner */}
-            <div className="relative rounded-2xl overflow-hidden bg-yellow-400 p-5 flex items-center justify-between min-h-[100px]">
-              <p className="text-base font-bold text-black max-w-[55%] leading-snug">
-                You have no active bids. Browse auctions to place a bid.
-              </p>
-              <div className="absolute right-0 top-0 bottom-0 w-40 overflow-hidden rounded-r-2xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=200&h=200&fit=crop"
-                  alt="Cards"
-                  fill
-                  className="object-cover opacity-70"
-                  unoptimized
-                />
+          <div className="px-4 py-4">
+            {userBids.length === 0 ? (
+              <div className="relative rounded-2xl overflow-hidden bg-yellow-400 p-5 flex items-center justify-between min-h-[100px]">
+                <p className="text-base font-bold text-black max-w-[55%] leading-snug">
+                  You have no active bids. Browse auctions to place a bid.
+                </p>
+                <div className="absolute right-0 top-0 bottom-0 w-40 overflow-hidden rounded-r-2xl">
+                  <Image
+                    src="https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=200&h=200&fit=crop"
+                    alt="Cards"
+                    fill
+                    className="object-cover opacity-70"
+                    unoptimized
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                {userBids.map((bid) => (
+                  <Link key={bid.id} href={`/shop/${bid.id}`} className="block">
+                    <div className="rounded-xl overflow-hidden bg-card border border-border">
+                      {/* Image */}
+                      <div className="relative aspect-square bg-muted">
+                        <Image src={bid.image} alt={bid.title} fill className="object-cover" unoptimized />
+                        <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/60 rounded-full px-1.5 py-0.5">
+                          <Gavel className="size-3 text-white" />
+                          <span className="text-[10px] text-white font-medium">{bid.bids}</span>
+                        </div>
+                        {/* Status badge */}
+                        <div className="absolute bottom-2 left-2">
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                            bid.status === "Winning" 
+                              ? "bg-green-500/90 text-white" 
+                              : "bg-red-500/90 text-white"
+                          }`}>
+                            {bid.status}
+                          </span>
+                        </div>
+                      </div>
 
-            {/* Auctions Ending Soon */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-bold text-foreground">Auctions Ending Soon</h2>
-                <Link href="/shop" className="text-xs font-medium text-primary">See All</Link>
-              </div>
-              <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-                {auctionsEndingSoon.map((item) => (
-                  <Link key={item.id} href={`/shop/${item.id}`} className="shrink-0 w-40">
-                    <div className="relative rounded-xl overflow-hidden aspect-square bg-muted">
-                      <Image src={item.image} alt={item.title} fill className="object-cover" unoptimized />
-                      <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/50 rounded-full px-1.5 py-0.5">
-                        <Bookmark className="size-3 text-white" />
-                        <span className="text-[10px] text-white font-medium">{item.saves}</span>
+                      {/* Info */}
+                      <div className="p-2">
+                        {/* Seller */}
+                        <div className="flex items-center gap-1 mb-1">
+                          <Avatar className="size-4 shrink-0">
+                            <AvatarImage src={bid.seller.avatar} />
+                            <AvatarFallback className="text-[8px]">{bid.seller.name[0]}</AvatarFallback>
+                          </Avatar>
+                          <span className="text-[9px] text-muted-foreground truncate">{bid.seller.name}</span>
+                          <span className="text-[9px] text-yellow-500">★{bid.seller.rating}</span>
+                        </div>
+
+                        {/* Title */}
+                        <p className="text-[11px] font-medium text-foreground line-clamp-2 leading-tight mb-1">{bid.title}</p>
+
+                        {/* Bids and time */}
+                        <div className="flex items-center justify-between mb-1.5 text-[9px] text-muted-foreground">
+                          <span>{bid.bids} bids</span>
+                          <span className="flex items-center gap-0.5">
+                            <Clock className="size-2.5" />
+                            {bid.timeLeft}
+                          </span>
+                        </div>
+
+                        {/* Price info */}
+                        <div className="space-y-0.5">
+                          <div>
+                            <p className="text-[9px] text-muted-foreground">Current bid</p>
+                            <p className="text-sm font-bold text-foreground">${bid.currentBid}</p>
+                          </div>
+                          <div>
+                            <p className="text-[9px] text-muted-foreground">Your bid</p>
+                            <p className="text-xs font-semibold text-primary">${bid.myBid}</p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="mt-1.5 px-0.5">
-                      <div className="flex items-center gap-1 mb-0.5">
-                        <Avatar className="size-4 shrink-0">
-                          <AvatarImage src={item.seller.avatar} />
-                          <AvatarFallback className="text-[8px]">{item.seller.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-[10px] text-muted-foreground truncate">{item.seller.name}</span>
-                        <span className="text-[10px] text-yellow-500">★ {item.seller.rating}</span>
-                      </div>
-                      <p className="text-[11px] text-foreground font-medium line-clamp-2 leading-tight">{item.title}</p>
-                      <p className="text-sm font-bold text-foreground mt-0.5">${item.price}</p>
                     </div>
                   </Link>
                 ))}
               </div>
-            </div>
+            )}
           </div>
         )}
 
