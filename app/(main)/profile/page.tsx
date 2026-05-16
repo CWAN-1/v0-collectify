@@ -9,14 +9,12 @@ import {
   DollarSign, 
   ClipboardList, 
   Users, 
-  Percent, 
   Lightbulb, 
   Tag, 
   Crown, 
   Truck, 
   BarChart3, 
   GraduationCap, 
-  Palmtree, 
   Gift, 
   CreditCard, 
   MapPin, 
@@ -35,7 +33,6 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Switch } from "@/components/ui/switch"
 import Link from "next/link"
 
 type TabType = "seller-hub" | "account"
@@ -56,7 +53,6 @@ const sellerHubGrid = [
 // Seller Hub menu items
 const sellerHubMenu = [
   { id: "invite", label: "Invite a Seller & Earn $100", subtitle: "Balance: $0.00", subtitleColor: "text-green-500", icon: Users, href: "/seller/invite" },
-  { id: "affiliate", label: "Affiliate Program: Earn Cash", icon: Percent, href: "/seller/affiliate" },
   { id: "tips", label: "Tips", icon: Lightbulb, href: "/seller/tips" },
   { id: "offers", label: "Offers", icon: Tag, href: "/seller/offers" },
   { id: "premier", label: "Premier Shop", icon: Crown, href: "/seller/premier" },
@@ -96,7 +92,6 @@ const helpLegalMenu = [
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<TabType>("seller-hub")
-  const [vacationMode, setVacationMode] = useState(false)
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -194,22 +189,6 @@ export default function ProfilePage() {
                   </Link>
                 )
               })}
-
-              {/* Vacation Mode */}
-              <div className="flex items-center gap-2.5 px-3 py-2.5 border-t border-border">
-                <div className="size-8 rounded-full border border-border flex items-center justify-center shrink-0">
-                  <Palmtree className="size-3.5 text-foreground" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-[11px] font-medium text-foreground">Vacation Mode</span>
-                  <p className="text-[9px] text-muted-foreground">Temporarily makes items in your store not purchasable</p>
-                </div>
-                <Switch
-                  checked={vacationMode}
-                  onCheckedChange={setVacationMode}
-                  className="shrink-0"
-                />
-              </div>
             </div>
           </div>
         )}
@@ -296,12 +275,6 @@ export default function ProfilePage() {
               <LogOut className="size-3.5" />
               Sign Out
             </Button>
-
-            {/* Version Info */}
-            <div className="text-center pb-4">
-              <p className="text-[9px] text-muted-foreground">v25.6.5 (13)</p>
-              <p className="text-[9px] text-muted-foreground">© 2023 Whatnot, Inc.</p>
-            </div>
           </div>
         )}
       </main>
