@@ -36,8 +36,8 @@ const shopProducts = [
 ]
 
 const chatMessages = [
-  { id: "1", user: "drejo", level: 5, avatar: null, color: "bg-orange-500", message: "Make the cactus dance" },
-  { id: "2", user: "ilikecards01", level: 12, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop", color: "bg-indigo-600", message: "Tips are welcomed. Jirehsales has a men's home and all tips go to...", hasMore: true },
+  { id: "1", user: "drejo", level: 1, avatar: null, color: "bg-orange-500", message: "Make the cactus dance", hasGoldFrame: false },
+  { id: "2", user: "ilikecards01", level: 10, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop", color: "bg-indigo-600", message: "Tips are welcomed. Jirehsales has a men's home and all tips go to...", hasMore: true, hasGoldFrame: true },
 ]
 
 export default function LiveStreamPage() {
@@ -206,13 +206,13 @@ export default function LiveStreamPage() {
         </button>
       </div>
 
-      {/* ── ENTRY NOTIFICATION (above chat) ── */}
+      {/* ── ENTRY NOTIFICATION (above chat, higher position) ── */}
       {entryNotification && (
         <div
           className="absolute left-3 flex items-center gap-1.5 animate-in fade-in slide-in-from-left-4 duration-300"
-          style={{ right: "60px", bottom: "220px" }}
+          style={{ right: "60px", top: "42%" }}
         >
-          <span className="text-yellow-400 text-[11px]">&#x1F451;</span>
+          <span className="text-yellow-400 text-sm">&#x1F451;</span>
           <span className="text-white/90 text-[11px]">
             <span className="font-semibold text-white">{entryNotification.name}</span>
             <span className="text-yellow-400 font-bold ml-1">LV{entryNotification.level}</span>
@@ -228,7 +228,8 @@ export default function LiveStreamPage() {
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-1.5">
-            <div className={`size-6 rounded-full shrink-0 overflow-hidden flex items-center justify-center ${msg.color}`}>
+            {/* Avatar with optional gold frame for high-level users */}
+            <div className={`size-6 rounded-full shrink-0 overflow-hidden flex items-center justify-center ${msg.hasGoldFrame ? "ring-2 ring-yellow-400" : ""} ${msg.color}`}>
               {msg.avatar ? (
                 <Image src={msg.avatar} alt={msg.user} width={24} height={24} className="w-full h-full object-cover" unoptimized />
               ) : (
@@ -237,7 +238,12 @@ export default function LiveStreamPage() {
             </div>
             <div className="min-w-0">
               <span className="text-white text-[11px] font-semibold">{msg.user} </span>
-              <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-[8px] px-1 py-px rounded font-bold align-middle mr-1">LV{msg.level}</span>
+              {/* Level badge: LV1 = gray, LV10+ = red gradient */}
+              <span className={`text-[8px] px-1 py-px rounded font-bold align-middle mr-1 ${
+                msg.level >= 10 
+                  ? "bg-gradient-to-r from-red-500 to-red-600 text-white" 
+                  : "bg-gray-400/60 text-white/80"
+              }`}>LV{msg.level}</span>
               <span className="text-white text-[11px] leading-snug">
                 {msg.message}
                 {msg.hasMore && <span className="text-orange-400 font-semibold"> More</span>}
@@ -302,24 +308,29 @@ export default function LiveStreamPage() {
       {showWinner && (
         <div
           className="absolute left-0 right-0 flex justify-center pointer-events-none z-20"
-          style={{ bottom: "280px" }}
+          style={{ top: "38%" }}
         >
           <div className="flex flex-col items-center">
             <div className="relative">
               {/* Sparkle effects */}
-              {[[-16,-16,"text-sm",0],[-8,28,"text-xs",200],[24,-10,"text-base",100],[20,26,"text-sm",300],[-24,12,"text-xs",150]].map(([t,l,sz,delay], i) => (
+              {[[-20,-20,"text-sm",0],[-12,32,"text-xs",200],[28,-14,"text-base",100],[24,30,"text-sm",300],[-28,14,"text-xs",150]].map(([t,l,sz,delay], i) => (
                 <span key={i} className={`absolute ${sz} text-yellow-400 animate-ping`} style={{ top: Number(t), left: Number(l), animationDelay: `${delay}ms` }}>&#10022;</span>
               ))}
-              {/* Crown frame on avatar */}
+              {/* Crown frame wrapping avatar - SVG crown border effect */}
               <div className="relative">
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-xl z-10">&#x1F451;</span>
-                <Avatar className="size-12 border-2 border-yellow-400 shadow-xl shadow-yellow-500/50">
+                {/* Crown frame ring */}
+                <div className="absolute -inset-1.5 rounded-full border-2 border-yellow-400 shadow-lg shadow-yellow-500/40" />
+                {/* Crown icon at top of frame */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 bg-black rounded-full px-1">
+                  <span className="text-yellow-400 text-base">&#x1F451;</span>
+                </div>
+                <Avatar className="size-12 border-2 border-yellow-400">
                   <AvatarImage src={winner.avatar} />
                   <AvatarFallback>{winner.name[0]}</AvatarFallback>
                 </Avatar>
               </div>
             </div>
-            <p className="text-yellow-400 font-bold text-sm mt-2 drop-shadow-lg">{winner.name}</p>
+            <p className="text-yellow-400 font-bold text-sm mt-3 drop-shadow-lg">{winner.name}</p>
             <p className="text-white/80 text-[10px] mt-0.5">won the last auction!</p>
           </div>
         </div>
