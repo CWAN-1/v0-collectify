@@ -4,7 +4,7 @@ import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { Search, X, ChevronRight, Heart, Play } from "lucide-react"
+import { Search, X, ChevronRight, Heart, Play, SlidersHorizontal, ArrowUpDown, ChevronDown } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ComposedChart, Bar, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
@@ -105,8 +105,8 @@ function SearchPageContent() {
 
   const tabs: { id: SearchTab; label: string }[] = [
     { id: "all", label: "All" },
-    { id: "shows", label: "Shows" },
     { id: "products", label: "Products" },
+    { id: "shows", label: "Shows" },
     { id: "posts", label: "Posts" },
     { id: "users", label: "Users" },
   ]
@@ -333,12 +333,25 @@ function SearchPageContent() {
                     ))}
                   </div>
                 </div>
+                </div>
               </div>
             )}
 
             {/* ── SHOWS TAB ── */}
             {activeTab === "shows" && (
-              <div className="grid grid-cols-2 gap-3 p-4">
+              <div className="flex flex-col">
+                {/* Filter Bar */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-border sticky top-0 bg-background z-10">
+                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    <SlidersHorizontal className="size-3" />
+                    Filter
+                  </button>
+                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    <ArrowUpDown className="size-3" />
+                    Sort
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-3 p-4">
                 {mockShows.map((show) => (
                   <Link href={`/live/${show.id}`} key={show.id} className="block">
                     <div className="flex items-center gap-1.5 mb-1.5">
@@ -365,7 +378,24 @@ function SearchPageContent() {
 
             {/* ── PRODUCTS TAB ── */}
             {activeTab === "products" && (
-              <div className="p-4 space-y-6 max-h-[calc(100vh-180px)] overflow-y-auto">
+              <div className="flex flex-col max-h-[calc(100vh-110px)] overflow-y-auto">
+                {/* Filter Bar */}
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-border sticky top-0 bg-background z-10">
+                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    <SlidersHorizontal className="size-3" />
+                    Filter
+                  </button>
+                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    <ArrowUpDown className="size-3" />
+                    Sort
+                  </button>
+                  <button className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-border bg-background text-xs font-medium text-foreground shrink-0">
+                    Buy Format
+                    <ChevronDown className="size-3" />
+                  </button>
+                </div>
+
+                <div className="p-4 space-y-6">
                 {/* Market Price History Card */}
                 <div className="bg-card rounded-2xl border border-border p-4 shrink-0">
                   {/* Product Header */}
@@ -391,10 +421,10 @@ function SearchPageContent() {
                   {/* ComposedChart */}
                   <div className="h-44 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={priceHistoryData} margin={{ top: 10, right: 35, left: -5, bottom: 5 }}>
-                        <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" axisLine={false} tickLine={false} />
-                        <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} domain={[7, 13]} width={30} />
-                        <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} domain={[0, 100]} width={30} />
+                      <ComposedChart data={priceHistoryData} margin={{ top: 10, right: 10, left: 10, bottom: 5 }}>
+                        <XAxis dataKey="date" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} domain={[7, 13]} width={28} ticks={[7, 9, 11, 13]} />
+                        <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} domain={[0, 100]} width={28} ticks={[0, 25, 50, 75, 100]} />
                         <Tooltip 
                           contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: "0.375rem", fontSize: 11 }}
                           formatter={(value: any, name: string) => {
@@ -449,6 +479,7 @@ function SearchPageContent() {
                       </Link>
                     ))}
                   </div>
+                </div>
                 </div>
               </div>
             )}
