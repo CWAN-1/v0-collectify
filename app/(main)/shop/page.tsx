@@ -10,18 +10,15 @@ import Link from "next/link"
 import Image from "next/image"
 
 const ipCategories = [
-  { id: "events", label: "Events", viewers: "3,318", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=200&h=200&fit=crop" },
-  { id: "trading-card-games", label: "Trading Card Games", viewers: "10k+", image: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=200&h=200&fit=crop" },
-  { id: "books-movies", label: "Books & Movies", viewers: "137", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop" },
-  { id: "sports-cards", label: "Sports Cards", viewers: "7,134", image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=200&h=200&fit=crop" },
-  { id: "toys-hobbies", label: "Toys & Hobbies", viewers: "3,386", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" },
-  { id: "electronics", label: "Electronics", viewers: "4,566", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop" },
-  { id: "coins-money", label: "Coins & Money", viewers: "4,664", image: "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?w=200&h=200&fit=crop" },
-  { id: "estate-sales", label: "Estate Sales & Storage Units", viewers: "728", image: "https://images.unsplash.com/photo-1512438248247-f0f2a5a8b7f0?w=200&h=200&fit=crop" },
-  { id: "sports-memorabilia", label: "Sports Memorabilia", viewers: "77", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=200&fit=crop" },
-  { id: "mens-fashion", label: "Men's Fashion", viewers: "1,867", image: "https://images.unsplash.com/photo-1445397096603-c45ed8b14b59?w=200&h=200&fit=crop" },
-  { id: "sneakers-shoes", label: "Sneakers & Shoes", viewers: "2,051", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop" },
-  { id: "womens-fashion", label: "Women's Fashion", viewers: "13k+", image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=200&h=200&fit=crop" },
+  { id: "trading-card-games", label: "Trading Card Games", image: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=200&h=200&fit=crop" },
+  { id: "books-movies", label: "Books & Movies", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop" },
+  { id: "sports-cards", label: "Sports Cards", image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=200&h=200&fit=crop" },
+  { id: "toys-hobbies", label: "Toys & Hobbies", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" },
+  { id: "coins-money", label: "Coins & Money", image: "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?w=200&h=200&fit=crop" },
+  { id: "memorabilia", label: "Memorabilia", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=200&fit=crop" },
+  { id: "mens-fashion", label: "Men's Fashion", image: "https://images.unsplash.com/photo-1445397096603-c45ed8b14b59?w=200&h=200&fit=crop" },
+  { id: "sneakers-shoes", label: "Sneakers & Shoes", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop" },
+  { id: "womens-fashion", label: "Women's Fashion", image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=200&h=200&fit=crop" },
 ]
 
 const filterOptions = {
@@ -663,7 +660,7 @@ export default function ShopPage() {
             <SheetDescription className="sr-only">Browse all categories</SheetDescription>
           </SheetHeader>
           <div className="flex-1 overflow-y-auto">
-            <div className="grid grid-cols-3 gap-0 divide-x divide-y divide-border border-b border-border">
+            <div className="grid grid-cols-3">
               {ipCategories.map((cat) => (
                 <button
                   key={cat.id}
@@ -671,19 +668,13 @@ export default function ShopPage() {
                     setSelectedIP(cat.id)
                     setShowCategoryDrawer(false)
                   }}
-                  className={`flex flex-col items-start p-3 transition-colors text-left ${
+                  className={`flex flex-col p-3 border-r border-b border-border transition-colors text-left ${
                     selectedIP === cat.id ? "bg-primary/10" : "bg-background hover:bg-muted/50"
                   }`}
                 >
-                  <span className="text-[11px] font-semibold text-foreground leading-tight mb-2">{cat.label}</span>
-                  <div className="w-full aspect-square rounded-xl overflow-hidden bg-muted mb-2">
+                  <span className="text-[11px] font-semibold text-foreground leading-tight mb-2 min-h-[28px]">{cat.label}</span>
+                  <div className="w-full aspect-square rounded-xl overflow-hidden bg-muted">
                     <Image src={cat.image} alt={cat.label} width={120} height={120} className="w-full h-full object-cover" unoptimized />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="size-2.5 rounded-full bg-red-500 flex items-center justify-center shrink-0">
-                      <TrendingUp className="size-1.5 text-white" />
-                    </span>
-                    <span className="text-[9px] text-muted-foreground">{cat.viewers} Viewers</span>
                   </div>
                 </button>
               ))}
