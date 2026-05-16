@@ -7,6 +7,7 @@ import Link from "next/link"
 import { Search, X, ChevronRight, Heart, Play } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
 
 // Suggested keywords
 const suggestedKeywords = ["pokemon", "pikachu", "one piece"]
@@ -43,6 +44,22 @@ const mockUsers = [
   { id: "4", name: "NruPokemon", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", followers: 20 },
   { id: "5", name: "JAYPOKEMON", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", followers: 0 },
   { id: "6", name: "tcgpokemon", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", followers: 0 },
+]
+
+// Market price history mock data
+const priceHistoryData = [
+  { date: "1/2", price: 8.5 },
+  { date: "1/6", price: 8.8 },
+  { date: "1/9", price: 9.2 },
+  { date: "1/13", price: 9.5 },
+  { date: "1/16", price: 9.8 },
+  { date: "1/20", price: 10.2 },
+  { date: "1/23", price: 10.5 },
+  { date: "1/27", price: 10.8 },
+  { date: "1/30", price: 11.2 },
+  { date: "2/3", price: 11.5 },
+  { date: "2/6", price: 11.9 },
+  { date: "2/10", price: 12.2 },
 ]
 
 type SearchTab = "all" | "shows" | "products" | "posts" | "users"
@@ -338,41 +355,65 @@ function SearchPageContent() {
 
             {/* ── PRODUCTS TAB ── */}
             {activeTab === "products" && (
-              <div className="grid grid-cols-2 gap-3 p-4">
-                {mockProducts.map((product) => (
-                  <Link href={`/shop/${product.id}`} key={product.id} className="block">
-                    <div className="bg-card rounded-xl overflow-hidden border border-border">
-                      <div className="relative aspect-square">
-                        <Image src={product.image} alt={product.name} fill className="object-cover" unoptimized />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                          <div className="flex items-center gap-1.5">
-                            <Avatar className="size-4 border border-white/30">
-                              <AvatarImage src={product.seller.avatar} />
-                              <AvatarFallback className="text-[8px]">{product.seller.name[0]}</AvatarFallback>
-                            </Avatar>
-                            <span className="text-[9px] text-white truncate">{product.seller.name}</span>
+              <div className="p-4 space-y-6">
+                {/* Market Price History */}
+                <div className="bg-card rounded-xl border border-border p-4">
+                  <h3 className="text-sm font-semibold text-foreground mb-4">Market Price History</h3>
+                  <div className="h-64 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={priceHistoryData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                        <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                        <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }}
+                          formatter={(value) => `$${value}`}
+                        />
+                        <Line type="monotone" dataKey="price" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Products Grid */}
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground mb-3">Results</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {mockProducts.map((product) => (
+                      <Link href={`/shop/${product.id}`} key={product.id} className="block">
+                        <div className="bg-card rounded-xl overflow-hidden border border-border">
+                          <div className="relative aspect-square">
+                            <Image src={product.image} alt={product.name} fill className="object-cover" unoptimized />
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+                              <div className="flex items-center gap-1.5">
+                                <Avatar className="size-4 border border-white/30">
+                                  <AvatarImage src={product.seller.avatar} />
+                                  <AvatarFallback className="text-[8px]">{product.seller.name[0]}</AvatarFallback>
+                                </Avatar>
+                                <span className="text-[9px] text-white truncate">{product.seller.name}</span>
+                              </div>
+                            </div>
+                            {product.type === "auction" && (
+                              <div className="absolute top-2 right-2 bg-yellow-500 text-black text-[8px] font-bold px-1.5 py-0.5 rounded">
+                                Auction
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-2">
+                            <h3 className="text-[10px] font-medium text-foreground line-clamp-2 leading-tight mb-1">{product.name}</h3>
+                            {product.type === "auction" ? (
+                              <div className="flex items-center justify-between">
+                                <p className="text-xs font-bold text-primary">${product.currentBid}</p>
+                                <span className="text-[9px] text-red-500">{product.endTime}</span>
+                              </div>
+                            ) : (
+                              <p className="text-xs font-bold text-primary">${product.price}</p>
+                            )}
                           </div>
                         </div>
-                        {product.type === "auction" && (
-                          <div className="absolute top-2 right-2 bg-yellow-500 text-black text-[8px] font-bold px-1.5 py-0.5 rounded">
-                            Auction
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-2">
-                        <h3 className="text-[10px] font-medium text-foreground line-clamp-2 leading-tight mb-1">{product.name}</h3>
-                        {product.type === "auction" ? (
-                          <div className="flex items-center justify-between">
-                            <p className="text-xs font-bold text-primary">${product.currentBid}</p>
-                            <span className="text-[9px] text-red-500">{product.endTime}</span>
-                          </div>
-                        ) : (
-                          <p className="text-xs font-bold text-primary">${product.price}</p>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
