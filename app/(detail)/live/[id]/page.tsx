@@ -37,6 +37,15 @@ const buyNowItem = {
   shipping: "Shipping & Tax",
 }
 
+const breakItem = {
+  title: "( 3 BOX BREAK ) (2) '23 NFL SELECT HOBBY (1) COMPOSITE HOBBY -- BREAK #2 - #23",
+  teamLabel: "Random Team",
+  spotsTotal: 32,
+  spotsFilled: 20,
+  currentPrice: 37,
+  shipping: "Shipping is $4.70 + Taxes",
+}
+
 const shopProducts = [
   { id: "1", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=200&fit=crop", title: "5-in-1 Microcurrent Facial Massager BLACK", qty: 40, price: 6, bids: 4, hasShipping: true, notify: 35 },
   { id: "2", image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=200&h=200&fit=crop", title: "7 Color LED light Beauty Rejuvenation Device Rose Gold", qty: 25, price: 6, bids: 6, hasShipping: true, notify: 10 },
@@ -53,6 +62,8 @@ export default function LiveStreamPage() {
   const router = useRouter()
   const params = useParams()
   const isBuyNow = params?.id === "live-2"
+  const isBreak = params?.id === "live-3"
+  const isAuctionBased = !isBuyNow  // both auction and break use countdown/bid
 
   const [isFollowing, setIsFollowing] = useState(false)
   const [chatInput, setChatInput] = useState("")
@@ -84,7 +95,7 @@ export default function LiveStreamPage() {
     }
   }, [entryNotification])
 
-  // Countdown timer — only for auction rooms
+  // Countdown timer — for auction and break rooms
   useEffect(() => {
     if (isBuyNow || !isAuctionActive || countdown <= 0) return
 
@@ -320,6 +331,62 @@ export default function LiveStreamPage() {
                 className="flex-1 h-6 rounded-full bg-red-700 text-white font-bold text-[10px] flex items-center justify-center gap-1 disabled:opacity-50"
               >
                 Buy Now <span className="text-[9px]">&gt;&gt;</span>
+              </button>
+            </div>
+          </>
+        ) : isBreak ? (
+          /* ── BREAK MODE ── */
+          <>
+            <div className="mb-1.5">
+              {/* Team label + spin prompt row */}
+              <div className="flex items-center justify-between mb-1">
+                <span className="bg-purple-600 text-white text-[8px] font-bold px-2 py-0.5 rounded">
+                  {breakItem.teamLabel}
+                </span>
+                <span className="text-white/70 text-[9px]">
+                  FOR <span className="text-white font-bold">{breakItem.spotsTotal - breakItem.spotsFilled}</span> MORE SPIN!
+                </span>
+              </div>
+              {/* Title */}
+              <p className="text-white font-bold text-[11px] leading-snug mb-1">{breakItem.title}</p>
+              {/* Break filling progress row */}
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="text-white/80 text-[9px] font-semibold">Break Filling</span>
+                <span className="text-[9px]">&#x231B;</span>
+                <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-yellow-400 rounded-full"
+                    style={{ width: `${(breakItem.spotsFilled / breakItem.spotsTotal) * 100}%` }}
+                  />
+                </div>
+                <span className="text-white/70 text-[9px] shrink-0">
+                  {breakItem.spotsTotal - breakItem.spotsFilled} of {breakItem.spotsTotal} remaining
+                </span>
+              </div>
+              {/* Shipping + price + countdown */}
+              <div className="flex items-center justify-between">
+                <span className="text-white/70 text-[9px]">🇺🇸 {breakItem.shipping}</span>
+                <div className="text-right">
+                  <p className="text-white font-bold text-[11px] leading-none">${currentPrice}</p>
+                  <p className="text-red-400 text-[10px] font-bold mt-0.5 h-[14px]">
+                    {isAuctionActive ? formatCountdown(countdown) : countdown === 0 ? "Sold" : ""}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { setCustomBidAmount(currentPrice + 1); setShowCustomBid(true) }}
+                className="h-6 px-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px]"
+              >
+                Custom
+              </button>
+              <button
+                onClick={handleBid}
+                disabled={!isAuctionActive}
+                className="flex-1 h-6 rounded-full bg-red-700 text-white font-bold text-[10px] flex items-center justify-center gap-1 disabled:opacity-50"
+              >
+                Bid: ${bidPrice} <span className="text-[9px]">&gt;&gt;</span>
               </button>
             </div>
           </>
