@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, SlidersHorizontal, Heart, Star, X, Check, Clock, TrendingUp, DollarSign, ChevronDown, Ticket, ShoppingCart, Play, ArrowUpDown } from "lucide-react"
+import { Search, SlidersHorizontal, Heart, Star, X, Check, Clock, TrendingUp, DollarSign, ChevronDown, Ticket, ShoppingCart, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
@@ -33,9 +33,6 @@ const filterSections = [
   { id: "showformat", label: "Show Format" },
   { id: "tag", label: "Tag" },
   { id: "sellerrating", label: "Seller Rating" },
-  { id: "premiershop", label: "Premier Shop" },
-  { id: "shippedfrom", label: "Shipped From" },
-  { id: "freepickup", label: "Free Pickup" },
 ]
 
 const shopLiveStreams = [
@@ -442,7 +439,7 @@ export default function ShopPage() {
   const currentIP = ipCategories.find(c => c.id === selectedIP)
 
   const filteredBuyNow = buyNowProducts.filter(p => p.category === selectedIP)
-  const filteredAuctions = auctionProducts.filter(p => p.category === selectedIP)
+  const filteredAuctions = auctionProducts.filter(p => !selectedIP || selectedIP === "all" || p.category === selectedIP)
   const filteredIchiban = ichibanProducts.filter(p => p.category === selectedIP)
 
   const applyFilters = () => setShowFilterSheet(false)
@@ -525,14 +522,6 @@ export default function ShopPage() {
               </button>
             ))}
           </div>
-          {/* Sort button right side */}
-          <button
-            onClick={() => setShowSortSheet(true)}
-            className="flex items-center gap-1.5 shrink-0 h-9 px-3 border-b-2 border-transparent text-muted-foreground ml-1"
-          >
-            <ArrowUpDown className="size-3.5" />
-            <span className="text-xs font-semibold">Sort</span>
-          </button>
         </div>
       </header>
 
@@ -670,11 +659,8 @@ export default function ShopPage() {
       {/* Filter Sheet — 3/4 height, two-column layout */}
       <Sheet open={showFilterSheet} onOpenChange={setShowFilterSheet}>
         <SheetContent side="bottom" className="h-[75vh] rounded-t-2xl p-0 flex flex-col">
-          <SheetHeader className="flex-row items-center justify-between px-4 pt-4 pb-3 border-b border-border shrink-0">
+          <SheetHeader className="px-4 pt-4 pb-3 border-b border-border shrink-0">
             <SheetTitle className="text-base font-bold">Filters</SheetTitle>
-            <button onClick={() => setShowFilterSheet(false)} className="size-7 rounded-full bg-muted flex items-center justify-center">
-              <X className="size-4 text-foreground" />
-            </button>
             <SheetDescription className="sr-only">Filter live streams and products</SheetDescription>
           </SheetHeader>
 
@@ -768,50 +754,6 @@ export default function ShopPage() {
                 ))}
               </section>
 
-              {/* Premier Shop */}
-              <section id="filter-section-premiershop" className="mb-6">
-                <h4 className="text-sm font-bold text-foreground mb-3">Premier Shop</h4>
-                <label className="flex items-center gap-3 py-2 cursor-pointer">
-                  <div className="size-4 rounded-full border-2 border-border flex items-center justify-center" />
-                  <span className="text-sm text-foreground">Premier Shop</span>
-                </label>
-              </section>
-
-              {/* Shipped From */}
-              <section id="filter-section-shippedfrom" className="mb-6">
-                <h4 className="text-sm font-bold text-foreground mb-3">Shipped From</h4>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { label: "United States", count: "57391" },
-                    { label: "United Kingdom", count: "15691" },
-                    { label: "France", count: "2435" },
-                    { label: "Australia", count: "2159" },
-                    { label: "Canada", count: "2142" },
-                    { label: "Germany", count: "1052" },
-                    { label: "Japan", count: "161" },
-                  ].map(({ label, count }) => (
-                    <button key={label} className="px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-foreground bg-background">
-                      {label} <span className="text-primary font-bold ml-1">{count}</span>
-                    </button>
-                  ))}
-                </div>
-              </section>
-
-              {/* Free Pickup */}
-              <section id="filter-section-freepickup" className="mb-6">
-                <h4 className="text-sm font-bold text-foreground mb-3">Free Pickup</h4>
-                <div className="rounded-xl border border-border p-3 bg-muted/30 mb-3">
-                  <p className="text-xs font-semibold text-foreground mb-1">Location</p>
-                  <p className="text-xs text-muted-foreground">Please set your location here.</p>
-                </div>
-                <p className="text-xs font-semibold text-foreground mb-1">Local Radius</p>
-                <p className="text-xs text-muted-foreground mb-3">Display shows & products within a specific distance</p>
-                <div className="flex items-center gap-3">
-                  <Slider defaultValue={[50]} min={1} max={200} step={1} className="flex-1" />
-                  <span className="text-xs text-muted-foreground shrink-0">50 km</span>
-                </div>
-              </section>
-
             </div>
           </div>
 
@@ -821,7 +763,7 @@ export default function ShopPage() {
               Clear
             </Button>
             <Button className="flex-1 h-10 rounded-xl bg-primary text-primary-foreground text-sm font-bold" onClick={applyFilters}>
-              8.2万 results
+              82k results
             </Button>
           </div>
         </SheetContent>
