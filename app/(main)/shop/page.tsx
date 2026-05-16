@@ -12,7 +12,7 @@ import Image from "next/image"
 const ipCategories = [
   { id: "trading-card-games", label: "Trading Card Games", image: "https://images.pokemontcg.io/swsh4/188_hires.png" },
   { id: "books-movies", label: "Books & Movies", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop" },
-  { id: "sports-cards", label: "Sports Cards", image: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=200&h=200&fit=crop" },
+  { id: "sports-cards", label: "Sports Cards", image: "https://images.unsplash.com/photo-1596527265007-c4ff17eaab00?w=200&h=200&fit=crop" },
   { id: "toys-hobbies", label: "Toys & Hobbies", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" },
   { id: "coins-money", label: "Coins & Money", image: "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?w=200&h=200&fit=crop" },
   { id: "memorabilia", label: "Memorabilia", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=200&fit=crop" },
