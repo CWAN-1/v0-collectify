@@ -11,23 +11,22 @@ import Image from "next/image"
 // All available categories/IPs
 const allCategories = [
   { id: "foryou", label: "For You", image: null, bgColor: "bg-yellow-400" },
-  { id: "marvel", label: "Marvel Cards", image: "/brands/marvel.jpg" },
-  { id: "entertainment", label: "Entertainment Cards", image: "/brands/entertainment.jpg" },
-  { id: "pokemon", label: "Pokemon", image: "/brands/pikachu.jpg" },
-  { id: "yugioh", label: "Yu-Gi-Oh!", image: "/brands/yugioh.jpg" },
-  { id: "onepiece", label: "One Piece", image: "/brands/luffy.jpg" },
-  { id: "sports", label: "Sports", image: "/brands/sports.jpg" },
+  { id: "pokemon", label: "Pokemon Cards", image: "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=200&h=240&fit=crop" },
+  { id: "onepiece", label: "One Piece Card", image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200&h=240&fit=crop" },
+  { id: "popmart", label: "Popmart Toys", image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=200&h=240&fit=crop" },
+  { id: "yugioh", label: "Yu-Gi-Oh!", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=240&fit=crop" },
+  { id: "sports", label: "Sports Cards", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=240&fit=crop" },
 ]
 
 // User's selected interests
-const userInterests = ["foryou", "marvel", "entertainment", "pokemon", "yugioh", "onepiece"]
+const userInterests = ["foryou", "pokemon", "onepiece", "popmart", "yugioh"]
 
 // Live stream data
 const liveStreams = [
   {
     id: "live-1",
-    user: { name: "pokepullzs", avatar: "/avatars/user1.jpg" },
-    thumbnail: "/live/live-1.jpg",
+    user: { name: "pokepullzs", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=500&fit=crop",
     title: "PRISMATIC/ASCENDED WALL INSANE 1/5 ODD...",
     viewers: 47,
     category: "Pokemon Cards",
@@ -36,8 +35,8 @@ const liveStreams = [
   },
   {
     id: "live-2",
-    user: { name: "alexcardshop", avatar: "/avatars/user2.jpg" },
-    thumbnail: "/live/live-2.jpg",
+    user: { name: "alexcardshop", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1642056446467-83ae30b63e37?w=400&h=500&fit=crop",
     title: "BIG GIVEAWAYIES WALL OF SEALED BREAK",
     viewers: 130,
     category: "Pokemon Cards",
@@ -46,8 +45,8 @@ const liveStreams = [
   },
   {
     id: "live-3",
-    user: { name: "card_lair", avatar: "/avatars/user3.jpg" },
-    thumbnail: "/live/live-3.jpg",
+    user: { name: "card_lair", avatar: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=500&fit=crop",
     title: "Prismatic SPC Giveaways!!! $1 start sl...",
     viewers: 241,
     category: "Pokemon Cards",
@@ -56,8 +55,8 @@ const liveStreams = [
   },
   {
     id: "live-4",
-    user: { name: "caascollectibles", avatar: "/avatars/user4.jpg" },
-    thumbnail: "/live/live-4.jpg",
+    user: { name: "caascollectibles", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=500&fit=crop",
     title: "WoTC - EX era $1 starts Giveaways",
     viewers: 101,
     category: "Pokemon Cards",
@@ -66,8 +65,8 @@ const liveStreams = [
   },
   {
     id: "live-5",
-    user: { name: "mastersetgames", avatar: "/avatars/user5.jpg" },
-    thumbnail: "/live/live-5.jpg",
+    user: { name: "mastersetgames", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=500&fit=crop",
     title: "PSA 10 Graded Cards Showcase",
     viewers: 155,
     category: "Pokemon Cards",
@@ -76,8 +75,8 @@ const liveStreams = [
   },
   {
     id: "live-6",
-    user: { name: "dungeonswipes", avatar: "/avatars/user6.jpg" },
-    thumbnail: "/live/live-6.jpg",
+    user: { name: "dungeonswipes", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop" },
+    thumbnail: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=400&h=500&fit=crop",
     title: "$1 STARTS! DEALS DROPS STEALS",
     viewers: 118,
     category: "Pokemon Cards",
@@ -91,7 +90,7 @@ const posts = [
   {
     id: "1",
     user: { name: "Alex Chen", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop", verified: true },
-    image: "/posts/post-pokemon-1.jpg",
+    image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=500&fit=crop",
     title: "Unboxing Pikachu VMAX Rainbow Rare",
     likes: 2431,
     comments: 89,
@@ -101,7 +100,7 @@ const posts = [
   {
     id: "2",
     user: { name: "Sarah Lee", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop", verified: false },
-    image: "/posts/post-sports-1.jpg",
+    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=500&fit=crop",
     title: "NBA Rookie Cards Collection 2024",
     likes: 1892,
     comments: 45,
@@ -111,7 +110,7 @@ const posts = [
   {
     id: "3",
     user: { name: "Mike Zhang", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", verified: true },
-    image: "/posts/post-yugioh-1.jpg",
+    image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=500&fit=crop",
     title: "Review: Blue-Eyes White Dragon",
     likes: 3210,
     comments: 156,
@@ -121,7 +120,7 @@ const posts = [
   {
     id: "4",
     user: { name: "Emma Wilson", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop", verified: false },
-    image: "/posts/post-storage-1.jpg",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=500&fit=crop",
     title: "Tips for Storing Your Collection",
     likes: 987,
     comments: 34,
@@ -131,7 +130,7 @@ const posts = [
   {
     id: "5",
     user: { name: "James Park", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop", verified: true },
-    image: "/posts/post-onepiece-1.jpg",
+    image: "https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=400&h=500&fit=crop",
     title: "Luffy Gear 5 Secret Rare Pull!",
     likes: 4521,
     comments: 234,
@@ -141,7 +140,7 @@ const posts = [
   {
     id: "6",
     user: { name: "Lisa Wang", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", verified: false },
-    image: "/posts/post-pokemon-2.jpg",
+    image: "https://images.unsplash.com/photo-1642056446467-83ae30b63e37?w=400&h=500&fit=crop",
     title: "Pokemon Cards from Japan",
     likes: 1567,
     comments: 67,
@@ -177,6 +176,7 @@ function LiveCard({ stream }: { stream: typeof liveStreams[0] }) {
             alt={stream.title}
             fill
             className="object-cover"
+            unoptimized
           />
           
           {/* Live badge */}
@@ -213,6 +213,7 @@ function PostCard({ post, priority = false }: { post: typeof posts[0]; priority?
             fill
             className="object-cover"
             priority={priority}
+            unoptimized
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           
@@ -336,65 +337,61 @@ export default function HomePage() {
 
         {/* Category Tabs - Shrinks on scroll */}
         <div className={`px-4 pb-2 transition-all duration-300 ${isScrolled ? "py-1" : ""}`}>
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-2.5 overflow-x-auto scrollbar-hide" style={{ paddingRight: "30%" }}>
             {displayedCategories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
                 className={`shrink-0 transition-all duration-300 ${
                   isScrolled
-                    ? `px-3 py-1.5 rounded-full text-xs font-medium ${
+                    ? `px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
                         selectedCategory === category.id
                           ? category.id === "foryou" ? "bg-yellow-400 text-black" : "bg-primary text-primary-foreground"
                           : "bg-muted text-foreground"
                       }`
-                    : "flex flex-col items-center gap-1"
+                    : ""
                 }`}
               >
-                {!isScrolled && (
-                  <div className={`w-20 h-24 rounded-xl overflow-hidden border-2 transition-all ${
+                {isScrolled ? (
+                  <span>{category.label}</span>
+                ) : (
+                  <div className={`relative w-[88px] h-[110px] rounded-xl overflow-hidden border-2 transition-all ${
                     selectedCategory === category.id
-                      ? "border-primary ring-2 ring-primary/20"
-                      : "border-border"
+                      ? category.id === "foryou" ? "border-yellow-400 ring-2 ring-yellow-400/30" : "border-primary ring-2 ring-primary/20"
+                      : "border-transparent"
                   }`}>
                     {category.image ? (
                       <Image
                         src={category.image}
                         alt={category.label}
-                        width={80}
-                        height={96}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        unoptimized
                       />
                     ) : (
-                      <div className={`w-full h-full ${category.bgColor} flex flex-col items-center justify-center gap-1`}>
-                        <div className="size-10 rounded-full bg-white/90 flex items-center justify-center">
-                          <div className="size-6 rounded-full bg-black" />
+                      <div className={`w-full h-full ${category.bgColor} flex flex-col items-center justify-center`}>
+                        <div className="size-12 rounded-full bg-white/90 flex items-center justify-center">
+                          <div className="size-7 rounded-full bg-black" />
                         </div>
                       </div>
                     )}
-                    {/* Label overlay for non-scrolled */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
-                      <span className="text-[10px] font-medium text-white">{category.label}</span>
+                    {/* Label overlay */}
+                    <div className="absolute inset-x-0 top-0 p-1.5">
+                      <span className="text-[11px] font-semibold text-white drop-shadow-md">{category.label}</span>
                     </div>
                   </div>
                 )}
-                {isScrolled ? category.label : (
-                  <span className={`text-[10px] font-medium ${
-                    selectedCategory === category.id ? "text-primary" : "text-muted-foreground"
-                  }`}>{category.label}</span>
-                )}
               </button>
             ))}
-            {/* Add button */}
+            {/* Add button - only when not scrolled */}
             {!isScrolled && (
               <button
                 onClick={() => setShowAddInterestSheet(true)}
-                className="flex flex-col items-center gap-1 shrink-0"
+                className="shrink-0"
               >
-                <div className="w-20 h-24 rounded-xl border-2 border-dashed border-border flex items-center justify-center">
+                <div className="w-[88px] h-[110px] rounded-xl border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-muted/30">
                   <Plus className="size-6 text-muted-foreground" />
                 </div>
-                <span className="text-[10px] text-muted-foreground">Add</span>
               </button>
             )}
           </div>
@@ -402,7 +399,7 @@ export default function HomePage() {
       </header>
       
       {/* Spacer for fixed header - adjusts based on scroll state */}
-      <div className={`transition-all duration-300 ${isScrolled ? "h-32" : "h-48"}`} />
+      <div className={`transition-all duration-300 ${isScrolled ? "h-28" : "h-52"}`} />
 
       <main className="px-4">
         {/* Feed Tab Switcher: LIVE / Post / Followed */}
