@@ -50,13 +50,13 @@ const user = {
   collectorLevel: 10,
 }
 
-// Mock collectibles data
+// Mock collectibles data - Pokemon TCG cards
 const mockCollectibles = [
-  { id: "1", name: "Pikachu VMAX Rainbow", image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=300&h=400&fit=crop", rarity: "Secret Rare" },
-  { id: "2", name: "Charizard GX Shiny", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=400&fit=crop", rarity: "Ultra Rare" },
-  { id: "3", name: "Mewtwo EX Full Art", image: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=300&h=400&fit=crop", rarity: "Full Art" },
-  { id: "4", name: "Blastoise Base Set", image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=300&h=400&fit=crop", rarity: "Holo Rare" },
-  { id: "5", name: "Umbreon VMAX Alt Art", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=400&fit=crop", rarity: "Alt Art" },
+  { id: "1", name: "Pikachu VMAX Rainbow", image: "https://images.pokemontcg.io/swsh4/188_hires.png", rarity: "Secret Rare" },
+  { id: "2", name: "Charizard VMAX", image: "https://images.pokemontcg.io/swsh35/SV107_hires.png", rarity: "Shiny Rare" },
+  { id: "3", name: "Mewtwo GX", image: "https://images.pokemontcg.io/sm12/158_hires.png", rarity: "Full Art" },
+  { id: "4", name: "Umbreon VMAX", image: "https://images.pokemontcg.io/swsh7/215_hires.png", rarity: "Alt Art" },
+  { id: "5", name: "Rayquaza VMAX", image: "https://images.pokemontcg.io/swsh7/218_hires.png", rarity: "Alt Art" },
 ]
 
 // Mock shop items
@@ -289,49 +289,35 @@ export default function ProfilePage() {
         {activeTab === "account" && (
           <div className="py-2">
 
-            {/* ── COLLECTIBLES ── Spotlight stage */}
+            {/* ── COLLECTIBLES ── Card carousel */}
             {profileNav === "collectibles" && (
-              <div>
-                {/* Stage with spotlight */}
-                <div className="relative bg-gradient-to-b from-background to-muted/30 rounded-2xl overflow-hidden pt-6 pb-4 mx-0">
-                  {/* Spotlight cone from top */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-full pointer-events-none">
-                    <div className="w-full h-full bg-gradient-to-b from-yellow-300/30 via-yellow-200/10 to-transparent" style={{ clipPath: "polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)" }} />
-                  </div>
-                  {/* Spotlight bulb dot */}
-                  <div className="absolute top-1 left-1/2 -translate-x-1/2 size-2 rounded-full bg-yellow-300/80 shadow-[0_0_8px_4px_rgba(253,224,71,0.5)]" />
-
-                  {/* Cards carousel */}
-                  <div className="relative flex items-end justify-center h-52 overflow-hidden">
-                    {mockCollectibles.map((item, index) => {
-                      const offset = index - activeCollectible
-                      const isCenter = offset === 0
-                      if (Math.abs(offset) > 2) return null
-                      const scale = isCenter ? 1 : Math.max(0.55, 0.72 - Math.abs(offset) * 0.08)
-                      const tx = offset * 76
-                      const opacity = isCenter ? 1 : Math.max(0.25, 0.55 - Math.abs(offset) * 0.1)
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() => setActiveCollectible(index)}
-                          className="absolute bottom-0 transition-all duration-300 ease-out"
-                          style={{ transform: `translateX(${tx}px) scale(${scale})`, zIndex: isCenter ? 10 : 5 - Math.abs(offset), opacity, transformOrigin: "bottom center" }}
-                        >
-                          <div className={`relative rounded-xl overflow-hidden shadow-xl ${isCenter ? "ring-2 ring-yellow-400/60 shadow-yellow-400/20" : ""}`} style={{ width: 90, height: 128 }}>
-                            <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
-                            {isCenter && <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10 pointer-events-none" />}
-                          </div>
-                        </button>
-                      )
-                    })}
-                  </div>
-
-                  {/* Stage floor line */}
-                  <div className="mx-6 mt-3 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="py-4">
+                {/* Cards carousel */}
+                <div className="relative flex items-center justify-center h-72 overflow-hidden">
+                  {mockCollectibles.map((item, index) => {
+                    const offset = index - activeCollectible
+                    const isCenter = offset === 0
+                    if (Math.abs(offset) > 2) return null
+                    const scale = isCenter ? 1 : Math.max(0.6, 0.75 - Math.abs(offset) * 0.08)
+                    const tx = offset * 90
+                    const opacity = isCenter ? 1 : Math.max(0.3, 0.6 - Math.abs(offset) * 0.15)
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveCollectible(index)}
+                        className="absolute transition-all duration-300 ease-out"
+                        style={{ transform: `translateX(${tx}px) scale(${scale})`, zIndex: isCenter ? 10 : 5 - Math.abs(offset), opacity }}
+                      >
+                        <div className={`relative rounded-xl overflow-hidden shadow-2xl ${isCenter ? "ring-2 ring-primary/50" : ""}`} style={{ width: 140, height: 196 }}>
+                          <Image src={item.image} alt={item.name} fill className="object-contain bg-muted/30" unoptimized />
+                        </div>
+                      </button>
+                    )
+                  })}
                 </div>
 
                 {/* Item info */}
-                <div className="text-center mt-2.5">
+                <div className="text-center mt-3">
                   <p className="text-sm font-semibold text-foreground">{mockCollectibles[activeCollectible]?.name}</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">{mockCollectibles[activeCollectible]?.rarity}</p>
                 </div>
@@ -342,11 +328,11 @@ export default function ProfilePage() {
                     <button
                       key={i}
                       onClick={() => setActiveCollectible(i)}
-                      className={`h-1.5 rounded-full transition-all duration-200 ${i === activeCollectible ? "w-4 bg-yellow-500" : "w-1.5 bg-muted-foreground/30"}`}
+                      className={`h-1.5 rounded-full transition-all duration-200 ${i === activeCollectible ? "w-4 bg-primary" : "w-1.5 bg-muted-foreground/30"}`}
                     />
                   ))}
                 </div>
-                <p className="text-[9px] text-muted-foreground text-center mt-1.5">Tap a card to spotlight it</p>
+                <p className="text-[9px] text-muted-foreground text-center mt-1.5">Tap to view card</p>
               </div>
             )}
 
