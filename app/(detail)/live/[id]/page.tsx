@@ -68,19 +68,15 @@ export default function LiveStreamPage() {
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
-          // Auction ended - show winner
           setIsAuctionActive(false)
           setShowWinner(true)
           setTimeout(() => {
             setShowWinner(false)
-            // Reset for next auction
-            setTimeout(() => {
-              setCurrentPrice(initialAuctionItem.currentPrice)
-              setBidPrice(initialAuctionItem.currentPrice + 1)
-              setCountdown(15)
-              setIsAuctionActive(true)
-            }, 2000)
-          }, 4000)
+            setCurrentPrice(initialAuctionItem.currentPrice)
+            setBidPrice(initialAuctionItem.currentPrice + 1)
+            setCountdown(15)
+            setIsAuctionActive(true)
+          }, 2000)
           return 0
         }
         return prev - 1
@@ -240,7 +236,7 @@ export default function LiveStreamPage() {
         />
       </div>
 
-      {/* ── BOTTOM PRODUCT AREA (Auction Mode) ── */}
+      {/* ── BOTTOM PRODUCT AREA (Auction Mode) ── fixed height to prevent layout shift */}
       <div className="absolute bottom-0 left-0 right-0 px-3 pb-5">
         <div className="flex items-start gap-2.5 mb-2">
           <div className="size-[48px] rounded-lg overflow-hidden bg-white/10 shrink-0">
@@ -251,28 +247,27 @@ export default function LiveStreamPage() {
               <p className="text-white font-bold text-[11px] leading-snug flex-1">{initialAuctionItem.title}</p>
               <div className="shrink-0 text-right">
                 <p className="text-white font-bold text-[11px] leading-none">${currentPrice.toFixed(2)}</p>
-                <p className="text-white/50 text-[8px]">+Ship/Tax</p>
-                {isAuctionActive && (
-                  <p className="text-red-400 text-[10px] font-bold mt-0.5">{formatCountdown(countdown)}</p>
-                )}
+                {/* Fixed-height row: shows countdown or "Sold" — always present to prevent height shift */}
+                <p className="text-red-400 text-[10px] font-bold mt-0.5 h-[14px]">
+                  {isAuctionActive ? formatCountdown(countdown) : countdown === 0 ? "Sold" : ""}
+                </p>
               </div>
             </div>
             <p className="text-white/65 text-[9px] mt-0.5">{initialAuctionItem.condition}</p>
             <div className="flex items-center gap-1.5 mt-1">
               <span className="bg-indigo-500 text-white text-[8px] font-semibold px-1.5 py-0.5 rounded-full">{initialAuctionItem.shipping}</span>
-              {initialAuctionItem.hasTax && <span className="text-white/65 text-[8px]">+ Taxes</span>}
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <button 
+          <button
             onClick={() => { setCustomBidAmount(currentPrice + 1); setShowCustomBid(true) }}
             className="h-6 px-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px]"
           >
             Custom
           </button>
-          <button 
+          <button
             onClick={handleBid}
             disabled={!isAuctionActive}
             className="flex-1 h-6 rounded-full bg-yellow-400 text-black font-bold text-[10px] flex items-center justify-center gap-1 disabled:opacity-50"
@@ -314,7 +309,6 @@ export default function LiveStreamPage() {
               </div>
               <div className="text-right ml-2">
                 <p className="text-white font-bold text-[12px]">US${currentPrice.toFixed(2)}</p>
-                <p className="text-white/50 text-[9px]">+Ship/Tax</p>
               </div>
             </div>
 
@@ -323,19 +317,28 @@ export default function LiveStreamPage() {
               <p className="text-red-400 text-center text-[12px] font-bold mb-4">{formatCountdown(countdown)}</p>
             )}
 
-            {/* Bid Amount Selector */}
+            {/* Bid Amount Selector — tapping the number focuses the hidden input */}
             <div className="flex items-center justify-center gap-4 mb-4">
-              <button 
+              <button
                 onClick={() => setCustomBidAmount(Math.max(currentPrice + 1, customBidAmount - 1))}
                 className="size-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center"
               >
                 <Minus className="size-5 text-white" />
               </button>
-              <div className="text-center">
-                <span className="text-white/60 text-lg">US$</span>
-                <span className="text-yellow-400 text-4xl font-bold">{customBidAmount}</span>
+              <div className="relative flex items-center justify-center min-w-[120px]">
+                <span className="text-white/60 text-lg mr-1">US$</span>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  value={customBidAmount}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value)
+                    if (!isNaN(val) && val >= currentPrice + 1) setCustomBidAmount(val)
+                  }}
+                  className="bg-transparent text-yellow-400 text-4xl font-bold w-[100px] text-center outline-none border-b border-yellow-400/40 focus:border-yellow-400"
+                />
               </div>
-              <button 
+              <button
                 onClick={() => setCustomBidAmount(customBidAmount + 1)}
                 className="size-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center"
               >
@@ -344,7 +347,7 @@ export default function LiveStreamPage() {
             </div>
 
             {/* Max Bid Toggle */}
-            <div className="flex items-center justify-between py-3 mb-4">
+            <div className="flex items-center justify-between py-3">
               <div className="flex items-center gap-1">
                 <span className="text-white text-[11px] font-semibold">Max Bid</span>
                 <div className="size-4 rounded-full bg-white/20 flex items-center justify-center">
@@ -353,12 +356,12 @@ export default function LiveStreamPage() {
               </div>
               <Switch checked={maxBidEnabled} onCheckedChange={setMaxBidEnabled} />
             </div>
-            <p className="text-white/50 text-[10px] -mt-2 mb-4">
+            <p className="text-white/50 text-[10px] mb-4">
               {"When on, we'll automatically place bids for you, up to this price."}
             </p>
 
             {/* Submit Button */}
-            <button 
+            <button
               onClick={handleCustomBidSubmit}
               disabled={customBidAmount <= currentPrice}
               className="w-full h-10 rounded-full bg-white/10 border border-white/30 text-white font-bold text-[12px] disabled:opacity-50"
