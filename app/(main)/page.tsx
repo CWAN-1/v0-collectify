@@ -11,11 +11,11 @@ import Image from "next/image"
 // All available categories/IPs
 const allCategories = [
   { id: "foryou", label: "For You", image: null, bgColor: "bg-blue-500" },
-  { id: "pokemon", label: "Pokemon Cards", image: "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=200&h=240&fit=crop" },
-  { id: "onepiece", label: "One Piece Card", image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200&h=240&fit=crop" },
-  { id: "popmart", label: "Popmart Toys", image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=200&h=240&fit=crop" },
+  { id: "pokemon", label: "Pokemon", image: "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=200&h=240&fit=crop" },
+  { id: "onepiece", label: "One Piece", image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200&h=240&fit=crop" },
+  { id: "popmart", label: "Popmart", image: "https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=200&h=240&fit=crop" },
   { id: "yugioh", label: "Yu-Gi-Oh!", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=240&fit=crop" },
-  { id: "sports", label: "Sports Cards", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=240&fit=crop" },
+  { id: "sports", label: "Sports", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=240&fit=crop" },
 ]
 
 // User's selected interests
@@ -266,6 +266,7 @@ export default function HomePage() {
   const [interests, setInterests] = useState(userInterests)
   const [showAddInterestSheet, setShowAddInterestSheet] = useState(false)
   const [scrollY, setScrollY] = useState(0)
+  const [headerHeight, setHeaderHeight] = useState(220)
   const headerRef = useRef<HTMLDivElement>(null)
 
   // SCROLL_MAX: number of px scrolled until tabs are fully collapsed to text-only
@@ -280,7 +281,11 @@ export default function HomePage() {
   const isCompact = progress >= 1
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+      if (headerRef.current) setHeaderHeight(headerRef.current.offsetHeight)
+    }
+    if (headerRef.current) setHeaderHeight(headerRef.current.offsetHeight)
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -342,20 +347,13 @@ export default function HomePage() {
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
                   className="shrink-0"
-                  style={{
-                    height: `${cardHeight}px`,
-                    width: isCompact ? "auto" : "88px",
-                  }}
+                  style={{ height: `${cardHeight}px`, width: "88px" }}
                 >
                   {/* Morphing card: full image → pill */}
                   <div
                     className="relative w-full h-full overflow-hidden border-2 transition-colors duration-200"
                     style={{
                       borderRadius: `${Math.min(cardBorderRadius, 20)}px`,
-                      width: isCompact ? "auto" : "88px",
-                      minWidth: isCompact ? "60px" : undefined,
-                      paddingLeft: isCompact ? "12px" : undefined,
-                      paddingRight: isCompact ? "12px" : undefined,
                       borderColor: isSelected
                         ? (isForyou ? "#3b82f6" : "hsl(var(--primary))")
                         : "transparent",
@@ -391,21 +389,24 @@ export default function HomePage() {
                     )}
                     {/* Label */}
                     <div
-                      className="absolute inset-0 flex items-center justify-center px-1.5"
+                      className="absolute inset-0 flex items-start justify-start px-2"
                       style={{
                         alignItems: isCompact ? "center" : "flex-start",
+                        justifyContent: isCompact ? "center" : "flex-start",
                         paddingTop: isCompact ? 0 : "6px",
                       }}
                     >
                       <span
-                        className="font-semibold leading-tight text-center"
+                        className="font-semibold leading-tight"
                         style={{
-                          fontSize: isCompact ? "12px" : "11px",
+                          fontSize: "11px",
                           color: isCompact
                             ? isSelected ? "white" : "hsl(var(--foreground))"
                             : "white",
                           textShadow: isCompact ? "none" : "0 1px 3px rgba(0,0,0,0.6)",
-                          whiteSpace: "nowrap",
+                          whiteSpace: "normal",
+                          wordBreak: "break-word",
+                          textAlign: isCompact ? "center" : "left",
                         }}
                       >
                         {category.label}
@@ -415,7 +416,7 @@ export default function HomePage() {
                 </button>
               )
             })}
-            {/* Add button */}
+            {/* Add button — same fixed width, only shown when not fully compact */}
             {!isCompact && (
               <button onClick={() => setShowAddInterestSheet(true)} className="shrink-0" style={{ height: `${cardHeight}px`, width: "88px" }}>
                 <div className="w-full h-full rounded-xl border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-muted/30">
@@ -432,21 +433,21 @@ export default function HomePage() {
             <button
               key={tab}
               onClick={() => setSelectedFeedTab(tab)}
-              className={`flex-1 py-2 text-sm font-medium transition-colors relative ${
+              className={`flex-1 py-2 text-xs font-medium transition-colors relative ${
                 selectedFeedTab === tab ? "text-foreground" : "text-muted-foreground"
               }`}
             >
               {tab === "live" ? "LIVE" : tab === "post" ? "Post" : "Followed"}
               {selectedFeedTab === tab && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full" />
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-primary rounded-full" />
               )}
             </button>
           ))}
         </div>
       </header>
 
-      {/* Spacer: full header height when scrollY=0 is ~200px, collapses to ~120px */}
-      <div style={{ height: `${Math.round(200 - progress * 80)}px` }} />
+      {/* Spacer: exact header height tracked via ref */}
+      <div style={{ height: `${headerHeight}px` }} />
 
       <main className="px-4">
         {/* Feed Content */}
