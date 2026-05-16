@@ -140,7 +140,7 @@ export default function LiveStreamPage() {
               <button
                 onClick={() => setIsFollowing(!isFollowing)}
                 className={`ml-1 px-2 py-0.5 rounded-full text-[10px] font-bold leading-none ${
-                  isFollowing ? "bg-white/25 text-white" : "bg-yellow-400 text-black"
+                  isFollowing ? "bg-white/25 text-white" : "bg-red-700 text-white"
                 }`}
               >
                 {isFollowing ? "Following" : "Follow"}
@@ -309,7 +309,7 @@ export default function LiveStreamPage() {
           <button
             onClick={handleBid}
             disabled={!isAuctionActive}
-            className="flex-1 h-6 rounded-full bg-yellow-400 text-black font-bold text-[10px] flex items-center justify-center gap-1 disabled:opacity-50"
+            className="flex-1 h-6 rounded-full bg-red-700 text-white font-bold text-[10px] flex items-center justify-center gap-1 disabled:opacity-50"
           >
             Bid: ${bidPrice} <span className="text-[9px]">&gt;&gt;</span>
           </button>
