@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { ChevronDown, ChevronLeft, ChevronRight, Star, Share2, Wallet, Store, MoreHorizontal, X, Search, SlidersHorizontal, Bell, Plus, CreditCard, MapPin } from "lucide-react"
+import { useState, useEffect, useCallback } from "react"
+import { ChevronDown, ChevronLeft, ChevronRight, Star, Share2, Wallet, Store, MoreHorizontal, X, Search, SlidersHorizontal, Bell, Plus, CreditCard, MapPin, Minus } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Switch } from "@/components/ui/switch"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 
@@ -18,15 +19,13 @@ const liveData = {
   thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=1200&fit=crop",
 }
 
-const auctionItem = {
+const initialAuctionItem = {
   image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=160&h=160&fit=crop",
   title: "Flashlight Gloves 1 pair Right and Left  #20",
   condition: "Brand New",
-  price: 10,
-  sold: true,
+  currentPrice: 10,
   shipping: "Free Shipping",
   hasTax: true,
-  winner: "amyamy96811",
 }
 
 const shopProducts = [
@@ -46,17 +45,75 @@ export default function LiveStreamPage() {
   const router = useRouter()
   const [isFollowing, setIsFollowing] = useState(false)
   const [chatInput, setChatInput] = useState("")
-  const [showWinner, setShowWinner] = useState(false)
   const [showWallet, setShowWallet] = useState(false)
   const [showShop, setShowShop] = useState(false)
   const [shopFilter, setShopFilter] = useState("all")
   const [shopSearch, setShopSearch] = useState("")
 
+  // Auction state
+  const [currentPrice, setCurrentPrice] = useState(initialAuctionItem.currentPrice)
+  const [bidPrice, setBidPrice] = useState(currentPrice + 1) // Bid is always higher than current
+  const [countdown, setCountdown] = useState(15) // 15 seconds countdown
+  const [isAuctionActive, setIsAuctionActive] = useState(true)
+  const [showCustomBid, setShowCustomBid] = useState(false)
+  const [customBidAmount, setCustomBidAmount] = useState(currentPrice + 1)
+  const [maxBidEnabled, setMaxBidEnabled] = useState(true)
+  const [showWinner, setShowWinner] = useState(false)
+  const [winner, setWinner] = useState({ name: "amyamy96811", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" })
+
+  // Countdown timer
   useEffect(() => {
-    const t1 = setTimeout(() => setShowWinner(true), 1500)
-    const t2 = setTimeout(() => setShowWinner(false), 5000)
-    return () => { clearTimeout(t1); clearTimeout(t2) }
-  }, [])
+    if (!isAuctionActive || countdown <= 0) return
+
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          // Auction ended - show winner
+          setIsAuctionActive(false)
+          setShowWinner(true)
+          setTimeout(() => {
+            setShowWinner(false)
+            // Reset for next auction
+            setTimeout(() => {
+              setCurrentPrice(initialAuctionItem.currentPrice)
+              setBidPrice(initialAuctionItem.currentPrice + 1)
+              setCountdown(15)
+              setIsAuctionActive(true)
+            }, 2000)
+          }, 4000)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [isAuctionActive, countdown])
+
+  // Handle quick bid
+  const handleBid = useCallback(() => {
+    if (!isAuctionActive) return
+    setCurrentPrice(bidPrice)
+    setBidPrice(bidPrice + 1)
+    setCountdown(15) // Reset countdown on new bid
+  }, [bidPrice, isAuctionActive])
+
+  // Handle custom bid submit
+  const handleCustomBidSubmit = useCallback(() => {
+    if (customBidAmount > currentPrice) {
+      setCurrentPrice(customBidAmount)
+      setBidPrice(customBidAmount + 1)
+      setCountdown(15)
+      setShowCustomBid(false)
+    }
+  }, [customBidAmount, currentPrice])
+
+  // Format countdown as MM:SS
+  const formatCountdown = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
 
   return (
     <div className="fixed inset-0 bg-black overflow-hidden">
@@ -125,7 +182,6 @@ export default function LiveStreamPage() {
           <span className="text-white/80 text-[9px]">Share</span>
         </div>
 
-        {/* Wallet Button */}
         <button onClick={() => setShowWallet(true)} className="flex flex-col items-center gap-0.5">
           <div className="size-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
             <Wallet className="size-[18px] text-white" />
@@ -133,7 +189,6 @@ export default function LiveStreamPage() {
           <span className="text-white/80 text-[9px]">Wallet</span>
         </button>
 
-        {/* Shop Button */}
         <button onClick={() => setShowShop(true)} className="flex flex-col items-center gap-0.5">
           <div className="relative">
             <div className="size-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
@@ -185,31 +240,44 @@ export default function LiveStreamPage() {
         />
       </div>
 
-      {/* ── BOTTOM PRODUCT AREA ── */}
+      {/* ── BOTTOM PRODUCT AREA (Auction Mode) ── */}
       <div className="absolute bottom-0 left-0 right-0 px-3 pb-5">
         <div className="flex items-start gap-2.5 mb-2">
           <div className="size-[48px] rounded-lg overflow-hidden bg-white/10 shrink-0">
-            <Image src={auctionItem.image} alt={auctionItem.title} width={48} height={48} className="w-full h-full object-cover" unoptimized />
+            <Image src={initialAuctionItem.image} alt={initialAuctionItem.title} width={48} height={48} className="w-full h-full object-cover" unoptimized />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
-              <p className="text-white font-bold text-[11px] leading-snug flex-1">{auctionItem.title}</p>
+              <p className="text-white font-bold text-[11px] leading-snug flex-1">{initialAuctionItem.title}</p>
               <div className="shrink-0 text-right">
-                <p className="text-white font-bold text-[11px] leading-none">${auctionItem.price}</p>
+                <p className="text-white font-bold text-[11px] leading-none">${currentPrice.toFixed(2)}</p>
+                <p className="text-white/50 text-[8px]">+Ship/Tax</p>
+                {isAuctionActive && (
+                  <p className="text-red-400 text-[10px] font-bold mt-0.5">{formatCountdown(countdown)}</p>
+                )}
               </div>
             </div>
-            <p className="text-white/65 text-[9px] mt-0.5">{auctionItem.condition}</p>
+            <p className="text-white/65 text-[9px] mt-0.5">{initialAuctionItem.condition}</p>
             <div className="flex items-center gap-1.5 mt-1">
-              <span className="bg-indigo-500 text-white text-[8px] font-semibold px-1.5 py-0.5 rounded-full">{auctionItem.shipping}</span>
-              {auctionItem.hasTax && <span className="text-white/65 text-[8px]">+ Taxes</span>}
+              <span className="bg-indigo-500 text-white text-[8px] font-semibold px-1.5 py-0.5 rounded-full">{initialAuctionItem.shipping}</span>
+              {initialAuctionItem.hasTax && <span className="text-white/65 text-[8px]">+ Taxes</span>}
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="h-6 px-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px]">Custom</button>
-          <button className="flex-1 h-6 rounded-full bg-yellow-400 text-black font-bold text-[10px] flex items-center justify-center gap-1">
-            Bid: $1 <span className="text-[9px]">&gt;&gt;</span>
+          <button 
+            onClick={() => { setCustomBidAmount(currentPrice + 1); setShowCustomBid(true) }}
+            className="h-6 px-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px]"
+          >
+            Custom
+          </button>
+          <button 
+            onClick={handleBid}
+            disabled={!isAuctionActive}
+            className="flex-1 h-6 rounded-full bg-yellow-400 text-black font-bold text-[10px] flex items-center justify-center gap-1 disabled:opacity-50"
+          >
+            Bid: ${bidPrice} <span className="text-[9px]">&gt;&gt;</span>
           </button>
         </div>
       </div>
@@ -223,18 +291,86 @@ export default function LiveStreamPage() {
                 <span key={i} className={`absolute ${sz} text-yellow-400 animate-ping`} style={{ top: Number(t), left: Number(l), animationDelay: `${delay}ms` }}>✦</span>
               ))}
               <Avatar className="size-16 border-4 border-yellow-400 shadow-2xl shadow-yellow-500/60">
-                <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" />
-                <AvatarFallback>a</AvatarFallback>
+                <AvatarImage src={winner.avatar} />
+                <AvatarFallback>{winner.name[0]}</AvatarFallback>
               </Avatar>
             </div>
-            <p className="text-yellow-400 font-bold text-lg mt-3 drop-shadow-lg">{auctionItem.winner}</p>
-            <p className="text-white/90 text-xs mt-0.5">won the auction!</p>
+            <p className="text-yellow-400 font-bold text-lg mt-3 drop-shadow-lg">{winner.name}</p>
+            <p className="text-white/90 text-xs mt-0.5">won the last auction!</p>
           </div>
         </div>
       )}
 
       {/* ══════════════════════════════════════════════════════════════════════
-          WALLET SHEET (Half-screen)
+          CUSTOM BID SHEET
+      ══════════════════════════════════════════════════════════════════════ */}
+      <Sheet open={showCustomBid} onOpenChange={setShowCustomBid}>
+        <SheetContent side="bottom" className="rounded-t-3xl h-auto max-h-[60vh] bg-black/95 border-t border-white/10 p-0">
+          <div className="px-4 pt-4 pb-6">
+            {/* Product Info Header */}
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1">
+                <p className="text-white font-bold text-[12px] leading-snug">{initialAuctionItem.title}</p>
+              </div>
+              <div className="text-right ml-2">
+                <p className="text-white font-bold text-[12px]">US${currentPrice.toFixed(2)}</p>
+                <p className="text-white/50 text-[9px]">+Ship/Tax</p>
+              </div>
+            </div>
+
+            {/* Countdown */}
+            {isAuctionActive && (
+              <p className="text-red-400 text-center text-[12px] font-bold mb-4">{formatCountdown(countdown)}</p>
+            )}
+
+            {/* Bid Amount Selector */}
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <button 
+                onClick={() => setCustomBidAmount(Math.max(currentPrice + 1, customBidAmount - 1))}
+                className="size-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center"
+              >
+                <Minus className="size-5 text-white" />
+              </button>
+              <div className="text-center">
+                <span className="text-white/60 text-lg">US$</span>
+                <span className="text-yellow-400 text-4xl font-bold">{customBidAmount}</span>
+              </div>
+              <button 
+                onClick={() => setCustomBidAmount(customBidAmount + 1)}
+                className="size-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center"
+              >
+                <Plus className="size-5 text-white" />
+              </button>
+            </div>
+
+            {/* Max Bid Toggle */}
+            <div className="flex items-center justify-between py-3 mb-4">
+              <div className="flex items-center gap-1">
+                <span className="text-white text-[11px] font-semibold">Max Bid</span>
+                <div className="size-4 rounded-full bg-white/20 flex items-center justify-center">
+                  <span className="text-white text-[8px]">i</span>
+                </div>
+              </div>
+              <Switch checked={maxBidEnabled} onCheckedChange={setMaxBidEnabled} />
+            </div>
+            <p className="text-white/50 text-[10px] -mt-2 mb-4">
+              {"When on, we'll automatically place bids for you, up to this price."}
+            </p>
+
+            {/* Submit Button */}
+            <button 
+              onClick={handleCustomBidSubmit}
+              disabled={customBidAmount <= currentPrice}
+              className="w-full h-10 rounded-full bg-white/10 border border-white/30 text-white font-bold text-[12px] disabled:opacity-50"
+            >
+              Submit Max Bid
+            </button>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          WALLET SHEET
       ══════════════════════════════════════════════════════════════════════ */}
       <Sheet open={showWallet} onOpenChange={setShowWallet}>
         <SheetContent side="bottom" className="rounded-t-3xl h-auto max-h-[50vh] bg-background p-0">
@@ -243,7 +379,6 @@ export default function LiveStreamPage() {
               <SheetTitle className="text-left text-sm font-bold">Wallet</SheetTitle>
             </SheetHeader>
 
-            {/* Add Shipping Details */}
             <div className="flex items-center justify-between py-2.5 border-b border-border">
               <div className="flex items-center gap-2.5">
                 <div className="size-7 rounded-full bg-muted flex items-center justify-center">
@@ -260,7 +395,6 @@ export default function LiveStreamPage() {
               </button>
             </div>
 
-            {/* Add Payment Method */}
             <div className="flex items-center justify-between py-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="size-7 rounded-full bg-muted flex items-center justify-center">
@@ -281,12 +415,11 @@ export default function LiveStreamPage() {
       </Sheet>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          SHOP SHEET (Full-screen)
+          SHOP SHEET
       ══════════════════════════════════════════════════════════════════════ */}
       <Sheet open={showShop} onOpenChange={setShowShop}>
         <SheetContent side="bottom" className="h-full rounded-none bg-background p-0">
           <div className="flex flex-col h-full">
-            {/* Header */}
             <div className="px-4 pt-12 pb-3 border-b border-border">
               <div className="flex items-center gap-2">
                 <div className="flex-1 relative">
@@ -303,7 +436,6 @@ export default function LiveStreamPage() {
                 </button>
               </div>
 
-              {/* Filters */}
               <div className="flex items-center gap-2 mt-3 overflow-x-auto scrollbar-hide">
                 <button className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium shrink-0">
                   <SlidersHorizontal className="size-3" />
@@ -325,14 +457,12 @@ export default function LiveStreamPage() {
               </div>
             </div>
 
-            {/* Products List */}
             <div className="flex-1 overflow-y-auto px-4 py-3">
               <p className="text-sm font-semibold mb-3">Products ({shopProducts.length})</p>
 
               <div className="flex flex-col gap-3">
                 {shopProducts.map((product) => (
                   <div key={product.id} className="flex items-start gap-3 pb-3 border-b border-border">
-                    {/* Product Image */}
                     <div className="relative size-20 rounded-lg overflow-hidden bg-muted shrink-0">
                       <Image src={product.image} alt={product.title} fill className="object-cover" unoptimized />
                       {product.hasShipping && (
@@ -348,7 +478,6 @@ export default function LiveStreamPage() {
                       )}
                     </div>
 
-                    {/* Product Info */}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium leading-snug line-clamp-2">{product.title}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">
@@ -358,7 +487,6 @@ export default function LiveStreamPage() {
                       <p className="text-xs text-muted-foreground">{product.bids} bids</p>
                     </div>
 
-                    {/* Pre-Bid Button */}
                     <button className="shrink-0 px-4 py-2 rounded-full border border-border text-xs font-semibold">
                       Pre-Bid
                     </button>
