@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ChevronDown, ChevronLeft, ChevronRight, Star, Share2, Wallet, Store, MoreHorizontal, X, Search, SlidersHorizontal, Bell, Plus, CreditCard, MapPin, Clock } from "lucide-react"
+import { ChevronDown, ChevronLeft, ChevronRight, Star, Share2, Wallet, Store, MoreHorizontal, X, Search, SlidersHorizontal, Bell, Plus, CreditCard, MapPin } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -238,49 +238,43 @@ export default function LiveStreamPage() {
       ══════════════════════════════════════════════════════════════════════ */}
       <Sheet open={showWallet} onOpenChange={setShowWallet}>
         <SheetContent side="bottom" className="rounded-t-3xl h-auto max-h-[50vh] bg-background p-0">
-          <div className="px-4 pt-4 pb-2">
-            <SheetHeader className="mb-4">
-              <SheetTitle className="text-left text-base font-bold">Wallet</SheetTitle>
+          <div className="px-4 pt-4 pb-6">
+            <SheetHeader className="mb-3">
+              <SheetTitle className="text-left text-sm font-bold">Wallet</SheetTitle>
             </SheetHeader>
 
             {/* Add Shipping Details */}
-            <div className="flex items-center justify-between py-3 border-b border-border">
-              <div className="flex items-center gap-3">
-                <div className="size-9 rounded-full bg-muted flex items-center justify-center">
-                  <MapPin className="size-4 text-muted-foreground" />
+            <div className="flex items-center justify-between py-2.5 border-b border-border">
+              <div className="flex items-center gap-2.5">
+                <div className="size-7 rounded-full bg-muted flex items-center justify-center">
+                  <MapPin className="size-3.5 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold">Add Shipping Details</p>
-                  <p className="text-xs text-muted-foreground">Used to mail your purchases to you</p>
+                  <p className="text-xs font-semibold">Add Shipping Details</p>
+                  <p className="text-[10px] text-muted-foreground">Used to mail your purchases to you</p>
                 </div>
               </div>
-              <button className="flex items-center gap-1 text-primary text-xs font-semibold px-3 py-1.5 rounded-full border border-primary">
-                <Plus className="size-3" />
+              <button className="flex items-center gap-0.5 text-primary text-[10px] font-semibold px-2.5 py-1 rounded-full border border-primary">
+                <Plus className="size-2.5" />
                 Add
               </button>
             </div>
 
             {/* Add Payment Method */}
-            <div className="flex items-center justify-between py-3 border-b border-border">
-              <div className="flex items-center gap-3">
-                <div className="size-9 rounded-full bg-muted flex items-center justify-center">
-                  <CreditCard className="size-4 text-muted-foreground" />
+            <div className="flex items-center justify-between py-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="size-7 rounded-full bg-muted flex items-center justify-center">
+                  <CreditCard className="size-3.5 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold">Add Payment Method</p>
-                  <p className="text-xs text-muted-foreground">{"You won't be charged until you purchase"}</p>
+                  <p className="text-xs font-semibold">Add Payment Method</p>
+                  <p className="text-[10px] text-muted-foreground">{"You won't be charged until you purchase"}</p>
                 </div>
               </div>
-              <button className="flex items-center gap-1 text-primary text-xs font-semibold px-3 py-1.5 rounded-full border border-primary">
-                <Plus className="size-3" />
+              <button className="flex items-center gap-0.5 text-primary text-[10px] font-semibold px-2.5 py-1 rounded-full border border-primary">
+                <Plus className="size-2.5" />
                 Add
               </button>
-            </div>
-
-            {/* Promo Code */}
-            <div className="flex items-center gap-2 py-4">
-              <Input placeholder="Promo Code" className="flex-1 h-9 text-sm bg-muted border-0" />
-              <button className="px-4 h-9 rounded-lg bg-muted text-muted-foreground text-sm font-medium">Apply</button>
             </div>
           </div>
         </SheetContent>
@@ -317,7 +311,7 @@ export default function LiveStreamPage() {
                 <button className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium shrink-0">
                   Sort <ChevronDown className="size-3" />
                 </button>
-                {["Auction", "Giveaway", "Sold"].map((f) => (
+                {["Auction", "Buy Now", "Sold"].map((f) => (
                   <button
                     key={f}
                     onClick={() => setShopFilter(shopFilter === f.toLowerCase() ? "all" : f.toLowerCase())}
