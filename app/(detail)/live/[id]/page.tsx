@@ -135,14 +135,14 @@ export default function LiveStreamPage() {
               <span className="text-[8px] font-bold text-black">35</span>
             </div>
           </div>
-          <span className="text-white/80 text-[9px]">View Shop</span>
+          <span className="text-white/80 text-[9px]">Shop</span>
         </div>
       </div>
 
       {/* ── CHAT MESSAGES ── messages only, above the input bar */}
       <div
-        className="absolute left-3 flex flex-col justify-end gap-1.5"
-        style={{ right: "52px", top: "52%", bottom: "148px" }}
+        className="absolute left-3 flex flex-col justify-end gap-1.5 overflow-hidden"
+        style={{ right: "60px", top: "50%", bottom: "168px" }}
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-1.5">
@@ -167,8 +167,11 @@ export default function LiveStreamPage() {
         ))}
       </div>
 
-      {/* ── CHAT INPUT — sits just above the product area ── */}
-      <div className="absolute left-3 right-3" style={{ bottom: "112px" }}>
+      {/* ── CHAT INPUT — fixed gap above product area ── */}
+      <div
+        className="absolute left-3"
+        style={{ right: "60px", bottom: "128px" }}
+      >
         <Input
           value={chatInput}
           onChange={(e) => setChatInput(e.target.value)}
