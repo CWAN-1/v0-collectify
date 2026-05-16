@@ -343,13 +343,10 @@ export default function LiveStreamPage() {
           /* ── BREAK MODE ── */
           <>
             <div className="mb-1.5">
-              {/* Team label + spin prompt row */}
-              <div className="flex items-center justify-between mb-1">
+              {/* Team label */}
+              <div className="mb-1">
                 <span className="bg-purple-600 text-white text-[8px] font-bold px-2 py-0.5 rounded">
                   {breakItem.teamLabel}
-                </span>
-                <span className="text-white/70 text-[9px]">
-                  FOR <span className="text-white font-bold">{breakItem.spotsTotal - spotsFilled}</span> MORE SPIN!
                 </span>
               </div>
               {/* Title */}
@@ -358,14 +355,14 @@ export default function LiveStreamPage() {
               <div className="flex items-center gap-1.5 mb-1">
                 <span className="text-white/80 text-[9px] font-semibold">Break Filling</span>
                 <span className="text-[9px]">&#x231B;</span>
-                <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
+                <div className="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-yellow-400 rounded-full"
+                    className="h-full bg-yellow-400 rounded-full transition-all duration-500"
                     style={{ width: `${(spotsFilled / breakItem.spotsTotal) * 100}%` }}
                   />
                 </div>
                 <span className="text-white/70 text-[9px] shrink-0">
-                  {breakItem.spotsTotal - spotsFilled} of {breakItem.spotsTotal} remaining
+                  {spotsFilled} of {breakItem.spotsTotal} filled
                 </span>
               </div>
               {/* Shipping + price + countdown */}
@@ -437,11 +434,11 @@ export default function LiveStreamPage() {
         )}
       </div>
 
-      {/* ── AUCTION WIN CELEBRATION — only in auction rooms ── */}
+      {/* ── AUCTION WIN CELEBRATION — only in auction/break rooms ── */}
       {!isBuyNow && showWinner && (
         <div
           className="absolute left-0 right-0 flex justify-center pointer-events-none z-20"
-          style={{ top: "38%" }}
+          style={{ top: isBreak ? "32%" : "38%" }}
         >
           <div className="flex flex-col items-center">
             <div className="relative">
