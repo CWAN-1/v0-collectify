@@ -142,7 +142,7 @@ export default function LiveStreamPage() {
       {/* ── CHAT MESSAGES ── positioned between screen midline and product area */}
       <div
         className="absolute left-3 flex flex-col gap-1.5"
-        style={{ right: "52px", top: "48%", bottom: "180px", overflowY: "auto" }}
+        style={{ right: "52px", top: "48%", bottom: "200px" }}
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-1.5">
@@ -211,13 +211,13 @@ export default function LiveStreamPage() {
           </div>
         </div>
 
-        {/* Action buttons: Custom + Bid */}
+        {/* Action buttons: Custom + Bid — 20% smaller height */}
         <div className="flex items-center gap-2">
-          <button className="h-8 px-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-[11px]">
+          <button className="h-6 px-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px]">
             Custom
           </button>
-          <button className="flex-1 h-8 rounded-full bg-yellow-400 text-black font-bold text-[11px] flex items-center justify-center gap-1">
-            Bid: $1 <span className="text-[10px]">&gt;&gt;</span>
+          <button className="flex-1 h-6 rounded-full bg-yellow-400 text-black font-bold text-[10px] flex items-center justify-center gap-1">
+            Bid: $1 <span className="text-[9px]">&gt;&gt;</span>
           </button>
         </div>
       </div>
