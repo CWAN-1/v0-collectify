@@ -300,13 +300,13 @@ export default function LiveStreamPage() {
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-white font-bold text-[11px] leading-snug flex-1">{buyNowItem.title}</p>
                   <div className="shrink-0 text-right">
-                    <p className="text-white font-bold text-[11px] leading-none">£{buyNowItem.price}</p>
+                    <p className="text-white font-bold text-[11px] leading-none">${buyNowItem.price}</p>
                     <p className="text-yellow-400 text-[10px] font-bold mt-0.5">{stock} Left</p>
                   </div>
                 </div>
                 <p className="text-white/65 text-[9px] mt-0.5">{buyNowItem.condition}</p>
                 <div className="flex items-center gap-1.5 mt-1">
-                  <span className="text-white/60 text-[9px]">&#x1F1EC;&#x1F1E7; {buyNowItem.shipping}</span>
+                  <span className="text-white/60 text-[9px]">🇮🇩 {buyNowItem.shipping}</span>
                 </div>
               </div>
             </div>
@@ -317,7 +317,7 @@ export default function LiveStreamPage() {
               <button
                 onClick={() => setStock(s => Math.max(0, s - 1))}
                 disabled={stock === 0}
-                className="flex-1 h-6 rounded-full bg-yellow-400 text-black font-bold text-[10px] flex items-center justify-center gap-1 disabled:opacity-50"
+                className="flex-1 h-6 rounded-full bg-red-700 text-white font-bold text-[10px] flex items-center justify-center gap-1 disabled:opacity-50"
               >
                 Buy Now <span className="text-[9px]">&gt;&gt;</span>
               </button>
