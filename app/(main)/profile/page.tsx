@@ -59,6 +59,40 @@ const mockCollectibles = [
   { id: "5", name: "Umbreon VMAX Alt Art", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=400&fit=crop", rarity: "Alt Art" },
 ]
 
+// Mock shop items
+const mockShopItems = [
+  { id: "s1", name: "Pikachu VMAX Rainbow Rare", price: 250, image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=200&h=200&fit=crop" },
+  { id: "s2", name: "Charizard GX Shiny", price: 450, image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=200&fit=crop" },
+  { id: "s3", name: "Mewtwo EX Full Art", price: 180, image: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=200&h=200&fit=crop" },
+  { id: "s4", name: "Blastoise Base Set", price: 320, image: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=200&h=200&fit=crop" },
+]
+
+// Mock upcoming shows
+const mockShows = [
+  { id: "sh1", title: "Pokemon VMAX Auction", scheduledAt: "Tomorrow · 7:00 PM", image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=200&h=120&fit=crop", viewers: 0 },
+  { id: "sh2", title: "Vintage Cards Special", scheduledAt: "Sat · 3:00 PM", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=120&fit=crop", viewers: 12 },
+]
+
+// Mock posts
+const mockPosts = [
+  { id: "p1", text: "Just pulled a Pikachu VMAX Rainbow! Absolutely stunning card.", image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=300&h=300&fit=crop", likes: 24, comments: 5, timeAgo: "2d" },
+  { id: "p2", text: "New collection haul from last week's auction. Can't believe these prices!", image: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=300&h=300&fit=crop", likes: 47, comments: 12, timeAgo: "5d" },
+]
+
+// Mock past shows
+const mockPastShows = [
+  { id: "ps1", title: "Pokemon Vintage Grail Auction", date: "Mar 10", duration: "1h 24m", viewers: 143, image: "https://images.unsplash.com/photo-1594652634010-275456c808d0?w=200&h=120&fit=crop", sales: 8 },
+  { id: "ps2", title: "Scarlet & Violet Box Break", date: "Feb 28", duration: "45m", viewers: 89, image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=200&h=120&fit=crop", sales: 5 },
+  { id: "ps3", title: "Weekly Card Show", date: "Feb 14", duration: "2h 5m", viewers: 201, image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=200&h=120&fit=crop", sales: 14 },
+]
+
+// Mock reviews
+const mockReviews = [
+  { id: "r1", buyer: "CardMaster99", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop", rating: 5, comment: "Fast shipping, card exactly as described. Great seller!", timeAgo: "1w" },
+  { id: "r2", buyer: "PokeFan2024", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop", rating: 5, comment: "Amazing condition, well packaged. Would buy again!", timeAgo: "2w" },
+  { id: "r3", buyer: "TCGCollector", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop", rating: 4, comment: "Good seller, slight delay in shipping but card was perfect.", timeAgo: "1mo" },
+]
+
 const sellerHubGrid = [
   { id: "inventory", label: "Inventory", icon: Package, href: "/seller/inventory" },
   { id: "shows", label: "Shows", icon: Radio, href: "/seller/shows" },
@@ -130,17 +164,17 @@ export default function ProfilePage() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <div className="flex items-center gap-2 mb-0.5">
-                <button className="flex items-center gap-1">
-                  <h1 className="text-base font-bold text-foreground">{user.name}</h1>
-                  <ChevronDown className="size-4 text-muted-foreground" />
-                </button>
+              <button className="flex items-center gap-1 mb-0.5">
+                <h1 className="text-base font-bold text-foreground">{user.name}</h1>
+                <ChevronDown className="size-4 text-muted-foreground" />
+              </button>
+              <div className="flex items-center gap-1.5 mb-1">
+                <p className="text-xs text-muted-foreground">{user.fullName}</p>
                 <Link href="/collector-level" className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-gradient-to-r from-yellow-500 to-amber-600 text-[9px] font-bold text-white">
                   <Crown className="size-2.5" />
                   <span>LV{user.collectorLevel}</span>
                 </Link>
               </div>
-              <p className="text-xs text-muted-foreground mb-1">{user.fullName}</p>
               <p className="text-xs text-muted-foreground">
                 <span className="font-semibold text-foreground">{user.followers}</span> Followers
                 {" · "}
@@ -254,83 +288,182 @@ export default function ProfilePage() {
         {/* ACCOUNT TAB */}
         {activeTab === "account" && (
           <div className="py-2">
-            {/* Collectibles - Spotlight Carousel */}
+
+            {/* ── COLLECTIBLES ── Spotlight stage */}
             {profileNav === "collectibles" && (
-              <div className="relative">
-                {/* Spotlight background effect */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-32 h-64 bg-gradient-to-b from-yellow-500/20 via-yellow-500/10 to-transparent rounded-full blur-2xl" />
-                </div>
+              <div>
+                {/* Stage with spotlight */}
+                <div className="relative bg-gradient-to-b from-background to-muted/30 rounded-2xl overflow-hidden pt-6 pb-4 mx-0">
+                  {/* Spotlight cone from top */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-full pointer-events-none">
+                    <div className="w-full h-full bg-gradient-to-b from-yellow-300/30 via-yellow-200/10 to-transparent" style={{ clipPath: "polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)" }} />
+                  </div>
+                  {/* Spotlight bulb dot */}
+                  <div className="absolute top-1 left-1/2 -translate-x-1/2 size-2 rounded-full bg-yellow-300/80 shadow-[0_0_8px_4px_rgba(253,224,71,0.5)]" />
 
-                {/* Carousel container */}
-                <div className="relative flex items-center justify-center h-64 overflow-hidden">
-                  {mockCollectibles.map((item, index) => {
-                    const offset = index - activeCollectible
-                    const isCenter = offset === 0
-                    const isVisible = Math.abs(offset) <= 2
-
-                    if (!isVisible) return null
-
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => setActiveCollectible(index)}
-                        className="absolute transition-all duration-300 ease-out"
-                        style={{
-                          transform: `translateX(${offset * 80}px) scale(${isCenter ? 1 : 0.7 - Math.abs(offset) * 0.1})`,
-                          zIndex: isCenter ? 10 : 5 - Math.abs(offset),
-                          opacity: isCenter ? 1 : 0.5 - Math.abs(offset) * 0.15,
-                        }}
-                      >
-                        <div className={`relative rounded-xl overflow-hidden shadow-2xl transition-all duration-300 ${isCenter ? "ring-2 ring-yellow-500/50" : ""}`}>
-                          <div className="w-28 h-40 bg-muted">
-                            <Image
-                              src={item.image}
-                              alt={item.name}
-                              fill
-                              className="object-cover"
-                              unoptimized
-                            />
+                  {/* Cards carousel */}
+                  <div className="relative flex items-end justify-center h-52 overflow-hidden">
+                    {mockCollectibles.map((item, index) => {
+                      const offset = index - activeCollectible
+                      const isCenter = offset === 0
+                      if (Math.abs(offset) > 2) return null
+                      const scale = isCenter ? 1 : Math.max(0.55, 0.72 - Math.abs(offset) * 0.08)
+                      const tx = offset * 76
+                      const opacity = isCenter ? 1 : Math.max(0.25, 0.55 - Math.abs(offset) * 0.1)
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => setActiveCollectible(index)}
+                          className="absolute bottom-0 transition-all duration-300 ease-out"
+                          style={{ transform: `translateX(${tx}px) scale(${scale})`, zIndex: isCenter ? 10 : 5 - Math.abs(offset), opacity, transformOrigin: "bottom center" }}
+                        >
+                          <div className={`relative rounded-xl overflow-hidden shadow-xl ${isCenter ? "ring-2 ring-yellow-400/60 shadow-yellow-400/20" : ""}`} style={{ width: 90, height: 128 }}>
+                            <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
+                            {isCenter && <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10 pointer-events-none" />}
                           </div>
-                          {/* Spotlight glow for center item */}
-                          {isCenter && (
-                            <div className="absolute inset-0 bg-gradient-to-t from-yellow-500/20 via-transparent to-white/10 pointer-events-none" />
-                          )}
-                        </div>
-                      </button>
-                    )
-                  })}
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Stage floor line */}
+                  <div className="mx-6 mt-3 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
                 </div>
 
-                {/* Center item info */}
-                <div className="text-center mt-2">
+                {/* Item info */}
+                <div className="text-center mt-2.5">
                   <p className="text-sm font-semibold text-foreground">{mockCollectibles[activeCollectible]?.name}</p>
-                  <p className="text-[10px] text-muted-foreground">{mockCollectibles[activeCollectible]?.rarity}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{mockCollectibles[activeCollectible]?.rarity}</p>
                 </div>
 
-                {/* Navigation dots */}
+                {/* Dots */}
                 <div className="flex items-center justify-center gap-1.5 mt-3">
-                  {mockCollectibles.map((_, index) => (
+                  {mockCollectibles.map((_, i) => (
                     <button
-                      key={index}
-                      onClick={() => setActiveCollectible(index)}
-                      className={`size-1.5 rounded-full transition-all ${
-                        index === activeCollectible ? "bg-yellow-500 w-4" : "bg-muted-foreground/30"
-                      }`}
+                      key={i}
+                      onClick={() => setActiveCollectible(i)}
+                      className={`h-1.5 rounded-full transition-all duration-200 ${i === activeCollectible ? "w-4 bg-yellow-500" : "w-1.5 bg-muted-foreground/30"}`}
                     />
                   ))}
                 </div>
-
-                {/* Swipe hint */}
-                <p className="text-[9px] text-muted-foreground text-center mt-2">Swipe to explore collection</p>
+                <p className="text-[9px] text-muted-foreground text-center mt-1.5">Tap a card to spotlight it</p>
               </div>
             )}
 
-            {profileNav === "shop" && <p className="text-center text-xs text-muted-foreground py-8">No items in shop yet.</p>}
-            {profileNav === "shows" && <p className="text-center text-xs text-muted-foreground py-8">No shows yet.</p>}
-            {profileNav === "posts" && <p className="text-center text-xs text-muted-foreground py-8">No posts yet.</p>}
-            {profileNav === "past-shows" && <p className="text-center text-xs text-muted-foreground py-8">No past shows yet.</p>}
-            {profileNav === "reviews" && <p className="text-center text-xs text-muted-foreground py-8">No reviews yet.</p>}
+            {/* ── SHOP ── */}
+            {profileNav === "shop" && (
+              <div className="grid grid-cols-2 gap-3">
+                {mockShopItems.map((item) => (
+                  <Link key={item.id} href={`/shop/${item.id}`} className="block">
+                    <div className="bg-card border border-border rounded-xl overflow-hidden">
+                      <div className="relative aspect-square bg-muted">
+                        <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
+                      </div>
+                      <div className="p-2">
+                        <p className="text-[11px] font-medium text-foreground line-clamp-2 leading-tight">{item.name}</p>
+                        <p className="text-xs font-bold text-primary mt-0.5">Rp {item.price.toLocaleString()}</p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {/* ── SHOWS ── */}
+            {profileNav === "shows" && (
+              <div className="space-y-3">
+                {mockShows.map((show) => (
+                  <div key={show.id} className="bg-card border border-border rounded-xl overflow-hidden flex gap-3 p-3">
+                    <div className="relative rounded-lg overflow-hidden shrink-0 bg-muted" style={{ width: 88, height: 60 }}>
+                      <Image src={show.image} alt={show.title} fill className="object-cover" unoptimized />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-semibold text-foreground line-clamp-2 leading-tight">{show.title}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{show.scheduledAt}</p>
+                      {show.viewers > 0 && <p className="text-[10px] text-primary mt-0.5">{show.viewers} interested</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ── POSTS ── */}
+            {profileNav === "posts" && (
+              <div className="space-y-3">
+                {mockPosts.map((post) => (
+                  <div key={post.id} className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="relative w-full bg-muted" style={{ height: 180 }}>
+                      <Image src={post.image} alt="post" fill className="object-cover" unoptimized />
+                    </div>
+                    <div className="p-3">
+                      <p className="text-[11px] text-foreground leading-relaxed line-clamp-2">{post.text}</p>
+                      <div className="flex items-center gap-3 mt-2 text-[10px] text-muted-foreground">
+                        <span>{post.likes} likes</span>
+                        <span>{post.comments} comments</span>
+                        <span className="ml-auto">{post.timeAgo}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ── PAST SHOWS ── */}
+            {profileNav === "past-shows" && (
+              <div className="space-y-3">
+                {mockPastShows.map((show) => (
+                  <div key={show.id} className="bg-card border border-border rounded-xl overflow-hidden flex gap-3 p-3">
+                    <div className="relative rounded-lg overflow-hidden shrink-0 bg-muted" style={{ width: 88, height: 60 }}>
+                      <Image src={show.image} alt={show.title} fill className="object-cover" unoptimized />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-semibold text-foreground line-clamp-2 leading-tight">{show.title}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{show.date} · {show.duration}</p>
+                      <div className="flex items-center gap-2 mt-0.5 text-[10px] text-muted-foreground">
+                        <span>{show.viewers} viewers</span>
+                        <span>·</span>
+                        <span>{show.sales} sold</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ── REVIEWS ── */}
+            {profileNav === "reviews" && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-2xl font-bold text-foreground">5.0</span>
+                  <div>
+                    <div className="flex gap-0.5">
+                      {[1,2,3,4,5].map((s) => <span key={s} className="text-yellow-500 text-sm">★</span>)}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">{mockReviews.length} reviews</p>
+                  </div>
+                </div>
+                {mockReviews.map((review) => (
+                  <div key={review.id} className="bg-card border border-border rounded-xl p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Avatar className="size-7 shrink-0">
+                        <AvatarImage src={review.avatar} />
+                        <AvatarFallback className="text-[10px]">{review.buyer[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] font-semibold text-foreground">{review.buyer}</p>
+                        <div className="flex gap-0.5">
+                          {[1,2,3,4,5].map((s) => (
+                            <span key={s} className={`text-[10px] ${s <= review.rating ? "text-yellow-500" : "text-muted-foreground/30"}`}>★</span>
+                          ))}
+                        </div>
+                      </div>
+                      <span className="text-[9px] text-muted-foreground shrink-0">{review.timeAgo}</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </main>
