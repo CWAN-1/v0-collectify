@@ -49,19 +49,8 @@ export default function LiveStreamPage() {
   return (
     <div className="fixed inset-0 bg-black overflow-hidden">
 
-      {/* Full-screen video BG */}
-      <div className="absolute inset-0">
-        <Image
-          src={liveData.thumbnail}
-          alt="live"
-          fill
-          className="object-cover"
-          unoptimized
-          priority
-        />
-        {/* gradient: darken top & bottom */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent via-45% to-black/20" />
-      </div>
+      {/* Full-screen black BG */}
+      <div className="absolute inset-0 bg-black" />
 
       {/* ── TOP BAR ── */}
       <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-3 pt-10 pb-2">
@@ -150,17 +139,17 @@ export default function LiveStreamPage() {
         </div>
       </div>
 
-      {/* ── CHAT MESSAGES ── pinned so top message sits just below screen midpoint */}
+      {/* ── CHAT MESSAGES ── top message positioned below screen midpoint (top: 55%) */}
       <div
         className="absolute left-3 flex flex-col gap-1.5"
-        style={{ right: "52px", bottom: "172px" }}
+        style={{ right: "52px", top: "55%", maxHeight: "30%" }}
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-1.5">
-            {/* Avatar or colored circle */}
-            <div className={`size-6 rounded-full shrink-0 overflow-hidden flex items-center justify-center ${!msg.avatar ? msg.color : ""}`}>
+            {/* Avatar circle with image or fallback letter */}
+            <div className={`size-6 rounded-full shrink-0 overflow-hidden flex items-center justify-center ${msg.color}`}>
               {msg.avatar ? (
-                <img src={msg.avatar} alt="" className="w-full h-full object-cover" />
+                <Image src={msg.avatar} alt={msg.user} width={24} height={24} className="w-full h-full object-cover" unoptimized />
               ) : (
                 <span className="text-[9px] text-white font-bold">{msg.user[0].toUpperCase()}</span>
               )}
@@ -184,32 +173,16 @@ export default function LiveStreamPage() {
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
             placeholder="Say something..."
-            className="h-8 rounded-full bg-black/30 backdrop-blur-sm border-white/20 text-white placeholder:text-white/45 text-[12px] px-4"
+            className="h-8 rounded-full bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder:text-white/45 text-[12px] px-4"
           />
         </div>
       </div>
 
-      {/* ── BOTTOM PRODUCT AREA — transparent, 20% smaller overall ── */}
+      {/* ── BOTTOM PRODUCT AREA — auction mode ── */}
       <div className="absolute bottom-0 left-0 right-0 px-3 pb-5">
-        {/* Live auction status badge */}
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <div className="flex items-center gap-1 bg-red-500/90 rounded-full px-2 py-0.5">
-            <div className="size-1.5 bg-white rounded-full animate-pulse" />
-            <span className="text-white text-[9px] font-bold tracking-wide">LIVE AUCTION</span>
-          </div>
-          <span className="text-white/70 text-[9px]">Bid to win</span>
-        </div>
-
-        {/* Winner row */}
-        <div className="flex items-center gap-1 mb-1.5">
-          <span className="text-[9px]">🏆</span>
-          <span className="text-white text-[9px] font-semibold">{auctionItem.winner} </span>
-          <span className="text-yellow-400 text-[9px] font-bold">won!</span>
-        </div>
-
-        {/* Product row — 20% smaller */}
-        <div className="flex items-start gap-2.5">
-          <div className="size-[48px] rounded-lg overflow-hidden bg-black/20 shrink-0">
+        {/* Product row */}
+        <div className="flex items-start gap-2.5 mb-2">
+          <div className="size-[48px] rounded-lg overflow-hidden bg-white/10 shrink-0">
             <Image
               src={auctionItem.image}
               alt={auctionItem.title}
@@ -224,7 +197,6 @@ export default function LiveStreamPage() {
               <p className="text-white font-bold text-[11px] leading-snug flex-1">{auctionItem.title}</p>
               <div className="shrink-0 text-right">
                 <p className="text-white font-bold text-[11px] leading-none">${auctionItem.price}</p>
-                {auctionItem.sold && <p className="text-red-400 text-[9px] font-semibold mt-0.5">Sold</p>}
               </div>
             </div>
             <p className="text-white/65 text-[9px] mt-0.5">{auctionItem.condition}</p>
@@ -239,10 +211,15 @@ export default function LiveStreamPage() {
           </div>
         </div>
 
-        {/* Action button */}
-        <button className="mt-2.5 w-full h-8 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 text-white font-semibold text-[11px]">
-          Awaiting Next Item
-        </button>
+        {/* Action buttons: Custom + Bid */}
+        <div className="flex items-center gap-2">
+          <button className="h-8 px-5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-[11px]">
+            Custom
+          </button>
+          <button className="flex-1 h-8 rounded-full bg-yellow-400 text-black font-bold text-[11px] flex items-center justify-center gap-1">
+            Bid: $1 <span className="text-[10px]">&gt;&gt;</span>
+          </button>
+        </div>
       </div>
 
       {/* ── AUCTION WIN CELEBRATION ── */}
