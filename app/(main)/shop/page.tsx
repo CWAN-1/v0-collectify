@@ -511,7 +511,7 @@ export default function ShopPage() {
             <Link href="/cart" className="relative shrink-0">
               <Button variant="ghost" size="icon" className="size-9 bg-card border border-border rounded-xl">
                 <ShoppingCart className="size-4" />
-                <span className="absolute -top-1 -right-1 size-4 bg-gradient-to-r from-primary to-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 size-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                   2
                 </span>
               </Button>

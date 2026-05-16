@@ -328,9 +328,9 @@ export default function HomePage() {
               </div>
             </Link>
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative size-10 rounded-full shrink-0">
-                <ShoppingCart className="size-5" />
-                <span className="absolute -top-0.5 -right-0.5 size-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">2</span>
+              <Button variant="ghost" size="icon" className="relative size-9 rounded-full shrink-0">
+                <ShoppingCart className="size-4" />
+                <span className="absolute -top-1 -right-1 size-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">2</span>
               </Button>
             </Link>
           </div>
