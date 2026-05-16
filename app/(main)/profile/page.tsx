@@ -337,7 +337,7 @@ export default function ProfilePage() {
                 <div className="flex justify-center mt-3">
                   <Button variant="outline" size="sm" className="h-7 px-4 rounded-full text-[11px] font-medium gap-1.5">
                     <Pencil className="size-3" />
-                    编辑你的藏品展示
+                    Edit Collection Display
                   </Button>
                 </div>
               </div>
