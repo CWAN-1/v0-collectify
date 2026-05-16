@@ -365,55 +365,55 @@ function SearchPageContent() {
 
             {/* ── PRODUCTS TAB ── */}
             {activeTab === "products" && (
-              <div className="p-4 space-y-6">
+              <div className="p-4 space-y-6 max-h-[calc(100vh-180px)] overflow-y-auto">
                 {/* Market Price History Card */}
-                <div className="bg-card rounded-2xl border border-border p-6">
+                <div className="bg-card rounded-2xl border border-border p-6 shrink-0">
                   {/* Product Header */}
                   <div className="flex gap-4 mb-6 pb-6 border-b border-border/50">
-                    <div className="size-24 rounded-lg overflow-hidden bg-muted shrink-0">
-                      <Image src={featuredProduct.image} alt={featuredProduct.name} width={96} height={96} className="w-full h-full object-cover" unoptimized />
+                    <div className="size-20 rounded-lg overflow-hidden bg-muted shrink-0">
+                      <Image src={featuredProduct.image} alt={featuredProduct.name} width={80} height={80} className="w-full h-full object-cover" unoptimized />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-foreground mb-1">{featuredProduct.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{featuredProduct.subtitle}</p>
-                      <div className="flex items-center gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base font-bold text-foreground mb-0.5 truncate">{featuredProduct.name}</h3>
+                      <p className="text-xs text-muted-foreground mb-2">{featuredProduct.subtitle}</p>
+                      <div className="flex items-center gap-3 text-xs">
                         <div>
-                          <p className="text-xs text-muted-foreground">Avg:</p>
-                          <p className="text-lg font-bold text-foreground">${featuredProduct.avgPrice}</p>
+                          <p className="text-muted-foreground">Avg:</p>
+                          <p className="font-bold text-foreground">${featuredProduct.avgPrice}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Change:</p>
-                          <p className="text-lg font-bold text-green-500">+{featuredProduct.change}%</p>
+                          <p className="text-muted-foreground">Change:</p>
+                          <p className="font-bold text-green-500">+{featuredProduct.change}%</p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Listings:</p>
-                          <p className="text-lg font-bold text-foreground">{featuredProduct.listings}</p>
+                          <p className="text-muted-foreground">Listings:</p>
+                          <p className="font-bold text-foreground">{featuredProduct.listings}</p>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Price History Title */}
-                  <h4 className="text-base font-bold text-foreground mb-4">Market Price History</h4>
+                  <h4 className="text-sm font-bold text-foreground mb-3">Market Price History</h4>
 
                   {/* ComposedChart */}
-                  <div className="h-72 w-full">
+                  <div className="h-40 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={priceHistoryData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                      <ComposedChart data={priceHistoryData} margin={{ top: 15, right: 30, left: 0, bottom: 15 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                        <YAxis yAxisId="left" label={{ value: "$", angle: -90, position: "insideLeft" }} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                        <YAxis yAxisId="right" orientation="right" label={{ value: "Listings", angle: 90, position: "insideRight" }} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                        <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                        <YAxis yAxisId="left" label={{ value: "$", angle: -90, position: "insideLeft", offset: 10 }} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" width={35} />
+                        <YAxis yAxisId="right" orientation="right" label={{ value: "Listings", angle: 90, position: "insideRight" }} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" width={45} />
                         <Tooltip 
-                          contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }}
+                          contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: "0.375rem", fontSize: 12 }}
                           formatter={(value: any, name: string) => {
                             if (name === "price") return [`$${value}`, "Price"];
                             if (name === "volume") return [value, "Listings"];
                             return [value, name];
                           }}
                         />
-                        <Bar yAxisId="right" dataKey="volume" fill="hsl(var(--muted-foreground))" opacity={0.3} radius={[4, 4, 0, 0]} />
-                        <Line yAxisId="left" type="monotone" dataKey="price" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} />
+                        <Bar yAxisId="right" dataKey="volume" fill="hsl(var(--muted-foreground))" opacity={0.2} radius={[2, 2, 0, 0]} />
+                        <Line yAxisId="left" type="monotone" dataKey="price" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
                       </ComposedChart>
                     </ResponsiveContainer>
                   </div>
