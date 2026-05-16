@@ -1,37 +1,36 @@
 "use client"
 
 import { useState } from "react"
-import {
-  ChevronRight,
-  ChevronDown,
-  Package,
-  Radio,
-  DollarSign,
-  ClipboardList,
-  Users,
-  Lightbulb,
-  Tag,
-  Crown,
-  Truck,
-  BarChart3,
-  GraduationCap,
-  Gift,
-  CreditCard,
-  MapPin,
-  ShieldCheck,
-  Bell,
-  Mail,
-  Lock,
-  Settings,
-  MessageSquare,
-  AlertTriangle,
-  Receipt,
-  FileText,
-  HelpCircle,
+import { 
+  ChevronRight, 
+  ChevronDown, 
+  Package, 
+  Radio, 
+  DollarSign, 
+  ClipboardList, 
+  Users, 
+  Lightbulb, 
+  Tag, 
+  Crown, 
+  Truck, 
+  BarChart3, 
+  GraduationCap, 
+  Gift, 
+  CreditCard, 
+  MapPin, 
+  ShieldCheck, 
+  Bell, 
+  Mail, 
+  Lock, 
+  Settings, 
+  MessageSquare, 
+  AlertTriangle, 
+  Receipt, 
+  FileText, 
+  HelpCircle, 
   LogOut,
   ExternalLink,
-  Menu,
-  X,
+  Pencil
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -291,9 +290,9 @@ export default function ProfilePage() {
 
             {/* ── COLLECTIBLES ── Card carousel */}
             {profileNav === "collectibles" && (
-              <div className="py-4">
+              <div className="pt-1 pb-2">
                 {/* Cards carousel */}
-                <div className="relative flex items-center justify-center h-72 overflow-hidden">
+                <div className="relative flex items-center justify-center h-64 overflow-hidden">
                   {mockCollectibles.map((item, index) => {
                     const offset = index - activeCollectible
                     const isCenter = offset === 0
@@ -317,13 +316,13 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Item info */}
-                <div className="text-center mt-3">
+                <div className="text-center mt-1.5">
                   <p className="text-sm font-semibold text-foreground">{mockCollectibles[activeCollectible]?.name}</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">{mockCollectibles[activeCollectible]?.rarity}</p>
                 </div>
 
                 {/* Dots */}
-                <div className="flex items-center justify-center gap-1.5 mt-3">
+                <div className="flex items-center justify-center gap-1.5 mt-2">
                   {mockCollectibles.map((_, i) => (
                     <button
                       key={i}
@@ -332,7 +331,14 @@ export default function ProfilePage() {
                     />
                   ))}
                 </div>
-                <p className="text-[9px] text-muted-foreground text-center mt-1.5">Tap to view card</p>
+
+                {/* Edit button */}
+                <div className="flex justify-center mt-3">
+                  <Button variant="outline" size="sm" className="h-7 px-4 rounded-full text-[11px] font-medium gap-1.5">
+                    <Pencil className="size-3" />
+                    编辑你的藏品展示
+                  </Button>
+                </div>
               </div>
             )}
 
