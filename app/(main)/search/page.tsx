@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Search, X, ChevronRight, Heart, Play } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
+import { ComposedChart, Bar, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts"
 
 // Suggested keywords
 const suggestedKeywords = ["pokemon", "pikachu", "one piece"]
@@ -46,21 +46,31 @@ const mockUsers = [
   { id: "6", name: "tcgpokemon", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop", followers: 0 },
 ]
 
-// Market price history mock data
+// Market price history mock data with volume
 const priceHistoryData = [
-  { date: "1/2", price: 8.5 },
-  { date: "1/6", price: 8.8 },
-  { date: "1/9", price: 9.2 },
-  { date: "1/13", price: 9.5 },
-  { date: "1/16", price: 9.8 },
-  { date: "1/20", price: 10.2 },
-  { date: "1/23", price: 10.5 },
-  { date: "1/27", price: 10.8 },
-  { date: "1/30", price: 11.2 },
-  { date: "2/3", price: 11.5 },
-  { date: "2/6", price: 11.9 },
-  { date: "2/10", price: 12.2 },
+  { date: "1/2", price: 8.5, volume: 25 },
+  { date: "1/6", price: 8.8, volume: 38 },
+  { date: "1/9", price: 9.2, volume: 42 },
+  { date: "1/13", price: 9.5, volume: 35 },
+  { date: "1/16", price: 9.8, volume: 48 },
+  { date: "1/20", price: 10.2, volume: 52 },
+  { date: "1/23", price: 10.5, volume: 45 },
+  { date: "1/27", price: 10.8, volume: 58 },
+  { date: "1/30", price: 11.2, volume: 62 },
+  { date: "2/3", price: 11.5, volume: 55 },
+  { date: "2/6", price: 11.9, volume: 68 },
+  { date: "2/10", price: 12.2, volume: 75 },
 ]
+
+// Featured product for price history
+const featuredProduct = {
+  name: "Pikachu VMAX Rainbow Rare",
+  subtitle: "Vivid Voltage 188/185",
+  avgPrice: 11.76,
+  change: 35.48,
+  listings: 291,
+  image: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=120&h=120&fit=crop",
+}
 
 type SearchTab = "all" | "shows" | "products" | "posts" | "users"
 
@@ -356,27 +366,62 @@ function SearchPageContent() {
             {/* ── PRODUCTS TAB ── */}
             {activeTab === "products" && (
               <div className="p-4 space-y-6">
-                {/* Market Price History */}
-                <div className="bg-card rounded-xl border border-border p-4">
-                  <h3 className="text-sm font-semibold text-foreground mb-4">Market Price History</h3>
-                  <div className="h-64 w-full">
+                {/* Market Price History Card */}
+                <div className="bg-card rounded-2xl border border-border p-6">
+                  {/* Product Header */}
+                  <div className="flex gap-4 mb-6 pb-6 border-b border-border/50">
+                    <div className="size-24 rounded-lg overflow-hidden bg-muted shrink-0">
+                      <Image src={featuredProduct.image} alt={featuredProduct.name} width={96} height={96} className="w-full h-full object-cover" unoptimized />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-foreground mb-1">{featuredProduct.name}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{featuredProduct.subtitle}</p>
+                      <div className="flex items-center gap-4">
+                        <div>
+                          <p className="text-xs text-muted-foreground">Avg:</p>
+                          <p className="text-lg font-bold text-foreground">${featuredProduct.avgPrice}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Change:</p>
+                          <p className="text-lg font-bold text-green-500">+{featuredProduct.change}%</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Listings:</p>
+                          <p className="text-lg font-bold text-foreground">{featuredProduct.listings}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Price History Title */}
+                  <h4 className="text-base font-bold text-foreground mb-4">Market Price History</h4>
+
+                  {/* ComposedChart */}
+                  <div className="h-72 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={priceHistoryData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                      <ComposedChart data={priceHistoryData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                        <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                        <YAxis yAxisId="left" label={{ value: "$", angle: -90, position: "insideLeft" }} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                        <YAxis yAxisId="right" orientation="right" label={{ value: "Listings", angle: 90, position: "insideRight" }} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
                         <Tooltip 
                           contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))", borderRadius: "0.5rem" }}
-                          formatter={(value) => `$${value}`}
+                          formatter={(value: any, name: string) => {
+                            if (name === "price") return [`$${value}`, "Price"];
+                            if (name === "volume") return [value, "Listings"];
+                            return [value, name];
+                          }}
                         />
-                        <Line type="monotone" dataKey="price" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
-                      </LineChart>
+                        <Bar yAxisId="right" dataKey="volume" fill="hsl(var(--muted-foreground))" opacity={0.3} radius={[4, 4, 0, 0]} />
+                        <Line yAxisId="left" type="monotone" dataKey="price" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} />
+                      </ComposedChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
                 {/* Products Grid */}
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3">Results</h3>
+                  <h3 className="text-sm font-bold text-foreground mb-3">More Products</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {mockProducts.map((product) => (
                       <Link href={`/shop/${product.id}`} key={product.id} className="block">
