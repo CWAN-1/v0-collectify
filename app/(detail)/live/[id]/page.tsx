@@ -139,10 +139,10 @@ export default function LiveStreamPage() {
         </div>
       </div>
 
-      {/* ── CHAT MESSAGES ── top message positioned below screen midpoint (top: 55%) */}
+      {/* ── CHAT MESSAGES ── positioned between screen midline and product area */}
       <div
         className="absolute left-3 flex flex-col gap-1.5"
-        style={{ right: "52px", top: "55%", maxHeight: "30%" }}
+        style={{ right: "52px", top: "48%", bottom: "180px", overflowY: "auto" }}
       >
         {chatMessages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-1.5">
