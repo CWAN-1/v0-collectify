@@ -36,7 +36,7 @@ const liveStreams = [
   {
     id: "live-2",
     user: { name: "alexcardshop", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=80&h=80&fit=crop" },
-    thumbnail: "https://images.unsplash.com/photo-1627856013091-fed6dc16c00b?w=400&h=500&fit=crop",
+    thumbnail: "https://images.unsplash.com/photo-1612404730960-5c71577fca11?w=400&h=500&fit=crop",
     title: "BIG GIVEAWAYIES WALL OF SEALED BREAK",
     viewers: 130,
     category: "Pokemon Cards",
@@ -266,7 +266,7 @@ export default function HomePage() {
   const [interests, setInterests] = useState(userInterests)
   const [showAddInterestSheet, setShowAddInterestSheet] = useState(false)
   const [scrollY, setScrollY] = useState(0)
-  const [headerHeight, setHeaderHeight] = useState(220)
+  const [headerHeight, setHeaderHeight] = useState(260)
   const headerRef = useRef<HTMLDivElement>(null)
 
   // SCROLL_MAX: number of px scrolled until tabs are fully collapsed to text-only
@@ -387,26 +387,18 @@ export default function HomePage() {
                         )}
                       </div>
                     )}
-                    {/* Label */}
-                    <div
-                      className="absolute inset-0 flex items-start justify-start px-2"
-                      style={{
-                        alignItems: isCompact ? "center" : "flex-start",
-                        justifyContent: isCompact ? "center" : "flex-start",
-                        paddingTop: isCompact ? 0 : "6px",
-                      }}
-                    >
+                    {/* Label — always centered */}
+                    <div className="absolute inset-0 flex items-center justify-center px-2">
                       <span
-                        className="font-semibold leading-tight"
+                        className="font-semibold leading-tight text-center"
                         style={{
                           fontSize: "11px",
                           color: isCompact
                             ? isSelected ? "white" : "hsl(var(--foreground))"
                             : "white",
-                          textShadow: isCompact ? "none" : "0 1px 3px rgba(0,0,0,0.6)",
+                          textShadow: isCompact ? "none" : "0 1px 3px rgba(0,0,0,0.7)",
                           whiteSpace: "normal",
                           wordBreak: "break-word",
-                          textAlign: isCompact ? "center" : "left",
                         }}
                       >
                         {category.label}
@@ -449,7 +441,7 @@ export default function HomePage() {
       {/* Spacer: exact header height tracked via ref */}
       <div style={{ height: `${headerHeight}px` }} />
 
-      <main className="px-4">
+      <main className="px-4 pt-2">
         {/* Feed Content */}
         <div className="mb-6">
           <div className="flex gap-3 w-full">
