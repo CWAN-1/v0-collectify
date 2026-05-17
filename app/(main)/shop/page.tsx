@@ -10,6 +10,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 const ipCategories = [
+  { id: "all", label: "All", image: "" },
   { id: "trading-card-games", label: "Trading Card Games", image: "https://images.pokemontcg.io/swsh4/188_hires.png" },
   { id: "books-movies", label: "Books & Movies", image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop" },
   { id: "sports-cards", label: "Sports Cards", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=300&h=300&fit=crop&crop=faces" },
@@ -263,7 +264,7 @@ const ichibanProducts = [
   },
 ]
 
-type ShopTab = "live" | "buynow" | "auction" | "ichiban"
+type ShopTab = "recommended" | "live" | "buynow" | "auction" | "ichiban"
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("en-US", {
@@ -445,8 +446,8 @@ function IchibanCard({ product }: { product: typeof ichibanProducts[0] }) {
 }
 
 export default function ShopPage() {
-  const [selectedIP, setSelectedIP] = useState("pokemon")
-  const [activeTab, setActiveTab] = useState<ShopTab>("live")
+  const [selectedIP, setSelectedIP] = useState("all")
+  const [activeTab, setActiveTab] = useState<ShopTab>("recommended")
   const [showCategoryDrawer, setShowCategoryDrawer] = useState(false)
   const [showFilterSheet, setShowFilterSheet] = useState(false)
   const [showSortSheet, setShowSortSheet] = useState(false)
@@ -462,9 +463,9 @@ export default function ShopPage() {
 
   const currentIP = ipCategories.find(c => c.id === selectedIP)
 
-  const filteredBuyNow = buyNowProducts.filter(p => p.category === selectedIP)
+  const filteredBuyNow = buyNowProducts.filter(p => !selectedIP || selectedIP === "all" || p.category === selectedIP)
   const filteredAuctions = auctionProducts.filter(p => !selectedIP || selectedIP === "all" || p.category === selectedIP)
-  const filteredIchiban = ichibanProducts.filter(p => p.category === selectedIP)
+  const filteredIchiban = ichibanProducts.filter(p => !selectedIP || selectedIP === "all" || p.category === selectedIP)
 
   const applyFilters = () => setShowFilterSheet(false)
   const resetFilters = () => {
@@ -473,6 +474,7 @@ export default function ShopPage() {
   }
 
   const tabs: { id: ShopTab; label: string }[] = [
+    { id: "recommended", label: "Recommended" },
     { id: "live", label: "Live" },
     { id: "buynow", label: "Buy Now" },
     { id: "auction", label: "Auction" },
@@ -521,11 +523,11 @@ export default function ShopPage() {
         </div>
 
         {/* Tab Row with Filter button on the left */}
-        <div className="flex items-center gap-0 pb-0">
-          {/* Filter button — rectangular, left of tabs */}
+        <div className="flex items-center gap-2 px-4 pb-2">
+          {/* Filter button — rectangular style */}
           <button
             onClick={() => setShowFilterSheet(true)}
-            className="flex items-center gap-1.5 shrink-0 h-9 px-3 border-b-2 border-transparent text-muted-foreground mr-1"
+            className="flex items-center gap-1.5 shrink-0 h-8 px-3 rounded-lg bg-muted border border-border text-foreground"
           >
             <SlidersHorizontal className="size-3.5" />
             <span className="text-xs font-semibold">Filter</span>
@@ -544,7 +546,7 @@ export default function ShopPage() {
               <button
                 key={tab.id}
                 data-tabid={tab.id}
-                className={`shrink-0 py-2.5 px-3 text-xs font-semibold transition-colors border-b-2 whitespace-nowrap ${
+                className={`shrink-0 py-2 px-3 text-xs font-semibold transition-colors border-b-2 whitespace-nowrap ${
                   activeTab === tab.id
                     ? "text-primary border-primary"
                     : "text-muted-foreground border-transparent"
@@ -562,6 +564,70 @@ export default function ShopPage() {
 
       {/* Content */}
       <main className="px-4 pt-2">
+        {activeTab === "recommended" && (
+          <div className="space-y-6">
+            {/* Shows Section */}
+            <section>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-bold text-foreground">Shows</h2>
+                <button onClick={() => setActiveTab("live")} className="text-xs text-primary font-medium">See All</button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {shopLiveStreams.slice(0, 6).map((stream) => (
+                  <Link href={`/live/${stream.id}`} key={stream.id} className="block">
+                    <div className="mb-1">
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <div className="size-5 rounded-full overflow-hidden bg-muted shrink-0">
+                          <Image src={stream.user.avatar} alt={stream.user.name} width={20} height={20} className="w-full h-full object-cover" unoptimized />
+                        </div>
+                        <span className="text-[10px] font-medium truncate text-foreground">{stream.user.name}</span>
+                      </div>
+                      <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-muted">
+                        <Image src={stream.thumbnail} alt={stream.title} fill className="object-cover" unoptimized />
+                        <div className="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                          <span>Live</span>
+                          <span>•</span>
+                          <span>{stream.viewers}</span>
+                        </div>
+                      </div>
+                      <div className="mt-1.5">
+                        <p className="text-[11px] font-semibold line-clamp-2 leading-tight">{stream.title}</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5 truncate">{stream.tags.join(" • ")}</p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            {/* Buy Now Section */}
+            <section>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-bold text-foreground">Buy Now</h2>
+                <button onClick={() => setActiveTab("buynow")} className="text-xs text-primary font-medium">See All</button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {filteredBuyNow.slice(0, 6).map((product) => (
+                  <BuyNowCard key={product.id} product={product} />
+                ))}
+              </div>
+            </section>
+
+            {/* Auction Section */}
+            <section>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-bold text-foreground">Auction</h2>
+                <button onClick={() => setActiveTab("auction")} className="text-xs text-primary font-medium">See All</button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {filteredAuctions.slice(0, 6).map((product) => (
+                  <AuctionCard key={product.id} product={product} />
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+
         {activeTab === "live" && (
           <div className="grid grid-cols-2 gap-3">
             {shopLiveStreams.map((stream) => (
