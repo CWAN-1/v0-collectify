@@ -570,7 +570,7 @@ export default function ShopPage() {
             <section>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-bold text-foreground">Shows</h2>
-                <Link href="/shop?tab=live" className="text-xs text-primary font-medium">See All</Link>
+                <button onClick={() => setActiveTab("live")} className="text-xs text-primary font-medium">See All</button>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {shopLiveStreams.slice(0, 6).map((stream) => (
@@ -600,15 +600,28 @@ export default function ShopPage() {
               </div>
             </section>
 
-            {/* Products Section */}
+            {/* Buy Now Section */}
             <section>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-bold text-foreground">Products</h2>
-                <Link href="/shop?tab=buynow" className="text-xs text-primary font-medium">See All</Link>
+                <h2 className="text-sm font-bold text-foreground">Buy Now</h2>
+                <button onClick={() => setActiveTab("buynow")} className="text-xs text-primary font-medium">See All</button>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {buyNowProducts.slice(0, 6).map((product) => (
+                {filteredBuyNow.slice(0, 6).map((product) => (
                   <BuyNowCard key={product.id} product={product} />
+                ))}
+              </div>
+            </section>
+
+            {/* Auction Section */}
+            <section>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-bold text-foreground">Auction</h2>
+                <button onClick={() => setActiveTab("auction")} className="text-xs text-primary font-medium">See All</button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {filteredAuctions.slice(0, 6).map((product) => (
+                  <AuctionCard key={product.id} product={product} />
                 ))}
               </div>
             </section>
