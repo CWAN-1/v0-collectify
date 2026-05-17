@@ -463,9 +463,9 @@ export default function ShopPage() {
 
   const currentIP = ipCategories.find(c => c.id === selectedIP)
 
-  const filteredBuyNow = buyNowProducts.filter(p => p.category === selectedIP)
+  const filteredBuyNow = buyNowProducts.filter(p => !selectedIP || selectedIP === "all" || p.category === selectedIP)
   const filteredAuctions = auctionProducts.filter(p => !selectedIP || selectedIP === "all" || p.category === selectedIP)
-  const filteredIchiban = ichibanProducts.filter(p => p.category === selectedIP)
+  const filteredIchiban = ichibanProducts.filter(p => !selectedIP || selectedIP === "all" || p.category === selectedIP)
 
   const applyFilters = () => setShowFilterSheet(false)
   const resetFilters = () => {
